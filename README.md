@@ -16,6 +16,12 @@ dotnet test MedicApp.slnx -c Release --no-restore
 
 Configurar `ConnectionStrings:Workforce` fuera del repositorio; la base definitiva confirmada es sql1002 / db_acaa35_trainify. Revisar [instalación](docs/instalacion.md) para ejecutar los scripts, habilitar el primer administrador y levantar HTTPS. No hay contraseña predeterminada ni migración automática al inicio.
 
+## Configuración y ejemplos 1.2.0
+
+El menú **Configuración** permite ajustar días disponibles, atención general (24 horas por defecto) y duración sugerida. Los valores base están en `MedicApp/config/medical.defaults.json`; los cambios administrativos se conservan en `App_Data/Configuration/medical.json` al volver a publicar. La disponibilidad sigue requiriendo agenda de un doctor.
+
+Incluye un calendario DEMO administrativo y generación explícita de registros ficticios identificables, aislados de las reservas reales. No se crean cuentas ni eventos laborales. Revisar [configuración y retiro posterior de ejemplos](docs/configuracion.md).
+
 ## Funciones
 
 - Inicio de sesión con cuenta o número de empleado compartido; cambio de contraseña y bloqueo por intentos con Identity. Sin registro público ni autenticación solo por gafete.

@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore;
 namespace MedicApp.Controllers;
 
 [Authorize(Policy = "Doctor")]
-public class AgendaController(MedicDbContext db, MedicalAccess access, MedicalService service, MedicalClock clock) : Controller
+public class AgendaController(MedicDbContext db, MedicalAccess access, MedicalService service, MedicalClock clock, Microsoft.Extensions.Options.IOptions<MedicalOptions> options) : Controller
 {
     [HttpGet]
     public async Task<IActionResult> Index(CancellationToken ct)
@@ -15,7 +15,7 @@ public class AgendaController(MedicDbContext db, MedicalAccess access, MedicalSe
         var doctor = await access.DoctorIdAsync(ct);
         ViewBag.Windows = await db.Windows.AsNoTracking().Where(x => x.DoctorId == doctor && x.Available && x.EndsAt > clock.UtcNow).OrderBy(x => x.StartsAt).Take(100).ToListAsync(ct);
         var tomorrow = clock.Local(clock.UtcNow).Date.AddDays(1);
-        return View(new WindowForm { StartsAt = tomorrow.AddHours(8), EndsAt = tomorrow.AddHours(16) });
+        return View(new WindowForm { StartsAt = tomorrow, EndsAt = tomorrow.AddMinutes(1440 / options.Value.DefaultSlotMinutes * options.Value.DefaultSlotMinutes), SlotMinutes = options.Value.DefaultSlotMinutes });
     }
     [HttpPost]
     public async Task<IActionResult> Create(WindowForm input, CancellationToken ct)

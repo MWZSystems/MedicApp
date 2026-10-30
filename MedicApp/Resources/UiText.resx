@@ -437,4 +437,25 @@
   <data name="InvalidReservation" xml:space="preserve">
     <value>Selecciona una fecha y una hora disponibles antes de confirmar.</value>
   </data>
+  <data name="Configuration" xml:space="preserve"><value>Configuración</value></data>
+  <data name="ConfigurationHelp" xml:space="preserve"><value>Ajusta las reglas generales de MedicApp. Los cambios se aplican a las nuevas reservas, sin modificar las citas existentes.</value></data>
+  <data name="AppointmentSettings" xml:space="preserve"><value>Agenda y horario de atención</value></data>
+  <data name="BookingHorizonDays" xml:space="preserve"><value>Días disponibles para agendar</value></data>
+  <data name="Open24Hours" xml:space="preserve"><value>Atención las 24 horas, todos los días</value></data>
+  <data name="OpeningTime" xml:space="preserve"><value>Hora de apertura</value></data>
+  <data name="ClosingTime" xml:space="preserve"><value>Hora de cierre</value></data>
+  <data name="DefaultSlotMinutes" xml:space="preserve"><value>Duración predeterminada de una cita (minutos)</value></data>
+  <data name="HorizonHelp" xml:space="preserve"><value>Entre 1 y 365 días a partir del momento actual. El empleado solo verá horarios con un doctor disponible.</value></data>
+  <data name="ServiceHoursHelp" xml:space="preserve"><value>Estas horas se usan al desactivar la atención de 24 horas. Un cierre anterior a la apertura indica un turno que termina al día siguiente.</value></data>
+  <data name="DurationHelp" xml:space="preserve"><value>Entre 5 y 120 minutos. Se usa al crear nuevas disponibilidades; las existentes conservan su duración.</value></data>
+  <data name="ConfigurationSaved" xml:space="preserve"><value>Configuración guardada. Las nuevas reservas utilizarán estas reglas.</value></data>
+  <data name="InvalidHours" xml:space="preserve"><value>Revisa el rango de días, las horas de atención y la duración.</value></data>
+  <data name="OutsideServiceHours" xml:space="preserve"><value>La cita queda fuera del horario de atención configurado.</value></data>
+  <data name="DemoData" xml:space="preserve"><value>Datos de demostración</value></data>
+  <data name="DemoHelp" xml:space="preserve"><value>Un doctor, tres empleados y citas ficticias, identificados con MEDIC-DEMO-. Se pueden generar una sola vez y retirar posteriormente por sus identificadores registrados en auditoría.</value></data>
+  <data name="DemoIsolation" xml:space="preserve"><value>DEMO: calendario de solo lectura. Estos ejemplos no aparecen en la agenda real, no crean cuentas de acceso ni generan incapacidades o eventos laborales. Las personas ficticias existen en el catálogo compartido y están identificadas como DEMO.</value></data>
+  <data name="ViewDemo" xml:space="preserve"><value>Ver calendario DEMO</value></data>
+  <data name="GenerateDemo" xml:space="preserve"><value>Generar datos DEMO</value></data>
+  <data name="DemoCreated" xml:space="preserve"><value>Datos DEMO disponibles. Si ya existían, se conservaron sin duplicarlos.</value></data>
+  <data name="DemoLeaveDisabled" xml:space="preserve"><value>Los datos DEMO no pueden generar incapacidades ni eventos laborales.</value></data>
 </root>

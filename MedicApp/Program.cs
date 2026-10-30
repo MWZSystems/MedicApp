@@ -5,18 +5,23 @@ using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
 using Serilog;
 using Trainify.Data;
 using Trainify.Domain;
 using Trainify.Services;
 
-var builder = WebApplication.CreateBuilder(args.Where(x => x != "--grant-admin").ToArray());
+var builder = WebApplication.CreateBuilder(args.Where(x => x != "--grant-admin" && x != "--create-demo").ToArray());
+builder.Configuration.AddJsonFile("config/medical.defaults.json", optional: false, reloadOnChange: true);
 builder.Configuration.AddUserSecrets<Program>(optional: true).AddEnvironmentVariables();
 var connection = builder.Configuration.GetConnectionString("Workforce");
 var dataDirectory = Path.GetFullPath(builder.Configuration["Medical:DataDirectory"] ?? "App_Data", builder.Environment.ContentRootPath);
 if (dataDirectory.StartsWith(Path.Combine(builder.Environment.ContentRootPath, "wwwroot"), StringComparison.OrdinalIgnoreCase))
 { throw new InvalidOperationException("DataDirectory must be outside wwwroot."); }
-builder.Services.AddOptions<MedicalOptions>().BindConfiguration("Medical").ValidateDataAnnotations().Validate(x => TimeZoneInfo.TryFindSystemTimeZoneById(x.TimeZoneId, out _), "Invalid timezone").ValidateOnStart();
+builder.Services.AddScoped<IOptions<MedicalOptions>>(services => services.GetRequiredService<IOptionsSnapshot<MedicalOptions>>());
+builder.Services.AddScoped<ApplicationConfiguration>();
+builder.Services.AddScoped<DemoDataService>();
+builder.Services.AddOptions<MedicalOptions>().BindConfiguration("Medical").PostConfigure<IWebHostEnvironment>(MedicalConfigurationLoader.Apply).ValidateDataAnnotations().Validate(x => TimeZoneInfo.TryFindSystemTimeZoneById(x.TimeZoneId, out _), "Invalid timezone").ValidateOnStart();
 builder.Services.AddSingleton(TimeProvider.System);
 builder.Services.AddScoped<MedicalClock>();
 builder.Services.AddHttpContextAccessor();
@@ -94,6 +99,17 @@ if (args.Contains("--grant-admin"))
     medical.Audit.Add(new() { EntityType = "AccessProfile", EntityId = profile.Id, Operation = "Bootstrap", UpdatedById = user.Id });
     await medical.SaveChangesAsync();
     await tx.CommitAsync();
+    return;
+}
+if (args.Contains("--create-demo"))
+{
+    using var scope = app.Services.CreateScope();
+    var shared = scope.ServiceProvider.GetRequiredService<TrainifyDbContext>();
+    var name = builder.Configuration["Bootstrap:UserName"] ?? throw new InvalidOperationException("Configure Bootstrap:UserName.");
+    var normalizedDemoName = name.ToUpperInvariant();
+    var userId = await shared.Users.Where(x => x.NormalizedUserName == normalizedDemoName && x.Active && x.Person.Active).Select(x => x.Id).SingleAsync();
+    var result = await scope.ServiceProvider.GetRequiredService<DemoDataService>().CreateAsync(userId, CancellationToken.None);
+    Console.WriteLine($"DEMO: {result}");
     return;
 }
 app.UseExceptionHandler();

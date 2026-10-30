@@ -1,5 +1,17 @@
 # Changelog
 
+## [1.2.0] - 2026-10-30
+
+### Agregado
+- Administración de configuración persistente: rango de días, atención de 24 horas por defecto, turnos diurnos/nocturnos y duración sugerida de nuevas citas.
+- Archivo config/medical.defaults.json y override protegido en App_Data/Configuration/medical.json, validación y auditoría.
+- Generador idempotente de cuatro personas DEMO, un doctor, once ventanas y hasta 33 citas; calendario administrativo independiente.
+
+### Seguridad
+- Horario validado al consultar y reservar; permisos de administración y protección antiforgery.
+- Identificadores DEMO registrados para su retiro posterior. Sin cuentas nuevas, incapacidades, eventos laborales ni migraciones SQL.
+- Exclusión del doctor DEMO de las reservas reales. Las personas DEMO se identifican en el catálogo compartido.
+
 ## [1.1.0] - 2026-10-30
 
 ### Agregado

@@ -1,0 +1,6 @@
+@{ViewData["Title"] = T["DemoData"];}
+@section Styles {<link rel="stylesheet" href="~/css/calendar.css" asp-append-version="true"/>}
+<div class="page-heading"><div><h1><medic-icon name="calendar"/>@T["DemoData"]</h1><p>@T["DemoHelp"]</p></div><a class="btn btn-outline-secondary" asp-action="Index"><medic-icon name="settings"/>@T["Configuration"]</a></div>
+<div class="alert alert-info">@T["DemoIsolation"]</div>
+<div class="card p-3"><div id="demo-calendar" data-events-url="@Url.Action("DemoEvents")" data-load-error="@T["CalendarRequestError"]"></div></div>
+@section Scripts {<script src="~/lib/fullcalendar/index.global.min.js"></script><script src="~/lib/fullcalendar/locales-all.global.min.js"></script><script src="~/js/demo-calendar.js" asp-append-version="true"></script>}

@@ -17,7 +17,7 @@
 <a class="nav-link" asp-controller="Home" asp-action="Index"><medic-icon name="home"/>@T["Home"]</a><a class="nav-link" asp-controller="Appointments" asp-action="Index"><medic-icon name="calendar"/>@T["Appointments"]</a><a class="nav-link" asp-controller="Leaves" asp-action="Index"><medic-icon name="heart"/>@T["Leaves"]</a>
 @if((await Authorization.AuthorizeAsync(User,"Doctor")).Succeeded){<a class="nav-link" asp-controller="Agenda" asp-action="Index"><medic-icon name="clock"/>@T["Agenda"]</a>}
 @if((await Authorization.AuthorizeAsync(User,"Doctors")).Succeeded){<a class="nav-link" asp-controller="Admin" asp-action="Doctors"><medic-icon name="users"/>@T["Doctors"]</a>}
-@if((await Authorization.AuthorizeAsync(User,"Access")).Succeeded){<a class="nav-link" asp-controller="Admin" asp-action="Access"><medic-icon name="shield"/>@T["Access"]</a><a class="nav-link" asp-controller="Admin" asp-action="Audit"><medic-icon name="history"/>@T["Audit"]</a>}
+@if((await Authorization.AuthorizeAsync(User,"Access")).Succeeded){<a class="nav-link" asp-controller="Admin" asp-action="Access"><medic-icon name="shield"/>@T["Access"]</a><a class="nav-link" asp-controller="Configuration" asp-action="Index"><medic-icon name="settings"/>@T["Configuration"]</a><a class="nav-link" asp-controller="Admin" asp-action="Audit"><medic-icon name="history"/>@T["Audit"]</a>}
 <a class="nav-link" asp-controller="Account" asp-action="ChangePassword"><medic-icon name="key"/>@T["ChangePassword"]</a></div></div></nav>}
 </div></header>
 <main class="container-fluid app-width py-4" id="main-content">

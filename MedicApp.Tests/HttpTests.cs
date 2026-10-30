@@ -11,7 +11,7 @@ public partial class HttpTests(SqlFixture fixture)
     private WebApplicationFactory<Program> Factory() => new WebApplicationFactory<Program>().WithWebHostBuilder(builder =>
     {
         builder.UseEnvironment("Testing");
-        builder.ConfigureAppConfiguration((_, config) => config.AddInMemoryCollection(new Dictionary<string, string?> { ["ConnectionStrings:Workforce"] = fixture.Connection, ["Medical:DataDirectory"] = Path.Combine(AppContext.BaseDirectory, "App_Data", "TestHost"), ["AllowedHosts"] = "localhost" }));
+        builder.ConfigureAppConfiguration((_, config) => config.AddInMemoryCollection(new Dictionary<string, string?> { ["ConnectionStrings:Workforce"] = fixture.Connection, ["Medical:DataDirectory"] = Path.Combine(AppContext.BaseDirectory, "App_Data", "TestHost", Guid.NewGuid().ToString("N")), ["AllowedHosts"] = "localhost" }));
     });
     private static HttpClient Client(WebApplicationFactory<Program> factory) => factory.CreateClient(new WebApplicationFactoryClientOptions { BaseAddress = new Uri("https://localhost"), AllowAutoRedirect = false });
     private async Task LoginAsync(HttpClient client, string name)
@@ -131,6 +131,46 @@ public partial class HttpTests(SqlFixture fixture)
         await LoginAsync(client, "employee");
         using var response = await client.GetAsync("/Appointments/Events?from=2026-01-01&to=2026-12-31");
         Assert.Equal(HttpStatusCode.UnprocessableEntity, response.StatusCode);
+    }
+    [Fact]
+    public async Task Configuration_AdminCanSaveAndNextRequestUsesPersistentRules()
+    {
+        await using var factory = Factory(); using var client = Client(factory);
+        await LoginAsync(client, "doctor");
+        var html = await client.GetStringAsync("/Configuration");
+        Assert.Contains("name=\"Open24Hours\"", html);
+        var token = TokenRegex().Match(html).Groups[1].Value;
+        var revision = Regex.Match(html, "name=\"Revision\"[^>]*value=\"([^\"]+)\"").Groups[1].Value;
+        Assert.NotEmpty(revision);
+        using var saved = await client.PostAsync("/Configuration", new FormUrlEncodedContent(new Dictionary<string, string>
+        {
+            ["BookingHorizonDays"] = "21",
+            ["Open24Hours"] = "true",
+            ["OpeningTime"] = "08:00",
+            ["ClosingTime"] = "18:00",
+            ["DefaultSlotMinutes"] = "20",
+            ["Revision"] = revision,
+            ["__RequestVerificationToken"] = token
+        }));
+        Assert.Equal(HttpStatusCode.Redirect, saved.StatusCode);
+        html = await client.GetStringAsync("/Configuration");
+        Assert.Matches("name=\"BookingHorizonDays\"[^>]*value=\"21\"", html);
+        using var csrf = await client.PostAsync("/Configuration", new FormUrlEncodedContent(new Dictionary<string, string>()));
+        Assert.Equal(HttpStatusCode.BadRequest, csrf.StatusCode);
+        using var demo = await client.GetAsync("/Configuration/Demo");
+        Assert.Equal(HttpStatusCode.OK, demo.StatusCode);
+    }
+    [Fact]
+    public async Task Configuration_EmployeeCannotReadSettingsOrDemo()
+    {
+        await using var factory = Factory(); using var client = Client(factory);
+        await LoginAsync(client, "employee");
+        foreach (var path in new[] { "/Configuration", "/Configuration/Demo", "/Configuration/DemoEvents?from=2026-10-01&to=2026-11-01" })
+        {
+            using var response = await client.GetAsync(path);
+            Assert.Equal(HttpStatusCode.Redirect, response.StatusCode);
+            Assert.Contains("Denied", response.Headers.Location?.ToString());
+        }
     }
     [GeneratedRegex(@"name=\x22__RequestVerificationToken\x22[^>]*value=\x22([^\x22]+)\x22")]
     private static partial Regex TokenRegex();

@@ -51,6 +51,9 @@ public class MedicalService(MedicDbContext db, TrainifyDbContext shared, Medical
                              orderby d.Id, w.Id
                              select new { Window = w, d.PersonId }).Take(2001).ToListAsync(ct);
         if (windows.Count > 2000) { throw new MedicalRuleException("UnavailableSlot"); }
+        var demoPeople = await shared.People.AsNoTracking().Where(x => x.EmployeeNumber.StartsWith(DemoDataService.Prefix)).Select(x => x.Id).ToListAsync(ct);
+        var isDemo = demoPeople.Contains(access.PersonId);
+        windows = windows.Where(x => demoPeople.Contains(x.PersonId) == isDemo).ToList();
         var personIds = windows.Select(x => x.PersonId).Distinct().ToArray();
         var active = await shared.People.AsNoTracking().Where(x => personIds.Contains(x.Id) && x.Active).Select(x => x.Id).ToListAsync(ct);
         var doctorIds = windows.Select(x => x.Window.DoctorId).Distinct().ToArray();
@@ -85,6 +88,9 @@ public class MedicalService(MedicDbContext db, TrainifyDbContext shared, Medical
         var start = clock.ToUtc(localStart);
         var end = start.AddMinutes(window.SlotMinutes);
         MedicalRules.ValidateBooking(start, end, clock.UtcNow, options.Value.BookingHorizonDays, window);
+        if (!options.Value.Allows(localStart, clock.Local(end))) { throw new MedicalRuleException("OutsideServiceHours"); }
+        var demoPeople = await shared.People.AsNoTracking().Where(x => x.EmployeeNumber.StartsWith(DemoDataService.Prefix)).Select(x => x.Id).ToListAsync(ct);
+        if (demoPeople.Contains(access.PersonId) != demoPeople.Contains(doctorPerson)) { throw new MedicalRuleException("UnavailableSlot"); }
         var personId = access.PersonId;
         if (await db.Appointments.AnyAsync(x => x.Available && x.Status == AppointmentStatus.Scheduled && (x.DoctorId == window.DoctorId || x.PersonId == personId) && x.StartsAt < end && x.EndsAt > start, ct))
         { throw new MedicalRuleException("Overlap"); }
@@ -117,6 +123,7 @@ public class MedicalService(MedicDbContext db, TrainifyDbContext shared, Medical
     {
         var doctor = await access.DoctorIdAsync(ct) ?? throw new MedicalRuleException("Forbidden");
         if (personId == access.PersonId) { throw new MedicalRuleException("Forbidden"); }
+        if (await shared.People.AsNoTracking().AnyAsync(x => (x.Id == personId || x.Id == access.PersonId) && x.EmployeeNumber.StartsWith(DemoDataService.Prefix), ct)) { throw new MedicalRuleException("DemoLeaveDisabled"); }
         if (!await shared.People.AsNoTracking().AnyAsync(x => x.Id == personId && x.Active, ct)) { throw new MedicalRuleException("NotFound"); }
         var start = clock.ToUtc(localStart);
         var end = clock.ToUtc(localEnd);

@@ -28,6 +28,9 @@ public class CalendarReader(MedicDbContext db, TrainifyDbContext shared, Medical
                              orderby d.Id, w.Id
                              select new { Window = w, d.PersonId }).Take(2001).ToListAsync(ct);
         if (windows.Count > 2000) { throw new MedicalRuleException("InvalidRange"); }
+        var demoPeople = await shared.People.AsNoTracking().Where(x => x.EmployeeNumber.StartsWith(DemoDataService.Prefix)).Select(x => x.Id).ToListAsync(ct);
+        var isDemo = demoPeople.Contains(access.PersonId);
+        windows = windows.Where(x => demoPeople.Contains(x.PersonId) == isDemo).ToList();
         var doctorPeople = windows.Select(x => x.PersonId).Distinct().ToArray();
         var activePeople = await shared.People.AsNoTracking().Where(x => doctorPeople.Contains(x.Id) && x.Active).Select(x => x.Id).ToListAsync(ct);
         windows = windows.Where(x => activePeople.Contains(x.PersonId)).ToList();
@@ -48,10 +51,10 @@ public class CalendarReader(MedicDbContext db, TrainifyDbContext shared, Medical
             }
             for (; at < end && at <= horizon && at.Add(step) <= window.EndsAt; at = at.Add(step))
             {
-                if (at <= now || result.ContainsKey(at)) { continue; }
+                if (at <= now || result.ContainsKey(at) || !options.Value.Allows(clock.Local(at), clock.Local(at.Add(step)))) { continue; }
                 if (busy.Any(x => (x.DoctorId == window.DoctorId || x.PersonId == access.PersonId) && MedicalRules.Overlaps(at, at.Add(step), x.StartsAt, x.EndsAt))) { continue; }
                 result.Add(at, new CalendarSlot(clock.Local(at), window.SlotMinutes));
-                if (result.Count > 10000) { throw new MedicalRuleException("InvalidRange"); }
+                if (result.Count > 30000) { throw new MedicalRuleException("InvalidRange"); }
             }
         }
         return result.Values.ToList();
