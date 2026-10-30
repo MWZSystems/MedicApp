@@ -1,5 +1,18 @@
 # Changelog
 
+## [1.5.0] - 2026-10-30
+
+### Agregado
+- Botón Agregar incapacidad para doctores y administración médica; el administrador asigna un doctor responsable, sin autorización clínica automática.
+- Carga de PDF/JPG/PNG en cada incapacidad, consulta/descarga protegida y expediente documental por nombre o número de control.
+- Almacenamiento cifrado fuera de wwwroot, metadatos y SHA-256 en medic.SY_LeaveDocuments; auditoría de carga y descarga.
+- Validación de extensiones, firmas y límites; idempotencia, bloqueo por incapacidad y compensación de archivos si falla SQL.
+- Migración aditiva LeaveDocumentEvidence y actualizador de esquema explícito sin generación de datos.
+
+### Seguridad
+- Lectura para titular, doctor responsable y administradores médicos; cargas para responsables y administración, sin URLs públicas ni borrado desde la interfaz.
+- Hasta 10 MB por archivo, 5 archivos/20 MB por envío y 20 documentos por incapacidad inicialmente. Configuración tipada Documents.
+
 ## [1.4.1] - 2026-10-30
 
 ### Corregido

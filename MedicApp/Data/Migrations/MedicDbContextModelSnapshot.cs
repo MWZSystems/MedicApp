@@ -451,6 +451,96 @@ namespace MedicApp.Data.Migrations
                         });
                 });
 
+            modelBuilder.Entity("MedicApp.Models.Entities.LeaveDocument", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasColumnName("PKLeaveDocument");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<bool>("Available")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(true);
+
+                    b.Property<long>("ByteCount")
+                        .HasColumnType("bigint");
+
+                    b.Property<string>("ContentType")
+                        .IsRequired()
+                        .HasMaxLength(80)
+                        .IsUnicode(false)
+                        .HasColumnType("varchar(80)");
+
+                    b.Property<DateTime>("LastUpdated")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2(0)")
+                        .HasDefaultValueSql("SYSUTCDATETIME()");
+
+                    b.Property<int>("MedicalLeaveId")
+                        .HasColumnType("int")
+                        .HasColumnName("FKMedicalLeave");
+
+                    b.Property<int>("Ordinal")
+                        .HasColumnType("int");
+
+                    b.Property<string>("OriginalName")
+                        .IsRequired()
+                        .HasMaxLength(180)
+                        .HasColumnType("nvarchar(180)");
+
+                    b.Property<Guid>("RequestKey")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<byte[]>("RowVersion")
+                        .IsConcurrencyToken()
+                        .IsRequired()
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("rowversion");
+
+                    b.Property<string>("Sha256")
+                        .IsRequired()
+                        .HasMaxLength(64)
+                        .IsUnicode(false)
+                        .HasColumnType("varchar(64)");
+
+                    b.Property<string>("StorageKey")
+                        .IsRequired()
+                        .HasMaxLength(32)
+                        .IsUnicode(false)
+                        .HasColumnType("varchar(32)");
+
+                    b.Property<string>("UpdatedById")
+                        .IsRequired()
+                        .HasMaxLength(450)
+                        .HasColumnType("nvarchar(450)")
+                        .HasColumnName("FKUserUpdater");
+
+                    b.HasKey("Id")
+                        .HasName("PK_SY_LeaveDocuments");
+
+                    SqlServerKeyBuilderExtensions.IsClustered(b.HasKey("Id"));
+
+                    b.HasIndex("StorageKey")
+                        .IsUnique();
+
+                    b.HasIndex("UpdatedById");
+
+                    b.HasIndex("MedicalLeaveId", "LastUpdated");
+
+                    b.HasIndex("MedicalLeaveId", "RequestKey", "Ordinal")
+                        .IsUnique();
+
+                    b.ToTable("SY_LeaveDocuments", "medic", t =>
+                        {
+                            t.HasCheckConstraint("CK_LeaveDocuments_Ordinal", "[Ordinal] BETWEEN 0 AND 4");
+
+                            t.HasCheckConstraint("CK_LeaveDocuments_Size", "[ByteCount] BETWEEN 1 AND 10485760");
+                        });
+                });
+
             modelBuilder.Entity("MedicApp.Models.Entities.MedicalLeave", b =>
                 {
                     b.Property<int>("Id")
@@ -633,6 +723,21 @@ namespace MedicApp.Data.Migrations
                     b.HasOne("MedicApp.Data.SharedPerson", null)
                         .WithMany()
                         .HasForeignKey("PersonId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("MedicApp.Data.SharedUser", null)
+                        .WithMany()
+                        .HasForeignKey("UpdatedById")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("MedicApp.Models.Entities.LeaveDocument", b =>
+                {
+                    b.HasOne("MedicApp.Models.Entities.MedicalLeave", null)
+                        .WithMany()
+                        .HasForeignKey("MedicalLeaveId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 

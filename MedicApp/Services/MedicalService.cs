@@ -112,11 +112,15 @@ public class MedicalService(MedicDbContext db, TrainifyDbContext shared, Medical
         await db.SaveChangesAsync(ct);
         await tx.CommitAsync(ct);
     }
-    public async Task<int> CreateLeaveAsync(int personId, DateTime localStart, DateTime localEnd, string reference, int? appointmentId, CancellationToken ct)
+    public async Task<int> CreateLeaveAsync(int personId, DateTime localStart, DateTime localEnd, string reference, int? appointmentId, CancellationToken ct, int? assignedDoctorId = null)
     {
-        var doctor = await access.DoctorIdAsync(ct) ?? throw new MedicalRuleException("Forbidden");
+        var ownDoctor = await access.DoctorIdAsync(ct);
+        var administrator = await access.CanManageDoctorsAsync(ct) || await access.CanManageAccessAsync(ct);
+        var doctor = ownDoctor ?? (administrator && assignedDoctorId > 0 ? assignedDoctorId.Value : throw new MedicalRuleException("Forbidden"));
+        var doctorPerson = await db.Doctors.AsNoTracking().Where(x => x.Id == doctor && x.Available).Select(x => x.PersonId).SingleOrDefaultAsync(ct);
+        if (!await shared.People.AnyAsync(x => x.Id == doctorPerson && x.Active, ct)) { throw new MedicalRuleException("ResponsibleDoctorRequired"); }
         if (personId == access.PersonId) { throw new MedicalRuleException("Forbidden"); }
-        if (await shared.People.AsNoTracking().AnyAsync(x => (x.Id == personId || x.Id == access.PersonId) && x.EmployeeNumber.StartsWith(DemoDataService.Prefix), ct)) { throw new MedicalRuleException("DemoLeaveDisabled"); }
+        if (await shared.People.AsNoTracking().AnyAsync(x => (x.Id == personId || x.Id == access.PersonId || x.Id == doctorPerson) && x.EmployeeNumber.StartsWith(DemoDataService.Prefix), ct)) { throw new MedicalRuleException("DemoLeaveDisabled"); }
         if (!await shared.People.AsNoTracking().AnyAsync(x => x.Id == personId && x.Active, ct)) { throw new MedicalRuleException("NotFound"); }
         var start = clock.ToUtc(localStart);
         var end = clock.ToUtc(localEnd);

@@ -11,7 +11,7 @@ using Trainify.Data;
 using Trainify.Domain;
 using Trainify.Services;
 
-var builder = WebApplication.CreateBuilder(args.Where(x => x != "--grant-admin" && x != "--create-demo" && x != "--prepare-booking").ToArray());
+var builder = WebApplication.CreateBuilder(args.Where(x => x != "--grant-admin" && x != "--create-demo" && x != "--prepare-booking" && x != "--migrate-medical").ToArray());
 builder.Configuration.AddJsonFile("config/medical.defaults.json", optional: false, reloadOnChange: true);
 builder.Configuration.AddUserSecrets<Program>(optional: true).AddEnvironmentVariables();
 var connection = builder.Configuration.GetConnectionString("Workforce");
@@ -55,18 +55,22 @@ builder.Services.AddScoped<MedicalService>();
 builder.Services.AddScoped<ListReader>();
 builder.Services.AddScoped<CalendarReader>();
 builder.Services.AddScoped<LeaveCalendarReader>();
+builder.Services.AddScoped<LeaveRecordAccess>();
+builder.Services.AddScoped<EvidenceStorage>();
+builder.Services.AddScoped<LeaveEvidenceService>();
+builder.Services.AddOptions<DocumentOptions>().BindConfiguration("Documents").ValidateDataAnnotations().Validate(x => x.MaxBatchSizeMb >= x.MaxFileSizeMb && x.MaxDocumentsPerLeave >= x.MaxFilesPerUpload, "Invalid document limits").ValidateOnStart();
 builder.Services.AddScoped<IAuthorizationHandler, MedicalAuthorizationHandler>();
 builder.Services.AddAuthorization(o =>
 {
     o.FallbackPolicy = new AuthorizationPolicyBuilder().RequireAuthenticatedUser().Build();
-    foreach (var key in (string[])["Doctor", "Doctors", "Access", "Integration"])
+    foreach (var key in (string[])["Doctor", "Doctors", "Access", "Integration", "LeaveEntry"])
     { o.AddPolicy(key, p => p.RequireAuthenticatedUser().AddRequirements(new MedicalRequirement(key))); }
     o.AddPolicy("ClinicalOrAdmin", p => p.RequireAuthenticatedUser().RequireAssertion(async context =>
     {
         var http = context.Resource as HttpContext;
         if (http == null) { return false; }
         var access = http.RequestServices.GetRequiredService<MedicalAccess>();
-        return await access.DoctorIdAsync(http.RequestAborted) != null || await access.CanManageDoctorsAsync(http.RequestAborted);
+        return await access.DoctorIdAsync(http.RequestAborted) != null || await access.CanManageDoctorsAsync(http.RequestAborted) || await access.CanManageAccessAsync(http.RequestAborted);
     }));
 });
 builder.Services.AddLocalization(o => o.ResourcesPath = "Resources");
@@ -112,6 +116,18 @@ if (args.Contains("--create-demo"))
     var userId = await shared.Users.Where(x => x.NormalizedUserName == normalizedDemoName && x.Active && x.Person.Active).Select(x => x.Id).SingleAsync();
     var result = await scope.ServiceProvider.GetRequiredService<DemoDataService>().CreateAsync(userId, CancellationToken.None);
     Console.WriteLine($"DEMO: {result}");
+    return;
+}
+if (args.Contains("--migrate-medical"))
+{
+    using var scope = app.Services.CreateScope();
+    var shared = scope.ServiceProvider.GetRequiredService<TrainifyDbContext>();
+    var medical = scope.ServiceProvider.GetRequiredService<MedicDbContext>();
+    var normalized = (builder.Configuration["Bootstrap:UserName"] ?? throw new InvalidOperationException("Configure Bootstrap:UserName.")).ToUpperInvariant();
+    var actor = await shared.Users.Where(x => x.NormalizedUserName == normalized && x.Active && x.Person.Active).Select(x => x.Id).SingleAsync();
+    if (!await medical.AccessProfiles.AnyAsync(x => x.UserId == actor && x.Available && x.ManageAccess)) { throw new InvalidOperationException("Administration permission required."); }
+    await medical.Database.MigrateAsync();
+    Console.WriteLine("ESQUEMA_MEDICO_ACTUALIZADO: migraciones aplicadas; sin generación de datos ni cambios de configuración.");
     return;
 }
 if (args.Contains("--prepare-booking"))

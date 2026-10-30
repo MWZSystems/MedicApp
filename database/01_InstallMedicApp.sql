@@ -481,3 +481,75 @@ END;
 COMMIT;
 GO
 
+BEGIN TRANSACTION;
+IF NOT EXISTS (
+    SELECT * FROM [medic].[__EFMigrationsHistory]
+    WHERE [MigrationId] = N'20261030175750_LeaveDocumentEvidence'
+)
+BEGIN
+    CREATE TABLE [medic].[SY_LeaveDocuments] (
+        [PKLeaveDocument] int NOT NULL IDENTITY,
+        [FKMedicalLeave] int NOT NULL,
+        [StorageKey] varchar(32) NOT NULL,
+        [OriginalName] nvarchar(180) NOT NULL,
+        [ContentType] varchar(80) NOT NULL,
+        [ByteCount] bigint NOT NULL,
+        [Sha256] varchar(64) NOT NULL,
+        [RequestKey] uniqueidentifier NOT NULL,
+        [Ordinal] int NOT NULL,
+        [Available] bit NOT NULL DEFAULT CAST(1 AS bit),
+        [FKUserUpdater] nvarchar(450) NOT NULL,
+        [LastUpdated] datetime2(0) NOT NULL DEFAULT (SYSUTCDATETIME()),
+        [RowVersion] rowversion NOT NULL,
+        CONSTRAINT [PK_SY_LeaveDocuments] PRIMARY KEY CLUSTERED ([PKLeaveDocument]),
+        CONSTRAINT [CK_LeaveDocuments_Ordinal] CHECK ([Ordinal] BETWEEN 0 AND 4),
+        CONSTRAINT [CK_LeaveDocuments_Size] CHECK ([ByteCount] BETWEEN 1 AND 10485760),
+        CONSTRAINT [FK_SY_LeaveDocuments_SC_Users_FKUserUpdater] FOREIGN KEY ([FKUserUpdater]) REFERENCES [dbo].[SC_Users] ([Id]) ON DELETE NO ACTION,
+        CONSTRAINT [FK_SY_LeaveDocuments_SY_MedicalLeaves_FKMedicalLeave] FOREIGN KEY ([FKMedicalLeave]) REFERENCES [medic].[SY_MedicalLeaves] ([PKMedicalLeave]) ON DELETE NO ACTION
+    );
+END;
+
+IF NOT EXISTS (
+    SELECT * FROM [medic].[__EFMigrationsHistory]
+    WHERE [MigrationId] = N'20261030175750_LeaveDocumentEvidence'
+)
+BEGIN
+    CREATE INDEX [IX_SY_LeaveDocuments_FKMedicalLeave_LastUpdated] ON [medic].[SY_LeaveDocuments] ([FKMedicalLeave], [LastUpdated]);
+END;
+
+IF NOT EXISTS (
+    SELECT * FROM [medic].[__EFMigrationsHistory]
+    WHERE [MigrationId] = N'20261030175750_LeaveDocumentEvidence'
+)
+BEGIN
+    CREATE UNIQUE INDEX [IX_SY_LeaveDocuments_FKMedicalLeave_RequestKey_Ordinal] ON [medic].[SY_LeaveDocuments] ([FKMedicalLeave], [RequestKey], [Ordinal]);
+END;
+
+IF NOT EXISTS (
+    SELECT * FROM [medic].[__EFMigrationsHistory]
+    WHERE [MigrationId] = N'20261030175750_LeaveDocumentEvidence'
+)
+BEGIN
+    CREATE INDEX [IX_SY_LeaveDocuments_FKUserUpdater] ON [medic].[SY_LeaveDocuments] ([FKUserUpdater]);
+END;
+
+IF NOT EXISTS (
+    SELECT * FROM [medic].[__EFMigrationsHistory]
+    WHERE [MigrationId] = N'20261030175750_LeaveDocumentEvidence'
+)
+BEGIN
+    CREATE UNIQUE INDEX [IX_SY_LeaveDocuments_StorageKey] ON [medic].[SY_LeaveDocuments] ([StorageKey]);
+END;
+
+IF NOT EXISTS (
+    SELECT * FROM [medic].[__EFMigrationsHistory]
+    WHERE [MigrationId] = N'20261030175750_LeaveDocumentEvidence'
+)
+BEGIN
+    INSERT INTO [medic].[__EFMigrationsHistory] ([MigrationId], [ProductVersion])
+    VALUES (N'20261030175750_LeaveDocumentEvidence', N'10.0.14');
+END;
+
+COMMIT;
+GO
+

@@ -10,6 +10,7 @@ public class MedicDbContext(DbContextOptions<MedicDbContext> options) : DbContex
     public DbSet<MedicalLeave> Leaves => Set<MedicalLeave>();
     public DbSet<AccessProfile> AccessProfiles => Set<AccessProfile>();
     public DbSet<AuditEntry> Audit => Set<AuditEntry>();
+    public DbSet<LeaveDocument> LeaveDocuments => Set<LeaveDocument>();
     public DbSet<LaborEvent> LaborEvents => Set<LaborEvent>();
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

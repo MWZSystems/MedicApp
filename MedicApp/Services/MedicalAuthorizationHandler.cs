@@ -10,6 +10,7 @@ public class MedicalAuthorizationHandler(MedicalAccess access, IHttpContextAcces
         var ct = accessor.HttpContext?.RequestAborted ?? CancellationToken.None;
         var allowed = requirement.Key switch
         {
+            "LeaveEntry" => await access.DoctorIdAsync(ct) != null || await access.CanManageDoctorsAsync(ct) || await access.CanManageAccessAsync(ct),
             "Doctor" => await access.DoctorIdAsync(ct) != null,
             "Doctors" => await access.CanManageDoctorsAsync(ct),
             "Access" => await access.CanManageAccessAsync(ct),

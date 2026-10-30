@@ -483,6 +483,33 @@
   <data name="LeaveRegistryDoctorHelp" xml:space="preserve"><value>Registra las incapacidades y administra tus borradores, autorizaciones y cancelaciones. Los periodos autorizados se muestran en el calendario de consulta.</value></data>
   <data name="LeaveRegistryReaderHelp" xml:space="preserve"><value>Consulta el registro de tus incapacidades y sus estados. Puedes abrir los periodos autorizados en el calendario.</value></data>
   <data name="BackToLeaveRegistry" xml:space="preserve"><value>Volver al registro</value></data>
-  <data name="LeaveEntryHelp" xml:space="preserve"><value>Selecciona la persona, captura el folio y las fechas de inicio y término. Al guardar se crea un borrador; autorízalo en el registro para que aparezca en el calendario de consulta.</value></data>
-  <data name="LeaveDraftSaved" xml:space="preserve"><value>Incapacidad registrada en borrador. Autorízala desde Acciones para mostrarla en el calendario de consulta.</value></data>
+  <data name="LeaveEntryHelp" xml:space="preserve"><value>Selecciona la persona, captura el folio y las fechas de inicio y término. Se guardará en borrador para adjuntar evidencias; el doctor responsable lo autoriza desde Registro para que aparezca en el calendario de consulta.</value></data>
+  <data name="LeaveDraftSaved" xml:space="preserve"><value>Incapacidad registrada en borrador. Adjunta sus evidencias; el doctor responsable podrá autorizarla desde Registro para mostrarla en el calendario.</value></data>
+  <data name="AddLeave" xml:space="preserve"><value>Agregar incapacidad</value></data>
+  <data name="ResponsibleDoctor" xml:space="preserve"><value>Doctor responsable</value></data>
+  <data name="ResponsibleDoctorRequired" xml:space="preserve"><value>Selecciona un doctor responsable activo en el catálogo.</value></data>
+  <data name="ResponsibleDoctorHelp" xml:space="preserve"><value>Busca al doctor por nombre o número de control. La autorización corresponde al doctor responsable.</value></data>
+  <data name="LeaveEvidence" xml:space="preserve"><value>Evidencias de la incapacidad</value></data>
+  <data name="EvidenceCount" xml:space="preserve"><value>Documentos ({0})</value></data>
+  <data name="PatientFile" xml:space="preserve"><value>Expediente documental</value></data>
+  <data name="PatientFileHelp" xml:space="preserve"><value>Consulta las incapacidades y los documentos asociados de cada persona.</value></data>
+  <data name="ShowPatientFile" xml:space="preserve"><value>Ver expediente</value></data>
+  <data name="ChooseRecordPerson" xml:space="preserve"><value>Busca por nombre o número de control y selecciona una persona para abrir su expediente documental.</value></data>
+  <data name="EvidenceAfterCapture" xml:space="preserve"><value>Al guardar podrás adjuntar los documentos del IMSS y otras evidencias de esta incapacidad.</value></data>
+  <data name="AttachEvidence" xml:space="preserve"><value>Adjuntar evidencias</value></data>
+  <data name="EvidenceFiles" xml:space="preserve"><value>Documentos de evidencia</value></data>
+  <data name="EvidenceUploadHelp" xml:space="preserve"><value>PDF, JPG o PNG. Máximo {0} MB por archivo, {1} archivos y {2} MB por envío. Hasta {3} documentos por incapacidad.</value></data>
+  <data name="SaveEvidence" xml:space="preserve"><value>Guardar documentos</value></data>
+  <data name="ConsultEvidence" xml:space="preserve"><value>Consultar / descargar</value></data>
+  <data name="NoEvidence" xml:space="preserve"><value>Esta incapacidad aún no tiene documentos adjuntos.</value></data>
+  <data name="NoRecordLeaves" xml:space="preserve"><value>No hay incapacidades disponibles en este expediente para tu acceso.</value></data>
+  <data name="DocumentName" xml:space="preserve"><value>Documento</value></data>
+  <data name="AddedAt" xml:space="preserve"><value>Fecha de incorporación</value></data>
+  <data name="DocumentSize" xml:space="preserve"><value>Tamaño</value></data>
+  <data name="EvidenceSaved" xml:space="preserve"><value>Documentos guardados en el expediente de la incapacidad.</value></data>
+  <data name="EvidenceInvalid" xml:space="preserve"><value>El archivo no es un PDF, JPG o PNG válido, o su nombre no es válido.</value></data>
+  <data name="EvidenceLimits" xml:space="preserve"><value>Revisa el tamaño y número de archivos permitidos en el formulario.</value></data>
+  <data name="EvidenceUnavailable" xml:space="preserve"><value>No fue posible recuperar el documento. Contacta a la administración para revisar su respaldo.</value></data>
+<data name="LeaveRegistryAdminHelp" xml:space="preserve"><value>Agrega la incapacidad y asigna al doctor responsable. Adjunta los comprobantes y consulta el expediente; el doctor responsable realiza la autorización o cancelación.</value></data>
+<data name="ConfigureDoctors" xml:space="preserve"><value>Configurar doctores responsables</value></data>
 </root>

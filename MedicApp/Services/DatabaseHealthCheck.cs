@@ -12,6 +12,7 @@ public class DatabaseHealthCheck(MedicDbContext db) : IHealthCheck
             var accessible = await db.Database.CanConnectAsync(cancellationToken);
             if (!accessible) { return HealthCheckResult.Unhealthy(); }
             await db.Doctors.AsNoTracking().Select(x => x.Id).Take(1).ToListAsync(cancellationToken);
+            await db.LeaveDocuments.AsNoTracking().Select(x => x.Id).Take(1).ToListAsync(cancellationToken);
             return HealthCheckResult.Healthy();
         }
         catch (Microsoft.Data.SqlClient.SqlException) { return HealthCheckResult.Unhealthy(); }

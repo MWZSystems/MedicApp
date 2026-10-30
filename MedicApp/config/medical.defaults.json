@@ -6,5 +6,11 @@
     "ClosingTime": "18:00",
     "DefaultSlotMinutes": 30,
     "DemoBookingEnabled": false
+  },
+  "Documents": {
+    "MaxFileSizeMb": 10,
+    "MaxBatchSizeMb": 20,
+    "MaxFilesPerUpload": 5,
+    "MaxDocumentsPerLeave": 20
   }
 }

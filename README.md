@@ -16,6 +16,10 @@ dotnet test MedicApp.slnx -c Release --no-restore
 
 Configurar `ConnectionStrings:Workforce` fuera del repositorio; la base definitiva confirmada es sql1002 / db_acaa35_trainify. Revisar [instalación](docs/instalacion.md) para ejecutar los scripts, habilitar el primer administrador y levantar HTTPS. No hay contraseña predeterminada ni migración automática al inicio.
 
+## Evidencias y expediente documental 1.5.0
+
+Registro incluye **Agregar incapacidad** para doctores y administración médica. Tras capturar se adjuntan documentos PDF/JPG/PNG desde la incapacidad; cada fila permite consultar sus evidencias y el expediente documental de la persona. Los archivos se cifran y conservan fuera de wwwroot; SQL almacena solo metadatos. El titular, el doctor responsable y los administradores médicos tienen acceso a la consulta. Solo el doctor responsable puede autorizar o cancelar el periodo. Ver [evidencias y expediente](docs/evidencias.md) para permisos, límites, migración y respaldos.
+
 ## Registro y consulta de incapacidades 1.4.1
 
 El menú **Incapacidades** tiene dos opciones: **Registro de incapacidades**, donde el doctor captura y administra las incapacidades como antes, y **Calendario de incapacidades**, para consultar sus periodos por persona. El borrador guardado se autoriza desde Registro antes de aparecer en el calendario; se conservan permisos, acciones y búsqueda.
@@ -48,7 +52,7 @@ Incluye un calendario DEMO administrativo y generación explícita de registros 
 
 ## Base de datos
 
-`database/01_InstallMedicApp.sql` es el script idempotente generado desde las migraciones EF de MedicDbContext, con preflight. Crea siete tablas en medic: CT_Doctors, SY_AvailabilityWindows, SY_Appointments, SY_MedicalLeaves, SC_AccessProfiles, AR_AuditEntries e IX_LaborEvents; además, dos vistas y su historial de migraciones. No crea ni altera tablas de WFMCore/Trainify.
+`database/01_InstallMedicApp.sql` es el script idempotente generado desde las migraciones EF de MedicDbContext, con preflight. Crea ocho tablas en medic: CT_Doctors, SY_AvailabilityWindows, SY_Appointments, SY_MedicalLeaves, SC_AccessProfiles, AR_AuditEntries, IX_LaborEvents y SY_LeaveDocuments; además, dos vistas y su historial de migraciones. No crea ni altera tablas de WFMCore/Trainify.
 
 ## Alcance pendiente de despliegue
 
