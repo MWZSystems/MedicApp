@@ -45,7 +45,7 @@ public class LeavesController(MedicDbContext db, MedicalAccess access, MedicalSe
     {
         if (!ModelState.IsValid) { return View(input); }
         await service.CreateLeaveAsync(input.PersonId, input.StartsAt, input.EndsAt, input.Reference, input.AppointmentId, ct);
-        TempData["Success"] = "Saved";
+        TempData["Success"] = "LeaveDraftSaved";
         return RedirectToAction(nameof(Index));
     }
     [Authorize(Policy = "Doctor"), HttpPost]

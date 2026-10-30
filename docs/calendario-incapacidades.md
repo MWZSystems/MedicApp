@@ -1,6 +1,8 @@
 # Calendario de incapacidades 1.4.0
 
-El menú **Incapacidades** abre `/Leaves/Calendar`. El listado existente sigue disponible en **Ver lista** y `/Leaves`; conserva las acciones del doctor para emitir, autorizar y cancelar incapacidades.
+Desde la versión 1.4.1, el menú **Incapacidades** ofrece dos opciones explícitas: **Registro de incapacidades** (`/Leaves`) y **Calendario de incapacidades** (`/Leaves/Calendar`). Ambas pantallas y el formulario de captura tienen navegación entre las dos secciones.
+
+El Registro conserva el flujo del doctor: Nueva incapacidad, captura, borrador, autorización y cancelación. Al guardar una captura se vuelve al Registro con un mensaje que indica cómo autorizarla; cada periodo autorizado tiene un enlace a su calendario por persona. El calendario es de consulta y conserva la búsqueda por nombre o número de control. No se aprueban registros automáticamente. Solo el doctor correspondiente puede autorizar o cancelar; el empleado consulta sus propios registros y calendario.
 
 ## Búsqueda y permisos
 

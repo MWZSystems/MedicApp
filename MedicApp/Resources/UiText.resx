@@ -478,4 +478,11 @@
   <data name="LeaveCalendarDaysHelp" xml:space="preserve"><value>La barra marca los días cubiertos. Abre un periodo para ver sus horas exactas de inicio y término.</value></data>
   <data name="LeaveExactEnd" xml:space="preserve"><value>Fin de la incapacidad (hora exacta)</value></data>
   <data name="LeaveCoveredThrough" xml:space="preserve"><value>Último día cubierto en el calendario</value></data>
+  <data name="LeaveRegistry" xml:space="preserve"><value>Registro de incapacidades</value></data>
+  <data name="LeaveSections" xml:space="preserve"><value>Registro y consulta de incapacidades</value></data>
+  <data name="LeaveRegistryDoctorHelp" xml:space="preserve"><value>Registra las incapacidades y administra tus borradores, autorizaciones y cancelaciones. Los periodos autorizados se muestran en el calendario de consulta.</value></data>
+  <data name="LeaveRegistryReaderHelp" xml:space="preserve"><value>Consulta el registro de tus incapacidades y sus estados. Puedes abrir los periodos autorizados en el calendario.</value></data>
+  <data name="BackToLeaveRegistry" xml:space="preserve"><value>Volver al registro</value></data>
+  <data name="LeaveEntryHelp" xml:space="preserve"><value>Selecciona la persona, captura el folio y las fechas de inicio y término. Al guardar se crea un borrador; autorízalo en el registro para que aparezca en el calendario de consulta.</value></data>
+  <data name="LeaveDraftSaved" xml:space="preserve"><value>Incapacidad registrada en borrador. Autorízala desde Acciones para mostrarla en el calendario de consulta.</value></data>
 </root>

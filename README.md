@@ -16,6 +16,10 @@ dotnet test MedicApp.slnx -c Release --no-restore
 
 Configurar `ConnectionStrings:Workforce` fuera del repositorio; la base definitiva confirmada es sql1002 / db_acaa35_trainify. Revisar [instalación](docs/instalacion.md) para ejecutar los scripts, habilitar el primer administrador y levantar HTTPS. No hay contraseña predeterminada ni migración automática al inicio.
 
+## Registro y consulta de incapacidades 1.4.1
+
+El menú **Incapacidades** tiene dos opciones: **Registro de incapacidades**, donde el doctor captura y administra las incapacidades como antes, y **Calendario de incapacidades**, para consultar sus periodos por persona. El borrador guardado se autoriza desde Registro antes de aparecer en el calendario; se conservan permisos, acciones y búsqueda.
+
 ## Calendario de incapacidades 1.4.0
 
 **Incapacidades** abre un calendario por persona con barras que cubren los días autorizados. Doctores y administradores buscan por nombre o número de control; el empleado consulta únicamente sus propios periodos. Se incluyen mes, semana, agenda y detalle con horas exactas. La búsqueda admite personas inactivas para consultar antecedentes. Ver [calendario de incapacidades](docs/calendario-incapacidades.md).

@@ -1,7 +1,8 @@
 @model LeaveCalendarPage
 @{ViewData["Title"] = T["LeaveCalendar"];}
 @section Styles {<link rel="stylesheet" href="~/css/calendar.css" asp-append-version="true"/>}
-<div class="page-heading"><div><h1><medic-icon name="heart"/>@T["LeaveCalendar"]</h1><p class="text-muted">@T["LeaveCalendarHelp"]</p></div><a class="btn btn-outline-secondary" asp-action="Index"><medic-icon name="list"/>@T["ViewList"]</a></div>
+<partial name="_LeaveNavigation"/>
+<div class="page-heading"><div><h1><medic-icon name="calendar"/>@T["LeaveCalendar"]</h1><p class="text-muted">@T["LeaveCalendarHelp"]</p></div><a class="btn btn-outline-secondary" asp-action="Index"><medic-icon name="list"/>@T["LeaveRegistry"]</a></div>
 @if(Model.CanSearchPeople){
   <section class="panel"><form method="get" asp-action="Calendar" id="leave-person-form" class="row g-3 align-items-end">
     <div class="col-md-9"><label for="leave-person" class="form-label"><medic-icon name="search"/>@T["SearchLeavePerson"]</label><select id="leave-person" name="personId" class="form-select" data-search-url="@Url.Action("CalendarPeople")" required><option value="">@T["SearchLeavePersonHint"]</option>@if(Model.Person!=null){<option value="@Model.Person.Id" selected>@Model.Person.Label</option>}</select><div class="form-text">@T["SearchLeavePersonHint"]</div></div>

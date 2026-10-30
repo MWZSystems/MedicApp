@@ -1,5 +1,14 @@
 # Changelog
 
+## [1.4.1] - 2026-10-30
+
+### Corregido
+- Incapacidades ofrece dos entradas explícitas: Registro de incapacidades y Calendario de incapacidades.
+- Registro conserva la captura del doctor y las acciones de autorización/cancelación; el calendario es de consulta.
+- Navegación entre ambas secciones y enlace al calendario desde cada periodo autorizado.
+- Mensajes de captura explican el flujo de borrador a autorización antes de mostrarse en el calendario.
+- Se conservan los permisos y la búsqueda por nombre o número de control, sin cambios de esquema o datos.
+
 ## [1.4.0] - 2026-10-30
 
 ### Agregado
