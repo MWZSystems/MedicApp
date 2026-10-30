@@ -84,6 +84,8 @@ try {
     if ($taskHealth.StatusCode -ne 200 -or $taskHealth.Content.Trim() -ne 'Healthy') { throw 'El sitio no confirmó conexión saludable a la base de datos.' }
     $taskLogin = Invoke-WebRequest ([uri]::new($SiteUrl, '/Account/Login')) -UseBasicParsing -TimeoutSec 30
     if ($taskLogin.StatusCode -ne 200 -or $taskLogin.Content -notmatch 'name="Identifier"' -or $taskLogin.Content -notmatch 'MedicApp') { throw 'No se verificó la pantalla de acceso de MedicApp.' }
+    $taskRootPage = Invoke-WebRequest $SiteUrl -UseBasicParsing -TimeoutSec 30
+    if ($taskRootPage.StatusCode -ne 200 -or $taskRootPage.Content -notmatch 'MedicApp' -or $taskRootPage.Content -match 'temporary homepage') { throw 'La raíz todavía no abre MedicApp.' }
     Write-Output ('MEDICAPP_PUBLICADO_Y_VERIFICADO: ' + $SiteUrl.AbsoluteUri)
 }
 finally {
