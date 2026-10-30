@@ -1,5 +1,17 @@
 # Changelog
 
+## [1.4.0] - 2026-10-30
+
+### Agregado
+- Calendario de incapacidades autorizadas con barras de varios días, vistas de mes, semana y agenda y detalle de horas exactas.
+- Búsqueda por nombre completo o número de control, incluyendo personas inactivas para consultas históricas autorizadas.
+- Navegación inicial al periodo vigente, próximo o más reciente de la persona seleccionada.
+
+### Seguridad
+- Los empleados solo consultan sus propios periodos; doctores y administradores médicos pueden buscar personas. Validación también en los endpoints.
+- Respuesta limitada a fechas de incapacidades autorizadas; no incluye folios clínicos, motivos de cancelación ni versiones.
+- Sin migraciones, generación de incapacidades ni cambios de configuración de agenda.
+
 ## [1.3.0] - 2026-10-30
 
 ### Corregido

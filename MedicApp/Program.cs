@@ -54,6 +54,7 @@ builder.Services.AddScoped<MedicalAccess>();
 builder.Services.AddScoped<MedicalService>();
 builder.Services.AddScoped<ListReader>();
 builder.Services.AddScoped<CalendarReader>();
+builder.Services.AddScoped<LeaveCalendarReader>();
 builder.Services.AddScoped<IAuthorizationHandler, MedicalAuthorizationHandler>();
 builder.Services.AddAuthorization(o =>
 {

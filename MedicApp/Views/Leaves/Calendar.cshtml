@@ -1,0 +1,21 @@
+@model LeaveCalendarPage
+@{ViewData["Title"] = T["LeaveCalendar"];}
+@section Styles {<link rel="stylesheet" href="~/css/calendar.css" asp-append-version="true"/>}
+<div class="page-heading"><div><h1><medic-icon name="heart"/>@T["LeaveCalendar"]</h1><p class="text-muted">@T["LeaveCalendarHelp"]</p></div><a class="btn btn-outline-secondary" asp-action="Index"><medic-icon name="list"/>@T["ViewList"]</a></div>
+@if(Model.CanSearchPeople){
+  <section class="panel"><form method="get" asp-action="Calendar" id="leave-person-form" class="row g-3 align-items-end">
+    <div class="col-md-9"><label for="leave-person" class="form-label"><medic-icon name="search"/>@T["SearchLeavePerson"]</label><select id="leave-person" name="personId" class="form-select" data-search-url="@Url.Action("CalendarPeople")" required><option value="">@T["SearchLeavePersonHint"]</option>@if(Model.Person!=null){<option value="@Model.Person.Id" selected>@Model.Person.Label</option>}</select><div class="form-text">@T["SearchLeavePersonHint"]</div></div>
+    <div class="col-md-3"><button class="btn btn-primary w-100"><medic-icon name="calendar"/>@T["ShowLeaveCalendar"]</button></div>
+  </form></section>
+}
+@if(Model.Person==null){<div class="alert alert-info" role="status">@T["ChooseLeavePerson"]</div>}
+else{
+  <section class="panel" id="leave-calendar-page" data-person-id="@Model.Person.Id" data-events-url="@Url.Action("CalendarEvents")" data-initial-date="@Model.FocusDate.ToString("yyyy-MM-dd")" data-error="@T["CalendarRequestError"]" data-empty="@T["NoLeavePeriods"]" data-today="@T["Today"]" data-month="@T["Month"]" data-week="@T["Week"]" data-list="@T["ListView"]">
+    <h2 class="h4"><medic-icon name="user"/>@Model.Person.Label</h2><p class="text-muted">@T["LeaveCalendarDaysHelp"]</p>
+    <div id="leave-calendar-status" class="alert d-none" role="status" aria-live="polite"></div>
+    <div id="leave-calendar" aria-label="@T["LeaveCalendar"]"></div>
+    <noscript><p>@T["CalendarNeedsJavascript"] <a asp-action="Index">@T["ViewList"]</a></p></noscript>
+  </section>
+  <div class="modal fade" id="leave-period-detail" tabindex="-1" aria-labelledby="leave-detail-title" aria-hidden="true"><div class="modal-dialog modal-dialog-centered"><div class="modal-content"><div class="modal-header"><h2 id="leave-detail-title" class="modal-title fs-5"><medic-icon name="heart"/>@T["ApprovedLeaveCalendar"]</h2><button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="@T["Close"]"></button></div><div class="modal-body"><p>@Model.Person.Label</p><dl class="appointment-details"><dt>@T["Start"]</dt><dd id="leave-detail-start"></dd><dt>@T["LeaveExactEnd"]</dt><dd id="leave-detail-end"></dd><dt>@T["LeaveCoveredThrough"]</dt><dd id="leave-detail-through"></dd></dl></div></div></div></div>
+}
+@section Scripts {<script src="~/lib/fullcalendar/index.global.min.js"></script><script src="~/lib/fullcalendar/locales-all.global.min.js"></script><script src="~/js/leave-calendar.js" asp-append-version="true"></script>}

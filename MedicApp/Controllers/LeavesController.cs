@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 namespace MedicApp.Controllers;
 
-public class LeavesController(MedicDbContext db, MedicalAccess access, MedicalService service, ListReader reader, MedicalClock clock) : Controller
+public class LeavesController(MedicDbContext db, MedicalAccess access, MedicalService service, ListReader reader, MedicalClock clock, LeaveCalendarReader calendar) : Controller
 {
     [HttpGet]
     public async Task<IActionResult> Index(int page = 1, DateTime? from = null, DateTime? to = null, CancellationToken ct = default)
@@ -19,6 +19,20 @@ public class LeavesController(MedicDbContext db, MedicalAccess access, MedicalSe
         model.CurrentDoctorId = doctor;
         model.People = await reader.NamesAsync(model.Items.Select(x => x.PersonId), ct);
         return View(model);
+    }
+    [HttpGet]
+    public async Task<IActionResult> Calendar(int? personId, CancellationToken ct)
+    {
+        if (!ModelState.IsValid || personId <= 0) { return BadRequest(); }
+        return View(await calendar.PageAsync(personId, ct));
+    }
+    [HttpGet]
+    public async Task<IActionResult> CalendarPeople(string? term, CancellationToken ct) => Json(new { results = (await calendar.SearchAsync(term, ct)).Select(x => new { id = x.Id, text = x.Label }) });
+    [HttpGet]
+    public async Task<IActionResult> CalendarEvents(int personId, DateOnly from, DateOnly to, CancellationToken ct)
+    {
+        if (!ModelState.IsValid || personId <= 0 || from == default || to == DateOnly.MaxValue) { return BadRequest(); }
+        return Json(await calendar.EventsAsync(personId, from, to, ct));
     }
     [Authorize(Policy = "Doctor"), HttpGet]
     public IActionResult Create()

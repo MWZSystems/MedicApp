@@ -467,4 +467,15 @@
 <data name="PrivateBooking" xml:space="preserve"><value>Cita de otra persona. Los datos del paciente son privados.</value></data>
 <data name="BookingRangeSummary" xml:space="preserve"><value>Puedes reservar en los próximos {0} días. Duración de los bloques recurrentes: {1} minutos.</value></data>
 <data name="BookingSetupDone" xml:space="preserve"><value>Agenda inicializada</value></data>
+  <data name="LeaveCalendar" xml:space="preserve"><value>Calendario de incapacidades</value></data>
+  <data name="LeaveCalendarHelp" xml:space="preserve"><value>Consulta visualmente los periodos de incapacidad autorizados de la persona seleccionada.</value></data>
+  <data name="SearchLeavePerson" xml:space="preserve"><value>Buscar por nombre o número de control</value></data>
+  <data name="SearchLeavePersonHint" xml:space="preserve"><value>Escribe al menos dos caracteres del nombre, apellidos o número de control.</value></data>
+  <data name="ShowLeaveCalendar" xml:space="preserve"><value>Ver calendario</value></data>
+  <data name="ChooseLeavePerson" xml:space="preserve"><value>Busca y selecciona una persona para consultar su calendario de incapacidades.</value></data>
+  <data name="NoLeavePeriods" xml:space="preserve"><value>No hay incapacidades autorizadas para esta persona en el periodo visible. Puedes navegar a otros meses.</value></data>
+  <data name="ApprovedLeaveCalendar" xml:space="preserve"><value>Incapacidad autorizada</value></data>
+  <data name="LeaveCalendarDaysHelp" xml:space="preserve"><value>La barra marca los días cubiertos. Abre un periodo para ver sus horas exactas de inicio y término.</value></data>
+  <data name="LeaveExactEnd" xml:space="preserve"><value>Fin de la incapacidad (hora exacta)</value></data>
+  <data name="LeaveCoveredThrough" xml:space="preserve"><value>Último día cubierto en el calendario</value></data>
 </root>

@@ -16,6 +16,10 @@ dotnet test MedicApp.slnx -c Release --no-restore
 
 Configurar `ConnectionStrings:Workforce` fuera del repositorio; la base definitiva confirmada es sql1002 / db_acaa35_trainify. Revisar [instalación](docs/instalacion.md) para ejecutar los scripts, habilitar el primer administrador y levantar HTTPS. No hay contraseña predeterminada ni migración automática al inicio.
 
+## Calendario de incapacidades 1.4.0
+
+**Incapacidades** abre un calendario por persona con barras que cubren los días autorizados. Doctores y administradores buscan por nombre o número de control; el empleado consulta únicamente sus propios periodos. Se incluyen mes, semana, agenda y detalle con horas exactas. La búsqueda admite personas inactivas para consultar antecedentes. Ver [calendario de incapacidades](docs/calendario-incapacidades.md).
+
 ## Agenda operativa 1.3.0
 
 El calendario abre en semana y muestra rangos completos de treinta minutos; el horizonte inicial es de siete días y ambos valores se ajustan en Configuración. Las citas de otras personas aparecen como **Ocupado · otra persona**, sin datos privados. El catálogo de doctores permite habilitar un horario recurrente basado en el horario global (24 horas inicialmente).
