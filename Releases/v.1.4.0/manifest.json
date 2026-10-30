@@ -1,0 +1,13 @@
+{
+  "Application": "MedicApp",
+  "Release": "v1.4.0",
+  "Version": "1.4.0",
+  "SourceCommit": "1e08539d10b33245466cc9e8cf93f4da55253607",
+  "Archive": "MedicApp-1.4.0.zip",
+  "Sha256": "39EFCBE388F9AB93140CFA986309DCB3885C112458B4E521E7C53EDFDD59C66A",
+  "Bytes": 33962310,
+  "Files": 329,
+  "Database": "InitialMedical y RecurringDoctorCalendar existentes; sin cambios de esquema o datos en 1.4.0",
+  "TestsPassed": 74,
+  "Configuration": "Sin SQL privado, claves, perfiles ni datos. Publicar con scripts/Publicar-MedicApp.ps1 sin InitializeCalendar para conservar la configuración."
+}
