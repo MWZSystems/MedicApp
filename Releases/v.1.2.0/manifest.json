@@ -1,0 +1,13 @@
+{
+  "Application": "MedicApp",
+  "Release": "v1.2.0",
+  "Version": "1.2.0",
+  "SourceCommit": "e852f9d720022644504cfa398f573b086a67220d",
+  "Archive": "MedicApp-1.2.0.zip",
+  "Sha256": "3D9E1BEEAE8991D78572FBF45CA920CADF6E19C39F1C7C2BB9BEAC8CB62A7E88",
+  "Bytes": 33924461,
+  "Files": 326,
+  "Database": "InitialMedical: siete tablas y dos vistas propias; identidad/personas compartidas no recreadas",
+  "TestsPassed": 57,
+  "Configuration": "Sin conexión SQL, claves de sesión, perfiles ni datos. Configurar producción con scripts/Publicar-MedicApp.ps1."
+}
