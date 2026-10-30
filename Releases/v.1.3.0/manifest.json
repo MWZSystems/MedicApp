@@ -1,0 +1,13 @@
+{
+  "Application": "MedicApp",
+  "Release": "v1.3.0",
+  "Version": "1.3.0",
+  "SourceCommit": "ae546274446cf9d41d957c605d5d321221b841d9",
+  "Archive": "MedicApp-1.3.0.zip",
+  "Sha256": "05603B1AF65CCD8ADC96E138C2DCCD005820A4C94DF8A196211877AD3217489F",
+  "Bytes": 33939463,
+  "Files": 326,
+  "Database": "InitialMedical y RecurringDoctorCalendar: siete tablas y dos vistas; dos columnas booleanas agregadas exclusivamente en medic",
+  "TestsPassed": 63,
+  "Configuration": "Sin conexión SQL, claves de sesión, perfiles ni datos. Configurar producción con scripts/Publicar-MedicApp.ps1."
+}
