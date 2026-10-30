@@ -16,6 +16,12 @@ dotnet test MedicApp.slnx -c Release --no-restore
 
 Configurar `ConnectionStrings:Workforce` fuera del repositorio; la base definitiva confirmada es sql1002 / db_acaa35_trainify. Revisar [instalación](docs/instalacion.md) para ejecutar los scripts, habilitar el primer administrador y levantar HTTPS. No hay contraseña predeterminada ni migración automática al inicio.
 
+## Agenda operativa 1.3.0
+
+El calendario abre en semana y muestra rangos completos de treinta minutos; el horizonte inicial es de siete días y ambos valores se ajustan en Configuración. Las citas de otras personas aparecen como **Ocupado · otra persona**, sin datos privados. El catálogo de doctores permite habilitar un horario recurrente basado en el horario global (24 horas inicialmente).
+
+La instalación de prueba inicializa un consultorio DEMO y veintiuna citas en el calendario principal. Un aviso distingue las reservas de prueba. Desactivar el modo DEMO y habilitar doctores reales antes de operar con pacientes. Revisar [agenda operativa](docs/agenda-operativa.md) para migración, inicialización, permisos y posterior retiro.
+
 ## Configuración y ejemplos 1.2.0
 
 El menú **Configuración** permite ajustar días disponibles, atención general (24 horas por defecto) y duración sugerida. Los valores base están en `MedicApp/config/medical.defaults.json`; los cambios administrativos se conservan en `App_Data/Configuration/medical.json` al volver a publicar. La disponibilidad sigue requiriendo agenda de un doctor.

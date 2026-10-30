@@ -276,6 +276,9 @@ namespace MedicApp.Data.Migrations
                     b.Property<DateTime>("EndsAt")
                         .HasColumnType("datetime2(0)");
 
+                    b.Property<bool>("Generated")
+                        .HasColumnType("bit");
+
                     b.Property<DateTime>("LastUpdated")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2(0)")
@@ -360,6 +363,9 @@ namespace MedicApp.Data.Migrations
                         .HasMaxLength(450)
                         .HasColumnType("nvarchar(450)")
                         .HasColumnName("FKUserUpdater");
+
+                    b.Property<bool>("UseRecurringSchedule")
+                        .HasColumnType("bit");
 
                     b.HasKey("Id")
                         .HasName("PK_CT_Doctors");

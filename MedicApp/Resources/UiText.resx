@@ -447,7 +447,7 @@
   <data name="DefaultSlotMinutes" xml:space="preserve"><value>Duración predeterminada de una cita (minutos)</value></data>
   <data name="HorizonHelp" xml:space="preserve"><value>Entre 1 y 365 días a partir del momento actual. El empleado solo verá horarios con un doctor disponible.</value></data>
   <data name="ServiceHoursHelp" xml:space="preserve"><value>Estas horas se usan al desactivar la atención de 24 horas. Un cierre anterior a la apertura indica un turno que termina al día siguiente.</value></data>
-  <data name="DurationHelp" xml:space="preserve"><value>Entre 5 y 120 minutos. Se usa al crear nuevas disponibilidades; las existentes conservan su duración.</value></data>
+  <data name="DurationHelp" xml:space="preserve"><value>Entre 5 y 30 minutos. Define los bloques del horario recurrente y se sugiere en nuevas disponibilidades manuales. Las citas ya reservadas conservan su duración.</value></data>
   <data name="ConfigurationSaved" xml:space="preserve"><value>Configuración guardada. Las nuevas reservas utilizarán estas reglas.</value></data>
   <data name="InvalidHours" xml:space="preserve"><value>Revisa el rango de días, las horas de atención y la duración.</value></data>
   <data name="OutsideServiceHours" xml:space="preserve"><value>La cita queda fuera del horario de atención configurado.</value></data>
@@ -458,4 +458,13 @@
   <data name="GenerateDemo" xml:space="preserve"><value>Generar datos DEMO</value></data>
   <data name="DemoCreated" xml:space="preserve"><value>Datos DEMO disponibles. Si ya existían, se conservaron sin duplicarlos.</value></data>
   <data name="DemoLeaveDisabled" xml:space="preserve"><value>Los datos DEMO no pueden generar incapacidades ni eventos laborales.</value></data>
+<data name="UseRecurringSchedule" xml:space="preserve"><value>Usar horario recurrente de la configuración</value></data>
+<data name="RecurringHelp" xml:space="preserve"><value>Genera horarios cada día usando la atención y duración configuradas. No requiere capturar fechas manualmente. Desactívalo para usar ventanas de Mi agenda.</value></data>
+<data name="DemoBookingEnabled" xml:space="preserve"><value>Habilitar reservas de prueba en el calendario principal</value></data>
+<data name="DemoBookingHelp" xml:space="preserve"><value>Usa exclusivamente el consultorio DEMO para probar reservas. Desactívalo al operar con doctores reales. Las citas de prueba no generan incapacidades.</value></data>
+<data name="OperationalDemoNotice" xml:space="preserve"><value>MODO DE PRUEBA: este calendario usa el consultorio DEMO. Puedes reservar a tu nombre y ver horarios ocupados de ejemplo. Las citas son de prueba; no generan incapacidades ni eventos laborales.</value></data>
+<data name="OccupiedAppointment" xml:space="preserve"><value>Ocupado · otra persona</value></data>
+<data name="PrivateBooking" xml:space="preserve"><value>Cita de otra persona. Los datos del paciente son privados.</value></data>
+<data name="BookingRangeSummary" xml:space="preserve"><value>Puedes reservar en los próximos {0} días. Duración de los bloques recurrentes: {1} minutos.</value></data>
+<data name="BookingSetupDone" xml:space="preserve"><value>Agenda inicializada</value></data>
 </root>

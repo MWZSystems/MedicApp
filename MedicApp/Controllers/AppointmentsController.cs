@@ -34,7 +34,7 @@ public class AppointmentsController(MedicDbContext db, MedicalAccess access, Med
     {
         if (!ModelState.IsValid || date == default || date == DateOnly.MaxValue) { return BadRequest(); }
         var slots = await calendar.SlotsAsync(date, date.AddDays(1), ct);
-        return Json(slots.Select(x => new { time = x.StartsAtLocal.ToString("HH:mm", System.Globalization.CultureInfo.InvariantCulture), durationMinutes = x.DurationMinutes }));
+        return Json(slots.Select(x => new { time = x.StartsAtLocal.ToString("HH:mm", System.Globalization.CultureInfo.InvariantCulture), durationMinutes = x.DurationMinutes, label = x.Label }));
     }
     [HttpPost]
     public async Task<IActionResult> Reserve(ReserveForm input, CancellationToken ct)
@@ -53,6 +53,9 @@ public class AppointmentsController(MedicDbContext db, MedicalAccess access, Med
         return new CalendarPage
         {
             Today = today,
+            DemoBookingEnabled = options.Value.DemoBookingEnabled,
+            BookingHorizonDays = options.Value.BookingHorizonDays,
+            SlotMinutes = options.Value.DefaultSlotMinutes,
             Date = selected,
             LastBookingDate = DateOnly.FromDateTime(clock.Local(clock.UtcNow.AddDays(options.Value.BookingHorizonDays))),
             IsDoctor = await access.DoctorIdAsync(ct) != null,

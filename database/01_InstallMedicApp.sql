@@ -452,3 +452,32 @@ END;
 COMMIT;
 GO
 
+BEGIN TRANSACTION;
+IF NOT EXISTS (
+    SELECT * FROM [medic].[__EFMigrationsHistory]
+    WHERE [MigrationId] = N'20261030144153_RecurringDoctorCalendar'
+)
+BEGIN
+    ALTER TABLE [medic].[SY_AvailabilityWindows] ADD [Generated] bit NOT NULL DEFAULT CAST(0 AS bit);
+END;
+
+IF NOT EXISTS (
+    SELECT * FROM [medic].[__EFMigrationsHistory]
+    WHERE [MigrationId] = N'20261030144153_RecurringDoctorCalendar'
+)
+BEGIN
+    ALTER TABLE [medic].[CT_Doctors] ADD [UseRecurringSchedule] bit NOT NULL DEFAULT CAST(0 AS bit);
+END;
+
+IF NOT EXISTS (
+    SELECT * FROM [medic].[__EFMigrationsHistory]
+    WHERE [MigrationId] = N'20261030144153_RecurringDoctorCalendar'
+)
+BEGIN
+    INSERT INTO [medic].[__EFMigrationsHistory] ([MigrationId], [ProductVersion])
+    VALUES (N'20261030144153_RecurringDoctorCalendar', N'10.0.14');
+END;
+
+COMMIT;
+GO
+

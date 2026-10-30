@@ -31,6 +31,7 @@ public class AdminController(MedicDbContext db, TrainifyDbContext shared, Medica
             service.SetVersion(doctor, input.Version);
             if (!input.Available && await db.Appointments.AnyAsync(x => x.DoctorId == doctor.Id && x.Available && x.Status == AppointmentStatus.Scheduled && x.EndsAt > clock.UtcNow, ct)) { throw new MedicalRuleException("ExistingAppointments"); }
         }
+        doctor.UseRecurringSchedule = input.UseRecurringSchedule;
         doctor.Specialty = input.Specialty.Trim();
         doctor.ProfessionalLicense = input.ProfessionalLicense.Trim();
         doctor.Available = input.Available;

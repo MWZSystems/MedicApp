@@ -16,5 +16,6 @@ public static class MedicalConfigurationLoader
         options.OpeningTime = form.OpeningTime;
         options.ClosingTime = form.ClosingTime;
         options.DefaultSlotMinutes = form.DefaultSlotMinutes;
+        options.DemoBookingEnabled = form.DemoBookingEnabled;
     }
 }

@@ -1,4 +1,7 @@
-# Configuración de MedicApp 1.2.0
+# Configuración de MedicApp
+
+Para los valores vigentes y la agenda operativa 1.3.0 consultar [agenda operativa](agenda-operativa.md). El horizonte inicial ahora es siete días; la duración inicial es treinta minutos, con máximo de treinta. La configuración incluye DemoBookingEnabled y el catálogo permite horario recurrente. El resto de esta sección documenta la configuración introducida en 1.2.0.
+
 
 El menú **Configuración** (`/Configuration`) requiere el permiso de administración de accesos. Permite cambiar el rango de reserva, horario general y duración sugerida al crear disponibilidades. El empleado sigue capturando únicamente fecha y hora.
 

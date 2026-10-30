@@ -18,17 +18,18 @@ public sealed class ApplicationConfiguration(IOptions<MedicalOptions> options, I
         OpeningTime = options.Value.OpeningTime,
         ClosingTime = options.Value.ClosingTime,
         DefaultSlotMinutes = options.Value.DefaultSlotMinutes,
+        DemoBookingEnabled = options.Value.DemoBookingEnabled,
         Revision = await RevisionAsync(ct)
     };
     public async Task SaveAsync(ConfigurationForm form, CancellationToken ct)
     {
-        var next = new MedicalOptions { BookingHorizonDays = form.BookingHorizonDays, Open24Hours = form.Open24Hours, OpeningTime = form.OpeningTime, ClosingTime = form.ClosingTime, DefaultSlotMinutes = form.DefaultSlotMinutes };
+        var next = new MedicalOptions { BookingHorizonDays = form.BookingHorizonDays, Open24Hours = form.Open24Hours, OpeningTime = form.OpeningTime, ClosingTime = form.ClosingTime, DefaultSlotMinutes = form.DefaultSlotMinutes, DemoBookingEnabled = form.DemoBookingEnabled };
         if (!Validator.TryValidateObject(next, new ValidationContext(next), [], true)) { throw new MedicalRuleException("InvalidHours"); }
         await Gate.WaitAsync(ct);
         try
         {
             if (form.Revision != await RevisionAsync(ct)) { throw new MedicalRuleException("Concurrency"); }
-            var contents = JsonSerializer.Serialize(new { Medical = new { next.BookingHorizonDays, next.Open24Hours, next.OpeningTime, next.ClosingTime, next.DefaultSlotMinutes } }, JsonOptions);
+            var contents = JsonSerializer.Serialize(new { Medical = new { next.BookingHorizonDays, next.Open24Hours, next.OpeningTime, next.ClosingTime, next.DefaultSlotMinutes, next.DemoBookingEnabled } }, JsonOptions);
             Directory.CreateDirectory(Path.GetDirectoryName(FileName)!);
             var temporary = FileName + "." + Guid.NewGuid().ToString("N") + ".tmp";
             var previous = File.Exists(FileName) ? await File.ReadAllTextAsync(FileName, ct) : null;

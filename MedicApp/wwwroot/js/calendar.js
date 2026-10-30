@@ -36,7 +36,7 @@
       const url = new URL(labels.slotsUrl, location.origin); url.searchParams.set("date", date);
       const slots = await jsonRequest(url, { signal: slotRequest.signal });
       if (sequence !== selectionSequence) { return; }
-      slots.forEach(slot => timeInput.add(new Option(slot.time, slot.time)));
+      slots.forEach(slot => timeInput.add(new Option(slot.label, slot.time)));
       if (preferredTime && slots.some(slot => slot.time === preferredTime)) { timeInput.value = preferredTime; }
       status.textContent = slots.length ? labels.autoDoctor : labels.noSlots;
     } catch (error) {
@@ -55,13 +55,13 @@
   // API ranges are business dates; persisted appointments remain UTC on the server.
   const calendar = new FullCalendar.Calendar(document.getElementById("appointments-calendar"), {
     locale: "es", timeZone: "UTC", initialDate: labels.initialDate,
-    initialView: window.innerWidth < 600 ? "listWeek" : "dayGridMonth",
+    initialView: window.innerWidth < 600 ? "listWeek" : "timeGridWeek",
     headerToolbar: { left: "prev,next today", center: "title", right: "dayGridMonth,timeGridWeek,timeGridDay,listWeek" },
     buttonIcons: false,
     buttonText: { prev: "‹", next: "›", today: labels.todayLabel, month: labels.monthLabel, week: labels.weekLabel, day: labels.dayLabel, list: labels.listLabel },
     height: 650, expandRows: true, firstDay: 1, navLinks: true, now: `${labels.today}T00:00:00`, nowIndicator: false,
     editable: false, dayMaxEvents: 3, eventDisplay: "block", eventTimeFormat: { hour: "2-digit", minute: "2-digit", hour12: false },
-    slotLabelFormat: { hour: "2-digit", minute: "2-digit", hour12: false }, slotDuration: "00:15:00", scrollTime: "07:00:00",
+    slotLabelFormat: { hour: "2-digit", minute: "2-digit", hour12: false }, slotDuration: `00:${labels.slotMinutes.padStart(2, "0")}:00`, scrollTime: "07:00:00",
     events: (info, success, failure) => {
       const url = new URL(labels.eventsUrl, location.origin);
       url.searchParams.set("from", info.startStr.slice(0, 10)); url.searchParams.set("to", info.endStr.slice(0, 10));
@@ -101,7 +101,7 @@
   const updateReason = () => { reason.required = action.value === "3"; document.getElementById("detail-reason-group").hidden = !reason.required; };
   const showDetail = event => {
     const detail = event.extendedProps;
-    document.getElementById("detail-employee").textContent = detail.employee;
+    document.getElementById("detail-employee").textContent = detail.kind === "busy" ? labels.privateBooking : detail.employee;
     document.getElementById("detail-doctor").textContent = detail.doctor;
     document.getElementById("detail-status").textContent = detail.status;
     const format = value => new Intl.DateTimeFormat("es-MX", { dateStyle: "medium", timeStyle: "short", timeZone: "UTC" }).format(value);
@@ -121,6 +121,7 @@
     catch (error) { document.getElementById("detail-error").textContent = error.message; }
     finally { button.disabled = false; }
   });
+  loadSlots(dayInput.value);
   updateButton();
   if (labels.openBooking === "true") { dayInput.focus(); }
 })();

@@ -45,28 +45,20 @@ public class MedicalService(MedicDbContext db, TrainifyDbContext shared, Medical
         if (existing != null) { return existing.Value; }
         var start = clock.ToUtc(localStart);
         if (start <= clock.UtcNow || start > clock.UtcNow.AddDays(options.Value.BookingHorizonDays)) { throw new MedicalRuleException("OutsideHorizon"); }
-        var windows = await (from w in db.Windows
-                             join d in db.Doctors on w.DoctorId equals d.Id
-                             where w.Available && d.Available && w.StartsAt <= start && w.EndsAt > start
-                             orderby d.Id, w.Id
-                             select new { Window = w, d.PersonId }).Take(2001).ToListAsync(ct);
-        if (windows.Count > 2000) { throw new MedicalRuleException("UnavailableSlot"); }
-        var demoPeople = await shared.People.AsNoTracking().Where(x => x.EmployeeNumber.StartsWith(DemoDataService.Prefix)).Select(x => x.Id).ToListAsync(ct);
-        var isDemo = demoPeople.Contains(access.PersonId);
-        windows = windows.Where(x => demoPeople.Contains(x.PersonId) == isDemo).ToList();
-        var personIds = windows.Select(x => x.PersonId).Distinct().ToArray();
-        var active = await shared.People.AsNoTracking().Where(x => personIds.Contains(x.Id) && x.Active).Select(x => x.Id).ToListAsync(ct);
-        var doctorIds = windows.Select(x => x.Window.DoctorId).Distinct().ToArray();
-        var latestEnd = start.AddMinutes(120);
+        var day = DateOnly.FromDateTime(localStart);
+        var planner = new AvailabilityPlanner(db, shared, clock, options);
+        var windows = await planner.WindowsAsync(day, day.AddDays(1), ct);
+        var doctorIds = windows.Select(x => x.DoctorId).Distinct().ToArray();
+        var latestEnd = start.AddMinutes(30);
         var busy = await db.Appointments.AsNoTracking().Where(x => x.Available && x.Status == AppointmentStatus.Scheduled && (doctorIds.Contains(x.DoctorId) || x.PersonId == access.PersonId) && x.StartsAt < latestEnd && x.EndsAt > start)
             .Select(x => new { x.DoctorId, x.PersonId, x.StartsAt, x.EndsAt }).ToListAsync(ct);
-        foreach (var row in windows.Where(x => active.Contains(x.PersonId)))
+        foreach (var window in windows.OrderBy(x => x.DoctorId).ThenBy(x => x.Id))
         {
-            var window = row.Window;
             var end = start.AddMinutes(window.SlotMinutes);
-            if (end > window.EndsAt || (start - window.StartsAt).Ticks % TimeSpan.FromMinutes(window.SlotMinutes).Ticks != 0) { continue; }
+            if (start < window.StartsAt || end > window.EndsAt || !options.Value.Allows(localStart, clock.Local(end)) || (start - window.StartsAt).Ticks % TimeSpan.FromMinutes(window.SlotMinutes).Ticks != 0) { continue; }
             if (busy.Any(x => (x.DoctorId == window.DoctorId || x.PersonId == access.PersonId) && x.StartsAt < end && x.EndsAt > start)) { continue; }
-            var id = await CreateBookingAsync(window.Id, localStart, requestKey, ct);
+            var windowId = await planner.MaterializeAsync(window, access.UserId, ct);
+            var id = await CreateBookingAsync(windowId, localStart, requestKey, ct);
             await tx.CommitAsync(ct);
             return id;
         }
@@ -89,8 +81,9 @@ public class MedicalService(MedicDbContext db, TrainifyDbContext shared, Medical
         var end = start.AddMinutes(window.SlotMinutes);
         MedicalRules.ValidateBooking(start, end, clock.UtcNow, options.Value.BookingHorizonDays, window);
         if (!options.Value.Allows(localStart, clock.Local(end))) { throw new MedicalRuleException("OutsideServiceHours"); }
-        var demoPeople = await shared.People.AsNoTracking().Where(x => x.EmployeeNumber.StartsWith(DemoDataService.Prefix)).Select(x => x.Id).ToListAsync(ct);
-        if (demoPeople.Contains(access.PersonId) != demoPeople.Contains(doctorPerson)) { throw new MedicalRuleException("UnavailableSlot"); }
+        var day = DateOnly.FromDateTime(localStart);
+        var candidates = await new AvailabilityPlanner(db, shared, clock, options).WindowsAsync(day, day.AddDays(1), ct);
+        if (!candidates.Any(x => x.DoctorId == window.DoctorId && x.SlotMinutes == window.SlotMinutes && (x.Id == window.Id || (window.Generated && x.Id == 0 && x.StartsAt == window.StartsAt && x.EndsAt == window.EndsAt)))) { throw new MedicalRuleException("UnavailableSlot"); }
         var personId = access.PersonId;
         if (await db.Appointments.AnyAsync(x => x.Available && x.Status == AppointmentStatus.Scheduled && (x.DoctorId == window.DoctorId || x.PersonId == personId) && x.StartsAt < end && x.EndsAt > start, ct))
         { throw new MedicalRuleException("Overlap"); }
@@ -168,7 +161,7 @@ public class MedicalService(MedicDbContext db, TrainifyDbContext shared, Medical
         var start = clock.ToUtc(localStart);
         var end = clock.ToUtc(localEnd);
         MedicalRules.ValidateInterval(start, end);
-        if (start <= clock.UtcNow || minutes < 5 || minutes > 120 || (end - start).TotalMinutes % minutes != 0) { throw new MedicalRuleException("UnavailableSlot"); }
+        if (start <= clock.UtcNow || minutes < 5 || minutes > 30 || (end - start).TotalMinutes % minutes != 0) { throw new MedicalRuleException("UnavailableSlot"); }
         await using var tx = await db.Database.BeginTransactionAsync(IsolationLevel.Serializable, ct);
         if (await db.Windows.AnyAsync(x => x.DoctorId == doctor && x.Available && x.StartsAt < end && x.EndsAt > start, ct)) { throw new MedicalRuleException("Overlap"); }
         var window = new AvailabilityWindow { DoctorId = doctor, StartsAt = start, EndsAt = end, SlotMinutes = minutes };

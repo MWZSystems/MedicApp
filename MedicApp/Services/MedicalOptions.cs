@@ -6,11 +6,12 @@ public class MedicalOptions : IValidatableObject
 {
     [Required] public string DisplayName { get; set; } = "MedicApp";
     [Required] public string TimeZoneId { get; set; } = "America/Chihuahua";
-    [Range(1, 365), Display(Name = "BookingHorizonDays")] public int BookingHorizonDays { get; set; } = 10;
+    [Range(1, 365), Display(Name = "BookingHorizonDays")] public int BookingHorizonDays { get; set; } = 7;
     [Display(Name = "Open24Hours")] public bool Open24Hours { get; set; } = true;
     [Required, RegularExpression(@"^([01]\d|2[0-3]):[0-5]\d$"), Display(Name = "OpeningTime")] public string OpeningTime { get; set; } = "08:00";
     [Required, RegularExpression(@"^([01]\d|2[0-3]):[0-5]\d$"), Display(Name = "ClosingTime")] public string ClosingTime { get; set; } = "18:00";
-    [Range(5, 120), Display(Name = "DefaultSlotMinutes")] public int DefaultSlotMinutes { get; set; } = 15;
+    [Range(5, 30), Display(Name = "DefaultSlotMinutes")] public int DefaultSlotMinutes { get; set; } = 30;
+    [Display(Name = "DemoBookingEnabled")] public bool DemoBookingEnabled { get; set; }
     public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
     {
         if (!Open24Hours && OpeningTime == ClosingTime) { yield return new ValidationResult("InvalidHours", [nameof(ClosingTime)]); }

@@ -12,7 +12,7 @@ public static class MedicalRules
     {
         ValidateInterval(start, end);
         if (start <= now || start > now.AddDays(horizon)) { throw new MedicalRuleException("OutsideHorizon"); }
-        if (!window.Available || start < window.StartsAt || end > window.EndsAt || (end - start).TotalMinutes != window.SlotMinutes || (start - window.StartsAt).TotalMinutes % window.SlotMinutes != 0)
+        if (window.SlotMinutes > 30 || !window.Available || start < window.StartsAt || end > window.EndsAt || (end - start).TotalMinutes != window.SlotMinutes || (start - window.StartsAt).TotalMinutes % window.SlotMinutes != 0)
         { throw new MedicalRuleException("UnavailableSlot"); }
     }
     public static void ValidateAppointmentTransition(AppointmentStatus current, AppointmentStatus next, bool doctor, DateTime startsAt, DateTime now)

@@ -11,7 +11,7 @@ using Trainify.Data;
 using Trainify.Domain;
 using Trainify.Services;
 
-var builder = WebApplication.CreateBuilder(args.Where(x => x != "--grant-admin" && x != "--create-demo").ToArray());
+var builder = WebApplication.CreateBuilder(args.Where(x => x != "--grant-admin" && x != "--create-demo" && x != "--prepare-booking").ToArray());
 builder.Configuration.AddJsonFile("config/medical.defaults.json", optional: false, reloadOnChange: true);
 builder.Configuration.AddUserSecrets<Program>(optional: true).AddEnvironmentVariables();
 var connection = builder.Configuration.GetConnectionString("Workforce");
@@ -21,6 +21,7 @@ if (dataDirectory.StartsWith(Path.Combine(builder.Environment.ContentRootPath, "
 builder.Services.AddScoped<IOptions<MedicalOptions>>(services => services.GetRequiredService<IOptionsSnapshot<MedicalOptions>>());
 builder.Services.AddScoped<ApplicationConfiguration>();
 builder.Services.AddScoped<DemoDataService>();
+builder.Services.AddScoped<BookingSetup>();
 builder.Services.AddOptions<MedicalOptions>().BindConfiguration("Medical").PostConfigure<IWebHostEnvironment>(MedicalConfigurationLoader.Apply).ValidateDataAnnotations().Validate(x => TimeZoneInfo.TryFindSystemTimeZoneById(x.TimeZoneId, out _), "Invalid timezone").ValidateOnStart();
 builder.Services.AddSingleton(TimeProvider.System);
 builder.Services.AddScoped<MedicalClock>();
@@ -110,6 +111,20 @@ if (args.Contains("--create-demo"))
     var userId = await shared.Users.Where(x => x.NormalizedUserName == normalizedDemoName && x.Active && x.Person.Active).Select(x => x.Id).SingleAsync();
     var result = await scope.ServiceProvider.GetRequiredService<DemoDataService>().CreateAsync(userId, CancellationToken.None);
     Console.WriteLine($"DEMO: {result}");
+    return;
+}
+if (args.Contains("--prepare-booking"))
+{
+    using var scope = app.Services.CreateScope();
+    var shared = scope.ServiceProvider.GetRequiredService<TrainifyDbContext>();
+    var medical = scope.ServiceProvider.GetRequiredService<MedicDbContext>();
+    var normalized = (builder.Configuration["Bootstrap:UserName"] ?? throw new InvalidOperationException("Configure Bootstrap:UserName.")).ToUpperInvariant();
+    var actor = await shared.Users.Where(x => x.NormalizedUserName == normalized && x.Active && x.Person.Active).Select(x => x.Id).SingleAsync();
+    if (!await medical.AccessProfiles.AnyAsync(x => x.UserId == actor && x.Available && x.ManageAccess)) { throw new InvalidOperationException("Administration permission required."); }
+    // Explicit operator command only; web startup never applies migrations or seeds data.
+    await medical.Database.MigrateAsync();
+    var result = await scope.ServiceProvider.GetRequiredService<BookingSetup>().PrepareAsync(actor, builder.Configuration["Bootstrap:CalendarAdminUserName"], CancellationToken.None);
+    Console.WriteLine(result);
     return;
 }
 app.UseExceptionHandler();

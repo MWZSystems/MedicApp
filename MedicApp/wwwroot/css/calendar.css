@@ -3,3 +3,5 @@
 @media(max-width:450px){.booking-panel form{grid-template-columns:1fr}.booking-panel .mb-3{grid-column:1/-1}.brand-row{flex-wrap:wrap;gap:12px}.account-bar{width:100%;justify-content:space-between}.fc .fc-toolbar-title{font-size:18px}}
 
 .fc .fc-prev-button,.fc .fc-next-button{font-size:20px;line-height:1;min-width:36px}
+
+.legend-dot.busy { background: #b35b4b; }

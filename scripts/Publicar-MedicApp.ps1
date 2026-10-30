@@ -2,6 +2,7 @@
 param(
     [string]$ProfilePath,
     [uri]$SiteUrl = 'https://mwzsystems-001-site9.etempurl.com/',
+    [switch]$InitializeCalendar,
     [switch]$PrepareOnly
 )
 
@@ -37,6 +38,11 @@ try {
     $taskCore = $taskWebConfig.configuration.location.'system.webServer'.aspNetCore
     if ($taskCore.processPath -ne 'dotnet' -or $taskCore.arguments -notmatch 'MedicApp\.dll' -or $taskCore.hostingModel -ne 'outofprocess') { throw 'El web.config no corresponde al arranque IIS esperado.' }
     if (Test-Path -LiteralPath (Join-Path $taskStage 'App_Data\Keys')) { throw 'El paquete no debe contener claves locales de sesión.' }
+    if ($InitializeCalendar) {
+        $taskCalendarPath = Join-Path $taskStage 'App_Data\Configuration'
+        New-Item -ItemType Directory -Path $taskCalendarPath -Force | Out-Null
+        @{Medical=@{BookingHorizonDays=7;Open24Hours=$true;OpeningTime='08:00';ClosingTime='18:00';DefaultSlotMinutes=30;DemoBookingEnabled=$true}} | ConvertTo-Json -Depth 4 | Set-Content -LiteralPath (Join-Path $taskCalendarPath 'medical.json') -Encoding UTF8
+    }
     $taskProduction = @{ ConnectionStrings = @{ Workforce = $taskConnection }; AllowedHosts = $SiteUrl.Host; Medical = @{ DataDirectory = 'App_Data' } }
     $taskProduction | ConvertTo-Json -Depth 5 | Set-Content -LiteralPath $taskPrivateFile -Encoding UTF8
     if ($PrepareOnly) {

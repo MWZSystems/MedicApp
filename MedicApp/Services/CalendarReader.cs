@@ -22,25 +22,13 @@ public class CalendarReader(MedicDbContext db, TrainifyDbContext shared, Medical
         var now = clock.UtcNow;
         var horizon = now.AddDays(options.Value.BookingHorizonDays);
         if (end <= now || start > horizon) { return []; }
-        var windows = await (from w in db.Windows.AsNoTracking()
-                             join d in db.Doctors.AsNoTracking() on w.DoctorId equals d.Id
-                             where w.Available && d.Available && w.StartsAt < end && w.StartsAt <= horizon && w.EndsAt > start && w.EndsAt > now
-                             orderby d.Id, w.Id
-                             select new { Window = w, d.PersonId }).Take(2001).ToListAsync(ct);
-        if (windows.Count > 2000) { throw new MedicalRuleException("InvalidRange"); }
-        var demoPeople = await shared.People.AsNoTracking().Where(x => x.EmployeeNumber.StartsWith(DemoDataService.Prefix)).Select(x => x.Id).ToListAsync(ct);
-        var isDemo = demoPeople.Contains(access.PersonId);
-        windows = windows.Where(x => demoPeople.Contains(x.PersonId) == isDemo).ToList();
-        var doctorPeople = windows.Select(x => x.PersonId).Distinct().ToArray();
-        var activePeople = await shared.People.AsNoTracking().Where(x => doctorPeople.Contains(x.Id) && x.Active).Select(x => x.Id).ToListAsync(ct);
-        windows = windows.Where(x => activePeople.Contains(x.PersonId)).ToList();
-        var doctorIds = windows.Select(x => x.Window.DoctorId).Distinct().ToArray();
+        var windows = await new AvailabilityPlanner(db, shared, clock, options).WindowsAsync(from, to, ct);
+        var doctorIds = windows.Select(x => x.DoctorId).Distinct().ToArray();
         var busy = await db.Appointments.AsNoTracking().Where(x => x.Available && x.Status == AppointmentStatus.Scheduled && (doctorIds.Contains(x.DoctorId) || x.PersonId == access.PersonId) && x.StartsAt < end && x.EndsAt > start)
             .Select(x => new { x.DoctorId, x.PersonId, x.StartsAt, x.EndsAt }).ToListAsync(ct);
         var result = new SortedDictionary<DateTime, CalendarSlot>();
-        foreach (var row in windows)
+        foreach (var window in windows)
         {
-            var window = row.Window;
             var step = TimeSpan.FromMinutes(window.SlotMinutes);
             var earliest = start > now ? start : now;
             var at = window.StartsAt;
@@ -93,6 +81,16 @@ public class CalendarReader(MedicDbContext db, TrainifyDbContext shared, Medical
                     CanCancel = row.Status == AppointmentStatus.Scheduled && (isDoctor || row.StartsAt > clock.UtcNow),
                     CanAttend = isDoctor && row.Status == AppointmentStatus.Scheduled && row.StartsAt <= clock.UtcNow
                 }));
+        }
+        var windows = await new AvailabilityPlanner(db, shared, clock, options).WindowsAsync(from, to, ct);
+        var visibleDoctors = windows.Select(x => x.DoctorId).Distinct().ToArray();
+        var occupied = await db.Appointments.AsNoTracking().Where(x => x.Available && x.Status == AppointmentStatus.Scheduled && visibleDoctors.Contains(x.DoctorId) && x.PersonId != access.PersonId && x.DoctorId != doctorId && x.StartsAt < end && x.EndsAt > start)
+            .OrderBy(x => x.StartsAt).Select(x => new { x.StartsAt, x.EndsAt }).Take(5001).ToListAsync(ct);
+        if (occupied.Count > 5000) { throw new MedicalRuleException("InvalidRange"); }
+        for (var index = 0; index < occupied.Count; index++)
+        {
+            var row = occupied[index];
+            result.Add(new("busy-" + index.ToString(CultureInfo.InvariantCulture), text["OccupiedAppointment"].Value, LocalText(row.StartsAt), LocalText(row.EndsAt), false, "#b35b4b", ["calendar-busy"], new CalendarEventDetails { Kind = "busy", Status = text["OccupiedAppointment"].Value }));
         }
         var slots = await SlotsAsync(from, to, ct);
         foreach (var day in slots.GroupBy(x => DateOnly.FromDateTime(x.StartsAtLocal)))

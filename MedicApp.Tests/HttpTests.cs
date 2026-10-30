@@ -148,6 +148,7 @@ public partial class HttpTests(SqlFixture fixture)
             ["Open24Hours"] = "true",
             ["OpeningTime"] = "08:00",
             ["ClosingTime"] = "18:00",
+            ["DemoBookingEnabled"] = "false",
             ["DefaultSlotMinutes"] = "20",
             ["Revision"] = revision,
             ["__RequestVerificationToken"] = token

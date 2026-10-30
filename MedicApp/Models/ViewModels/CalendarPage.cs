@@ -6,6 +6,9 @@ public class CalendarPage
     public DateOnly Today { get; set; }
     public DateOnly LastBookingDate { get; set; }
     public bool IsDoctor { get; set; }
+    public bool DemoBookingEnabled { get; set; }
+    public int BookingHorizonDays { get; set; }
+    public int SlotMinutes { get; set; }
     public bool OpenBooking { get; set; }
     public IReadOnlyList<CalendarSlot> Slots { get; set; } = [];
 }

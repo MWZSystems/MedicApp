@@ -1,5 +1,18 @@
 # Changelog
 
+## [1.3.0] - 2026-10-30
+
+### Corregido
+- La agenda principal puede reservar en un consultorio DEMO identificado, con disponibilidad recurrente y horarios iniciales cargados.
+- Selector con rangos completos (08:00–08:30), carga al abrir la página y vista semanal por defecto.
+
+### Agregado
+- Rango inicial de siete días y bloques recurrentes de treinta minutos; configurables, con máximo de treinta minutos para nuevas reservas.
+- Horario recurrente por doctor desde el catálogo, sin capturar cada día ni generar disponibilidad al consultar.
+- Citas ajenas visibles como intervalos ocupados anónimos, sin identidad, identificador clínico, versión ni acciones.
+- Inicializador explícito con veintiuna citas de ejemplo, permisos auditados para la cuenta indicada y modo DEMO desactivable.
+- Migración aditiva de Generated y UseRecurringSchedule exclusivamente en tablas médicas.
+
 ## [1.2.0] - 2026-10-30
 
 ### Agregado

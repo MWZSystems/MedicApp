@@ -1,9 +1,10 @@
 {
   "Medical": {
-    "BookingHorizonDays": 10,
+    "BookingHorizonDays": 7,
     "Open24Hours": true,
     "OpeningTime": "08:00",
     "ClosingTime": "18:00",
-    "DefaultSlotMinutes": 15
+    "DefaultSlotMinutes": 30,
+    "DemoBookingEnabled": false
   }
 }
