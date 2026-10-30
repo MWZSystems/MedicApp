@@ -82,6 +82,56 @@ public partial class HttpTests(SqlFixture fixture)
         Assert.Equal(HttpStatusCode.OK, restrictions.StatusCode);
     }
 
+    [Fact]
+    public async Task Calendar_AuthenticatedPage_HasOnlyDateAndTimeForBooking()
+    {
+        await using var factory = Factory(); using var client = Client(factory);
+        await LoginAsync(client, "employee");
+        var html = await client.GetStringAsync("/Appointments");
+        Assert.Contains("appointments-calendar", html);
+        Assert.Contains("name=\"Date\"", html);
+        Assert.Contains("name=\"Time\"", html);
+        Assert.DoesNotContain("name=\"PersonId\"", html);
+        Assert.DoesNotContain("name=\"WindowId\"", html);
+        Assert.Contains("fullcalendar/index.global.min.js", html);
+        Assert.Contains("icons.svg#calendar", html);
+        using var denied = await client.PostAsync("/Appointments/Reserve", new FormUrlEncodedContent(new Dictionary<string, string>()));
+        Assert.Equal(HttpStatusCode.BadRequest, denied.StatusCode);
+    }
+    [Fact]
+    public async Task Calendar_ReserveEndpoint_IgnoresForgedEmployeeAndDoctor()
+    {
+        await using var factory = Factory(); using var client = Client(factory);
+        await LoginAsync(client, "employee");
+        var html = await client.GetStringAsync("/Appointments");
+        var token = TokenRegex().Match(html).Groups[1].Value;
+        var at = SqlFixture.Clock().Local(fixture.Tomorrow.AddHours(6));
+        client.DefaultRequestHeaders.Accept.ParseAdd("application/json");
+        using var response = await client.PostAsync("/Appointments/Reserve", new FormUrlEncodedContent(new Dictionary<string, string>
+        {
+            ["Date"] = at.ToString("yyyy-MM-dd", System.Globalization.CultureInfo.InvariantCulture),
+            ["Time"] = at.ToString("HH:mm", System.Globalization.CultureInfo.InvariantCulture),
+            ["RequestKey"] = Guid.NewGuid().ToString(),
+            ["PersonId"] = fixture.OtherId.ToString(System.Globalization.CultureInfo.InvariantCulture),
+            ["DoctorId"] = "999999",
+            ["__RequestVerificationToken"] = token
+        }));
+        Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+        using var document = System.Text.Json.JsonDocument.Parse(await response.Content.ReadAsStringAsync());
+        var id = document.RootElement.GetProperty("id").GetInt32();
+        await using var db = fixture.Medical();
+        var saved = await Microsoft.EntityFrameworkCore.EntityFrameworkQueryableExtensions.SingleAsync(db.Appointments, x => x.Id == id);
+        Assert.Equal(fixture.EmployeeId, saved.PersonId);
+        Assert.Equal(fixture.DoctorId, saved.DoctorId);
+    }
+    [Fact]
+    public async Task Calendar_InvalidRange_IsRejected()
+    {
+        await using var factory = Factory(); using var client = Client(factory);
+        await LoginAsync(client, "employee");
+        using var response = await client.GetAsync("/Appointments/Events?from=2026-01-01&to=2026-12-31");
+        Assert.Equal(HttpStatusCode.UnprocessableEntity, response.StatusCode);
+    }
     [GeneratedRegex(@"name=\x22__RequestVerificationToken\x22[^>]*value=\x22([^\x22]+)\x22")]
     private static partial Regex TokenRegex();
 }

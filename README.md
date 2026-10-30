@@ -41,3 +41,9 @@ Las pruebas crean y eliminan exclusivamente una base LocalDB aleatoria `MedicApp
 Repositorio: https://github.com/MWZSystems/MedicApp. Los metadatos y las instrucciones de la entrega están en `Releases/v.1.0.0`. El ZIP de aplicación y su checksum se distribuyen como assets del release `v1.0.0`, sin conexión SQL, perfiles privados, claves de sesión ni datos.
 
 La integración automática con asistencia y overtime continúa pendiente de incorporar y publicar en WFMCore. El esquema propio y la cuenta administrativa de MedicApp ya se instalaron; publicar el sitio no vuelve a aplicar esos cambios.
+
+## Calendario de citas 1.1.0
+
+Citas abre el calendario compartido de la interfaz, con alcance por usuario. El empleado ve solo sus citas; cada doctor ve las propias y las asignadas. Reservar requiere fecha y hora. El empleado, doctor disponible, duración y auditoría se resuelven en el servidor. Las flechas, vistas, navegación por días y detalle permiten consultar y cancelar sin salir del calendario. La lista paginada sigue disponible como alternativa.
+
+La disponibilidad depende de doctores activos y ventanas previamente configuradas en Mi agenda; no se inventan horarios ni se crean reservas fuera de agenda. El horizonte de reserva configurado se conserva. No hay cambio SQL en esta versión.

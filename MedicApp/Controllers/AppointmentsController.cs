@@ -7,10 +7,10 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 namespace MedicApp.Controllers;
 
-public class AppointmentsController(MedicDbContext db, MedicalAccess access, MedicalService service, ListReader reader, MedicalClock clock, IOptions<MedicalOptions> options) : Controller
+public class AppointmentsController(MedicDbContext db, MedicalAccess access, MedicalService service, ListReader reader, MedicalClock clock, IOptions<MedicalOptions> options, CalendarReader calendar, Microsoft.Extensions.Localization.IStringLocalizer<UiText> text) : Controller
 {
     [HttpGet]
-    public async Task<IActionResult> Index(int page = 1, DateTime? from = null, DateTime? to = null, CancellationToken ct = default)
+    public async Task<IActionResult> List(int page = 1, DateTime? from = null, DateTime? to = null, CancellationToken ct = default)
     {
         var doctor = await access.DoctorIdAsync(ct);
         var range = reader.Range(from, to);
@@ -21,33 +21,46 @@ public class AppointmentsController(MedicDbContext db, MedicalAccess access, Med
         var doctors = await db.Doctors.AsNoTracking().Where(x => model.Items.Select(a => a.DoctorId).Contains(x.Id)).Select(x => new { x.Id, x.PersonId }).ToListAsync(ct);
         var names = await reader.NamesAsync(doctors.Select(x => x.PersonId), ct);
         model.Doctors = doctors.ToDictionary(x => x.Id, x => names[x.PersonId]);
-        return View(model);
+        return View("List", model);
     }
     [HttpGet]
-    public async Task<IActionResult> Book(DateTime? date, CancellationToken ct)
+    public async Task<IActionResult> Index(DateOnly? date = null, CancellationToken ct = default) => View(await CalendarPageAsync(date, false, ct));
+    [HttpGet]
+    public async Task<IActionResult> Book(DateTime? date, CancellationToken ct) => View("Index", await CalendarPageAsync(date == null ? null : DateOnly.FromDateTime(date.Value), true, ct));
+    [HttpGet]
+    public async Task<IActionResult> Events(DateOnly from, DateOnly to, CancellationToken ct) => Json(await calendar.EventsAsync(from, to, ct));
+    [HttpGet]
+    public async Task<IActionResult> Slots(DateOnly date, CancellationToken ct)
     {
-        var day = (date ?? clock.Local(clock.UtcNow)).Date;
-        var start = clock.ToUtc(day);
-        var end = clock.ToUtc(day.AddDays(1));
-        ViewBag.Date = day;
-        if (start > clock.UtcNow.AddDays(options.Value.BookingHorizonDays) || end <= clock.UtcNow) { return View(new List<SlotOption>()); }
-        var windows = await (from w in db.Windows.AsNoTracking() join d in db.Doctors.AsNoTracking() on w.DoctorId equals d.Id where w.Available && d.Available && w.StartsAt < end && w.EndsAt > start orderby w.StartsAt select new { Window = w, d.PersonId, d.Specialty }).Take(200).ToListAsync(ct);
-        var doctorIds = windows.Select(x => x.Window.DoctorId).Distinct().ToArray();
-        var busy = await db.Appointments.AsNoTracking().Where(x => x.Available && x.Status == AppointmentStatus.Scheduled && (doctorIds.Contains(x.DoctorId) || x.PersonId == access.PersonId) && x.StartsAt < end && x.EndsAt > start).Select(x => new { x.DoctorId, x.PersonId, x.StartsAt, x.EndsAt }).ToListAsync(ct);
-        var names = await reader.NamesAsync(windows.Select(x => x.PersonId), ct);
-        var slots = new List<SlotOption>();
-        foreach (var row in windows)
-        {
-            var w = row.Window;
-            for (var at = w.StartsAt; at.AddMinutes(w.SlotMinutes) <= w.EndsAt && slots.Count < 500; at = at.AddMinutes(w.SlotMinutes))
-            {
-                if (at < start || at >= end || at <= clock.UtcNow || at > clock.UtcNow.AddDays(options.Value.BookingHorizonDays)) { continue; }
-                if (busy.Any(x => (x.DoctorId == w.DoctorId || x.PersonId == access.PersonId) && MedicalRules.Overlaps(at, at.AddMinutes(w.SlotMinutes), x.StartsAt, x.EndsAt))) { continue; }
-                slots.Add(new(w.Id, w.DoctorId, names[row.PersonId], row.Specialty, clock.Local(at), w.SlotMinutes));
-            }
-        }
-        return View(slots);
+        if (!ModelState.IsValid || date == default || date == DateOnly.MaxValue) { return BadRequest(); }
+        var slots = await calendar.SlotsAsync(date, date.AddDays(1), ct);
+        return Json(slots.Select(x => new { time = x.StartsAtLocal.ToString("HH:mm", System.Globalization.CultureInfo.InvariantCulture), durationMinutes = x.DurationMinutes }));
     }
+    [HttpPost]
+    public async Task<IActionResult> Reserve(ReserveForm input, CancellationToken ct)
+    {
+        if (!ModelState.IsValid || input.Date == null || input.Time == null || input.RequestKey == Guid.Empty) { throw new MedicalRuleException("InvalidReservation"); }
+        var id = await service.BookAtAsync(input.Date.Value.ToDateTime(input.Time.Value), input.RequestKey, ct);
+        if (WantsJson()) { return Json(new { id, message = text["BookingSaved"].Value }); }
+        TempData["Success"] = "BookingSaved";
+        return RedirectToAction(nameof(Index), new { date = input.Date.Value.ToString("yyyy-MM-dd", System.Globalization.CultureInfo.InvariantCulture) });
+    }
+    private async Task<CalendarPage> CalendarPageAsync(DateOnly? date, bool openBooking, CancellationToken ct)
+    {
+        var today = DateOnly.FromDateTime(clock.Local(clock.UtcNow));
+        var selected = date ?? today;
+        if (selected == DateOnly.MaxValue) { selected = today; }
+        return new CalendarPage
+        {
+            Today = today,
+            Date = selected,
+            LastBookingDate = DateOnly.FromDateTime(clock.Local(clock.UtcNow.AddDays(options.Value.BookingHorizonDays))),
+            IsDoctor = await access.DoctorIdAsync(ct) != null,
+            OpenBooking = openBooking,
+            Slots = await calendar.SlotsAsync(selected, selected.AddDays(1), ct)
+        };
+    }
+    private bool WantsJson() => Request.Headers.Accept.Any(x => x != null && x.Contains("application/json", StringComparison.OrdinalIgnoreCase));
     [HttpPost]
     public async Task<IActionResult> Book(BookingForm input, CancellationToken ct)
     {
@@ -61,6 +74,7 @@ public class AppointmentsController(MedicDbContext db, MedicalAccess access, Med
     {
         if (!ModelState.IsValid) { return BadRequest(); }
         await service.ChangeAppointmentAsync(input.Id, (AppointmentStatus)input.Status, input.Reason, input.Version, ct);
+        if (WantsJson()) { return Json(new { message = text["Saved"].Value }); }
         TempData["Success"] = "Saved";
         return RedirectToAction(nameof(Index));
     }

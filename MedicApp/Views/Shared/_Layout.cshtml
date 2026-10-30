@@ -10,14 +10,15 @@
 <link rel="stylesheet" href="~/lib/select2/select2.min.css"/>
 <link rel="stylesheet" href="~/lib/datatables/dataTables.bootstrap5.min.css"/>
 <link rel="stylesheet" href="~/css/medicapp.css" asp-append-version="true"/>
+@await RenderSectionAsync("Styles", required: false)
 </head><body data-search-page="@T["SearchPage"]" data-no-matches="@T["NoMatches"]" data-no-records="@T["NoRecords"]" data-columns="@T["Columns"]" data-filter-column="@T["FilterColumn"]" data-clear-filters="@T["ClearFilters"]" data-confirm="@T["Confirm"]" data-cancel="@T["Cancel"]">
-<header class="app-header"><div class="container-fluid app-width"><div class="brand-row"><a class="brand" asp-controller="Home" asp-action="Index"><img src="~/branding/medicapp.svg" alt="" width="40" height="40"/><span>@Settings.Value.DisplayName<small>@T["MedicalService"]</small></span></a><div class="account-bar">@if(User.Identity?.IsAuthenticated == true){<span>@User.Identity.Name</span><form asp-controller="Account" asp-action="Logout" method="post"><button class="btn btn-outline-secondary">@T["Logout"]</button></form>}</div></div>
+<header class="app-header"><div class="container-fluid app-width"><div class="brand-row"><a class="brand" asp-controller="Home" asp-action="Index"><img src="~/branding/medicapp.svg" alt="" width="40" height="40"/><span>@Settings.Value.DisplayName<small>@T["MedicalService"]</small></span></a><div class="account-bar">@if(User.Identity?.IsAuthenticated == true){<span>@User.Identity.Name</span><form asp-controller="Account" asp-action="Logout" method="post"><button class="btn btn-outline-secondary"><medic-icon name="logout"/>@T["Logout"]</button></form>}</div></div>
 @if(User.Identity?.IsAuthenticated == true){<nav class="navbar navbar-expand-lg app-nav" aria-label="@T["Home"]"><button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#main-nav" aria-controls="main-nav" aria-expanded="false"><span class="navbar-toggler-icon"></span></button><div id="main-nav" class="collapse navbar-collapse"><div class="navbar-nav">
-<a class="nav-link" asp-controller="Home" asp-action="Index">@T["Home"]</a><a class="nav-link" asp-controller="Appointments" asp-action="Index">@T["Appointments"]</a><a class="nav-link" asp-controller="Leaves" asp-action="Index">@T["Leaves"]</a>
-@if((await Authorization.AuthorizeAsync(User,"Doctor")).Succeeded){<a class="nav-link" asp-controller="Agenda" asp-action="Index">@T["Agenda"]</a>}
-@if((await Authorization.AuthorizeAsync(User,"Doctors")).Succeeded){<a class="nav-link" asp-controller="Admin" asp-action="Doctors">@T["Doctors"]</a>}
-@if((await Authorization.AuthorizeAsync(User,"Access")).Succeeded){<a class="nav-link" asp-controller="Admin" asp-action="Access">@T["Access"]</a><a class="nav-link" asp-controller="Admin" asp-action="Audit">@T["Audit"]</a>}
-<a class="nav-link" asp-controller="Account" asp-action="ChangePassword">@T["ChangePassword"]</a></div></div></nav>}
+<a class="nav-link" asp-controller="Home" asp-action="Index"><medic-icon name="home"/>@T["Home"]</a><a class="nav-link" asp-controller="Appointments" asp-action="Index"><medic-icon name="calendar"/>@T["Appointments"]</a><a class="nav-link" asp-controller="Leaves" asp-action="Index"><medic-icon name="heart"/>@T["Leaves"]</a>
+@if((await Authorization.AuthorizeAsync(User,"Doctor")).Succeeded){<a class="nav-link" asp-controller="Agenda" asp-action="Index"><medic-icon name="clock"/>@T["Agenda"]</a>}
+@if((await Authorization.AuthorizeAsync(User,"Doctors")).Succeeded){<a class="nav-link" asp-controller="Admin" asp-action="Doctors"><medic-icon name="users"/>@T["Doctors"]</a>}
+@if((await Authorization.AuthorizeAsync(User,"Access")).Succeeded){<a class="nav-link" asp-controller="Admin" asp-action="Access"><medic-icon name="shield"/>@T["Access"]</a><a class="nav-link" asp-controller="Admin" asp-action="Audit"><medic-icon name="history"/>@T["Audit"]</a>}
+<a class="nav-link" asp-controller="Account" asp-action="ChangePassword"><medic-icon name="key"/>@T["ChangePassword"]</a></div></div></nav>}
 </div></header>
 <main class="container-fluid app-width py-4" id="main-content">
 @if(TempData["Success"] is string success){<div class="alert alert-success" role="status">@T[success]</div>}

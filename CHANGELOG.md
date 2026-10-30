@@ -1,5 +1,18 @@
 # Changelog
 
+## [1.1.0] - 2026-10-30
+
+### Agregado
+- Calendario de citas con vistas de mes, semana, día y agenda, basado en la referencia AppStack.
+- Reserva con fecha/hora y asignación automática de un doctor disponible; identidad tomada de la sesión.
+- Consulta y cancelación desde el detalle de la cita, con actualización del calendario y horarios.
+- Iconos SVG locales en navegación, formularios y acciones.
+
+### Seguridad
+- Alcance propio del empleado y agenda asignada del doctor; validación de disponibilidad, idempotencia y concurrencia en servidor.
+- Sin cambios de esquema ni migraciones de datos.
+
+
 ## [1.0.0] - 2026-10-30
 
 ### Agregado

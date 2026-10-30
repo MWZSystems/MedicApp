@@ -5,7 +5,7 @@ if (window.jQuery && jQuery.fn.select2) {
   document.querySelectorAll("select[data-search-url]").forEach(element => {
     jQuery(element).select2({ width: "100%", language: "es", minimumInputLength: 2, ajax: { url: element.dataset.searchUrl, dataType: "json", delay: 300, data: params => ({ term: params.term }), processResults: data => data } });
   });
-  document.querySelectorAll("select:not([data-search-url])").forEach(element => {
+  document.querySelectorAll('select:not([data-search-url]):not([data-select2="off"])').forEach(element => {
     jQuery(element).select2({ width: "100%", language: "es", minimumResultsForSearch: 8 });
   });
   if (jQuery.validator) { jQuery.validator.setDefaults({ ignore: ":hidden:not(.select2-hidden-accessible)" }); }

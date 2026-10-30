@@ -8,3 +8,6 @@
 - Insove Medical Healthcare Pro, TemplatesJungle: template comercial proporcionado por el usuario. Se usa su CSS como base visual y se adapta la navegación a Razor. La vigencia y alcance de la licencia deben cubrir la instalación del cliente. No se distribuye el archivo License Key.txt ni ninguna clave comercial. Este aviso no sustituye la licencia del proveedor.
 
 No se cargan recursos desde CDN, Google Fonts ni servicios de terceros durante la operación de la interfaz.
+
+- FullCalendar Standard 6.1.19: MIT, archivos oficiales locales de los paquetes npm fullcalendar y @fullcalendar/core. Licencia conservada en wwwroot/lib/fullcalendar/LICENSE.md. Referencia visual: calendario de AppStack 3.3.1 bootstrap5 proporcionado por el usuario; no se copia ni publica su bundle comercial. Documentación/licencia: https://fullcalendar.io/license.
+- Iconos de interfaz: sprite SVG propio, sin fuentes externas ni dependencia de servicios remotos.

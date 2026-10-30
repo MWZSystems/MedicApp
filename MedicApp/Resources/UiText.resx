@@ -350,4 +350,91 @@
   <data name="No" xml:space="preserve">
     <value>No</value>
   </data>
+  <data name="Calendar" xml:space="preserve">
+    <value>Calendario</value>
+  </data>
+  <data name="DoctorCalendar" xml:space="preserve">
+    <value>Mi calendario de atención</value>
+  </data>
+  <data name="MyCalendar" xml:space="preserve">
+    <value>Mis citas médicas</value>
+  </data>
+  <data name="CalendarHelp" xml:space="preserve">
+    <value>Consulta tus citas y elige un día para encontrar un horario disponible.</value>
+  </data>
+  <data name="SimpleBookingHelp" xml:space="preserve">
+    <value>Elige la fecha y la hora. Nosotros completamos lo demás.</value>
+  </data>
+  <data name="Time" xml:space="preserve">
+    <value>Hora</value>
+  </data>
+  <data name="ChooseTime" xml:space="preserve">
+    <value>Selecciona un horario</value>
+  </data>
+  <data name="AutoDoctorHelp" xml:space="preserve">
+    <value>Asignaremos un doctor disponible al confirmar tu cita.</value>
+  </data>
+  <data name="SessionBookingHelp" xml:space="preserve">
+    <value>La cita se reserva a tu nombre. No necesitas volver a capturar tus datos.</value>
+  </data>
+  <data name="ConfirmBooking" xml:space="preserve">
+    <value>Confirmar cita</value>
+  </data>
+  <data name="AvailableTimes" xml:space="preserve">
+    <value>Horarios disponibles</value>
+  </data>
+  <data name="FreeSlots" xml:space="preserve">
+    <value>{0} horarios libres</value>
+  </data>
+  <data name="MyAppointment" xml:space="preserve">
+    <value>Mi cita</value>
+  </data>
+  <data name="ViewList" xml:space="preserve">
+    <value>Ver lista</value>
+  </data>
+  <data name="Today" xml:space="preserve">
+    <value>Hoy</value>
+  </data>
+  <data name="Month" xml:space="preserve">
+    <value>Mes</value>
+  </data>
+  <data name="Week" xml:space="preserve">
+    <value>Semana</value>
+  </data>
+  <data name="Day" xml:space="preserve">
+    <value>Día</value>
+  </data>
+  <data name="ListView" xml:space="preserve">
+    <value>Agenda</value>
+  </data>
+  <data name="LoadingSlots" xml:space="preserve">
+    <value>Buscando horarios disponibles…</value>
+  </data>
+  <data name="CalendarRequestError" xml:space="preserve">
+    <value>No fue posible actualizar el calendario. Reintenta o vuelve a iniciar sesión.</value>
+  </data>
+  <data name="ManageAvailability" xml:space="preserve">
+    <value>Configurar mi disponibilidad</value>
+  </data>
+  <data name="CalendarNeedsJavascript" xml:space="preserve">
+    <value>Activa JavaScript para usar el calendario. También puedes consultar la lista de citas.</value>
+  </data>
+  <data name="ShowTimes" xml:space="preserve">
+    <value>Ver horarios</value>
+  </data>
+  <data name="AppointmentDetail" xml:space="preserve">
+    <value>Detalle de la cita</value>
+  </data>
+  <data name="DateAndTime" xml:space="preserve">
+    <value>Fecha y hora</value>
+  </data>
+  <data name="Close" xml:space="preserve">
+    <value>Cerrar</value>
+  </data>
+  <data name="Action" xml:space="preserve">
+    <value>Acción</value>
+  </data>
+  <data name="InvalidReservation" xml:space="preserve">
+    <value>Selecciona una fecha y una hora disponibles antes de confirmar.</value>
+  </data>
 </root>
