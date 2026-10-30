@@ -16,6 +16,10 @@ dotnet test MedicApp.slnx -c Release --no-restore
 
 Configurar `ConnectionStrings:Workforce` fuera del repositorio; la base definitiva confirmada es sql1002 / db_acaa35_trainify. Revisar [instalación](docs/instalacion.md) para ejecutar los scripts, habilitar el primer administrador y levantar HTTPS. No hay contraseña predeterminada ni migración automática al inicio.
 
+## Iconos e interfaz 1.5.1
+
+La pantalla de acceso, inicio, menús, formularios, tablas y acciones utilizan iconos SVG locales consistentes. Las etiquetas siguen visibles y los iconos decorativos no se anuncian por lectores de pantalla. Sin cambios de reglas, permisos ni esquema.
+
 ## Evidencias y expediente documental 1.5.0
 
 Registro incluye **Agregar incapacidad** para doctores y administración médica. Tras capturar se adjuntan documentos PDF/JPG/PNG desde la incapacidad; cada fila permite consultar sus evidencias y el expediente documental de la persona. Los archivos se cifran y conservan fuera de wwwroot; SQL almacena solo metadatos. El titular, el doctor responsable y los administradores médicos tienen acceso a la consulta. Solo el doctor responsable puede autorizar o cancelar el periodo. Ver [evidencias y expediente](docs/evidencias.md) para permisos, límites, migración y respaldos.

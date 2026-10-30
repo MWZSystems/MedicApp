@@ -1,5 +1,5 @@
 @{ var calendarSection = string.Equals(ViewContext.RouteData.Values["action"]?.ToString(), "Calendar", StringComparison.OrdinalIgnoreCase); }
 <nav class="nav nav-pills gap-2 mb-4" aria-label="@T["LeaveSections"]">
-  <a class="nav-link @(!calendarSection ? "active" : "")" asp-controller="Leaves" asp-action="Index" aria-current="@(!calendarSection ? "page" : null)"><medic-icon name="list"/>@T["LeaveRegistry"]</a>
+  <a class="nav-link @(!calendarSection ? "active" : "")" asp-controller="Leaves" asp-action="Index" aria-current="@(!calendarSection ? "page" : null)"><medic-icon name="clipboard"/>@T["LeaveRegistry"]</a>
   <a class="nav-link @(calendarSection ? "active" : "")" asp-controller="Leaves" asp-action="Calendar" aria-current="@(calendarSection ? "page" : null)"><medic-icon name="calendar"/>@T["LeaveCalendar"]</a>
 </nav>

@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.5.1] - 2026-10-30
+
+### Interfaz
+- Iconos locales de acceso, identificación y contraseña en la entrada; distintivos en inicio y tarjetas de resumen.
+- Iconos consistentes en menús, formularios, tablas, filtros, navegación y documentos; estilos adaptados a móvil.
+- Se conservan etiquetas visibles y los SVG son decorativos para lectores de pantalla. Sin cambios de permisos, datos o reglas de negocio.
+
 ## [1.5.0] - 2026-10-30
 
 ### Agregado
