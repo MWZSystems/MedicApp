@@ -1,0 +1,28 @@
+@using Microsoft.AspNetCore.Authorization
+@using Microsoft.Extensions.Options
+@inject IAuthorizationService Authorization
+@inject IOptions<MedicalOptions> Settings
+<!DOCTYPE html>
+<html lang="es-MX"><head><meta charset="utf-8"/><meta name="viewport" content="width=device-width, initial-scale=1"/><title>@ViewData["Title"] · @Settings.Value.DisplayName</title>
+<link rel="icon" href="~/branding/medicapp.svg" type="image/svg+xml"/>
+<link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css"/>
+<link rel="stylesheet" href="~/lib/insove/style.css"/>
+<link rel="stylesheet" href="~/lib/select2/select2.min.css"/>
+<link rel="stylesheet" href="~/lib/datatables/dataTables.bootstrap5.min.css"/>
+<link rel="stylesheet" href="~/css/medicapp.css" asp-append-version="true"/>
+</head><body data-search-page="@T["SearchPage"]" data-no-matches="@T["NoMatches"]" data-no-records="@T["NoRecords"]" data-columns="@T["Columns"]" data-filter-column="@T["FilterColumn"]" data-clear-filters="@T["ClearFilters"]" data-confirm="@T["Confirm"]" data-cancel="@T["Cancel"]">
+<header class="app-header"><div class="container-fluid app-width"><div class="brand-row"><a class="brand" asp-controller="Home" asp-action="Index"><img src="~/branding/medicapp.svg" alt="" width="40" height="40"/><span>@Settings.Value.DisplayName<small>@T["MedicalService"]</small></span></a><div class="account-bar">@if(User.Identity?.IsAuthenticated == true){<span>@User.Identity.Name</span><form asp-controller="Account" asp-action="Logout" method="post"><button class="btn btn-outline-secondary">@T["Logout"]</button></form>}</div></div>
+@if(User.Identity?.IsAuthenticated == true){<nav class="navbar navbar-expand-lg app-nav" aria-label="@T["Home"]"><button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#main-nav" aria-controls="main-nav" aria-expanded="false"><span class="navbar-toggler-icon"></span></button><div id="main-nav" class="collapse navbar-collapse"><div class="navbar-nav">
+<a class="nav-link" asp-controller="Home" asp-action="Index">@T["Home"]</a><a class="nav-link" asp-controller="Appointments" asp-action="Index">@T["Appointments"]</a><a class="nav-link" asp-controller="Leaves" asp-action="Index">@T["Leaves"]</a>
+@if((await Authorization.AuthorizeAsync(User,"Doctor")).Succeeded){<a class="nav-link" asp-controller="Agenda" asp-action="Index">@T["Agenda"]</a>}
+@if((await Authorization.AuthorizeAsync(User,"Doctors")).Succeeded){<a class="nav-link" asp-controller="Admin" asp-action="Doctors">@T["Doctors"]</a>}
+@if((await Authorization.AuthorizeAsync(User,"Access")).Succeeded){<a class="nav-link" asp-controller="Admin" asp-action="Access">@T["Access"]</a><a class="nav-link" asp-controller="Admin" asp-action="Audit">@T["Audit"]</a>}
+<a class="nav-link" asp-controller="Account" asp-action="ChangePassword">@T["ChangePassword"]</a></div></div></nav>}
+</div></header>
+<main class="container-fluid app-width py-4" id="main-content">
+@if(TempData["Success"] is string success){<div class="alert alert-success" role="status">@T[success]</div>}
+@RenderBody()
+</main><footer class="container-fluid app-width app-footer"><span>@Settings.Value.DisplayName · @T["Version"] @typeof(Program).Assembly.GetName().Version?.ToString(3)</span><span>@T["TimeZone"]: @Settings.Value.TimeZoneId</span></footer>
+<script src="~/lib/jquery/dist/jquery.min.js"></script><script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script><script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script><script src="~/lib/jquery-validation-unobtrusive/dist/jquery.validate.unobtrusive.min.js"></script><script src="~/lib/select2/select2.min.js"></script><script src="~/lib/select2/es.js"></script><script src="~/lib/datatables/dataTables.min.js"></script><script src="~/lib/datatables/dataTables.bootstrap5.min.js"></script><script src="~/lib/sweetalert2/sweetalert2.all.min.js"></script><script src="~/js/medicapp.js" asp-append-version="true"></script>
+@await RenderSectionAsync("Scripts", required: false)
+</body></html>

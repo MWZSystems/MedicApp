@@ -1,0 +1,5 @@
+@model List<SlotOption>
+@{ ViewData["Title"] = T["Book"]; }
+<div class="page-heading"><h1>@T["AvailableSlots"]</h1></div><p>@T["BookingHelp"]</p><form method="get" class="filter-row"><div><label for="date" class="form-label">@T["Date"]</label><input id="date" name="date" type="date" value="@(((DateTime)ViewBag.Date).ToString("yyyy-MM-dd"))" class="form-control"/></div><button class="btn btn-outline-secondary">@T["Search"]</button></form>
+@if(Model.Count==0){<section class="panel">@T["NoAgenda"]</section>}
+<div class="slot-grid">@foreach(var slot in Model){<section class="slot"><span class="eyebrow">@slot.Specialty</span><strong>@slot.StartsAt.ToString("HH:mm")</strong><p>@slot.DoctorName<br/>@slot.Minutes @T["Minutes"]</p><form method="post" data-confirm="@T["ConfirmAction"]" data-confirm-text="@T["ConfirmDetail"]"><input type="hidden" name="WindowId" value="@slot.WindowId"/><input type="hidden" name="StartsAt" value="@slot.StartsAt.ToString("yyyy-MM-ddTHH:mm:ss")"/><input type="hidden" name="RequestKey" value="@Guid.NewGuid()"/><button class="btn btn-primary">@T["Book"]</button></form></section>}</div>

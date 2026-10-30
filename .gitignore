@@ -1,0 +1,16 @@
+bin/
+obj/
+.vs/
+App_Data/
+TestResults/
+*.user
+*.log
+appsettings.Local.json
+
+# Configuración privada de publicación
+*.publishsettings
+*.pubxml
+appsettings.Production.json
+publish/
+Releases/**/*.zip
+

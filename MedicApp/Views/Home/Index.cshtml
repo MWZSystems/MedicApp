@@ -1,0 +1,4 @@
+@{ ViewData["Title"] = T["Home"]; }
+<section class="hero"><span class="eyebrow">@T["MedicalService"]</span><h1>@T["Welcome"]</h1><p>@T["WelcomeDetail"]</p><a class="btn btn-primary" asp-controller="Appointments" asp-action="Book">@T["Book"] →</a></section>
+<div class="stats"><section class="panel"><span>@T["PendingAppointments"]</span><div class="stat-number">@ViewBag.Appointments</div><a asp-controller="Appointments" asp-action="Index">@T["Appointments"] →</a></section><section class="panel"><span>@T["ActiveLeaves"]</span><div class="stat-number">@ViewBag.Leaves</div><a asp-controller="Leaves" asp-action="Index">@T["Leaves"] →</a></section></div>
+<p class="text-muted">@T["ClinicalPrivacy"]</p>

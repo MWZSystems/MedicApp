@@ -1,0 +1,353 @@
+<root>
+  <data name="Home" xml:space="preserve">
+    <value>Inicio</value>
+  </data>
+  <data name="Appointments" xml:space="preserve">
+    <value>Citas</value>
+  </data>
+  <data name="Leaves" xml:space="preserve">
+    <value>Incapacidades</value>
+  </data>
+  <data name="Agenda" xml:space="preserve">
+    <value>Mi agenda</value>
+  </data>
+  <data name="Doctors" xml:space="preserve">
+    <value>Doctores</value>
+  </data>
+  <data name="Access" xml:space="preserve">
+    <value>Permisos</value>
+  </data>
+  <data name="Audit" xml:space="preserve">
+    <value>Auditoría</value>
+  </data>
+  <data name="Login" xml:space="preserve">
+    <value>Iniciar sesión</value>
+  </data>
+  <data name="Logout" xml:space="preserve">
+    <value>Cerrar sesión</value>
+  </data>
+  <data name="Identifier" xml:space="preserve">
+    <value>Usuario o número de empleado</value>
+  </data>
+  <data name="Password" xml:space="preserve">
+    <value>Contraseña</value>
+  </data>
+  <data name="Required" xml:space="preserve">
+    <value>Este campo es obligatorio.</value>
+  </data>
+  <data name="PasswordLength" xml:space="preserve">
+    <value>Usa al menos 12 caracteres.</value>
+  </data>
+  <data name="PasswordsDiffer" xml:space="preserve">
+    <value>Las contraseñas no coinciden.</value>
+  </data>
+  <data name="InvalidLogin" xml:space="preserve">
+    <value>No fue posible iniciar sesión. Revisa tus datos o consulta al administrador.</value>
+  </data>
+  <data name="PasswordRejected" xml:space="preserve">
+    <value>No se pudo cambiar la contraseña. Revisa la contraseña actual y los requisitos de seguridad.</value>
+  </data>
+  <data name="ChangePassword" xml:space="preserve">
+    <value>Cambiar contraseña</value>
+  </data>
+  <data name="CurrentPassword" xml:space="preserve">
+    <value>Contraseña actual</value>
+  </data>
+  <data name="NewPassword" xml:space="preserve">
+    <value>Nueva contraseña</value>
+  </data>
+  <data name="ConfirmPassword" xml:space="preserve">
+    <value>Confirmar contraseña</value>
+  </data>
+  <data name="Start" xml:space="preserve">
+    <value>Inicio</value>
+  </data>
+  <data name="End" xml:space="preserve">
+    <value>Fin</value>
+  </data>
+  <data name="Employee" xml:space="preserve">
+    <value>Empleado</value>
+  </data>
+  <data name="Doctor" xml:space="preserve">
+    <value>Doctor</value>
+  </data>
+  <data name="Specialty" xml:space="preserve">
+    <value>Especialidad</value>
+  </data>
+  <data name="License" xml:space="preserve">
+    <value>Cédula profesional</value>
+  </data>
+  <data name="Status" xml:space="preserve">
+    <value>Estado</value>
+  </data>
+  <data name="Actions" xml:space="preserve">
+    <value>Acciones</value>
+  </data>
+  <data name="Save" xml:space="preserve">
+    <value>Guardar</value>
+  </data>
+  <data name="Cancel" xml:space="preserve">
+    <value>Cancelar</value>
+  </data>
+  <data name="Approve" xml:space="preserve">
+    <value>Autorizar</value>
+  </data>
+  <data name="Create" xml:space="preserve">
+    <value>Crear</value>
+  </data>
+  <data name="Reference" xml:space="preserve">
+    <value>Folio</value>
+  </data>
+  <data name="Reason" xml:space="preserve">
+    <value>Motivo</value>
+  </data>
+  <data name="SlotMinutes" xml:space="preserve">
+    <value>Minutos por cita</value>
+  </data>
+  <data name="Appointment" xml:space="preserve">
+    <value>Cita atendida (opcional)</value>
+  </data>
+  <data name="Search" xml:space="preserve">
+    <value>Buscar</value>
+  </data>
+  <data name="From" xml:space="preserve">
+    <value>Desde</value>
+  </data>
+  <data name="To" xml:space="preserve">
+    <value>Hasta</value>
+  </data>
+  <data name="Previous" xml:space="preserve">
+    <value>Anterior</value>
+  </data>
+  <data name="Next" xml:space="preserve">
+    <value>Siguiente</value>
+  </data>
+  <data name="NoRecords" xml:space="preserve">
+    <value>No hay registros para este período.</value>
+  </data>
+  <data name="Book" xml:space="preserve">
+    <value>Reservar cita</value>
+  </data>
+  <data name="BookingSaved" xml:space="preserve">
+    <value>Tu cita quedó reservada.</value>
+  </data>
+  <data name="Saved" xml:space="preserve">
+    <value>Cambios guardados.</value>
+  </data>
+  <data name="Welcome" xml:space="preserve">
+    <value>Tu salud, en buenas manos.</value>
+  </data>
+  <data name="WelcomeDetail" xml:space="preserve">
+    <value>Gestiona tus citas y consulta tus incapacidades desde un solo lugar.</value>
+  </data>
+  <data name="PendingAppointments" xml:space="preserve">
+    <value>Citas pendientes</value>
+  </data>
+  <data name="ActiveLeaves" xml:space="preserve">
+    <value>Incapacidades vigentes</value>
+  </data>
+  <data name="MedicalService" xml:space="preserve">
+    <value>Servicio médico</value>
+  </data>
+  <data name="AvailableSlots" xml:space="preserve">
+    <value>Horarios disponibles</value>
+  </data>
+  <data name="BookingHelp" xml:space="preserve">
+    <value>Selecciona un horario. La disponibilidad se comprueba nuevamente al reservar.</value>
+  </data>
+  <data name="Date" xml:space="preserve">
+    <value>Fecha</value>
+  </data>
+  <data name="Minutes" xml:space="preserve">
+    <value>minutos</value>
+  </data>
+  <data name="Attended" xml:space="preserve">
+    <value>Atendida</value>
+  </data>
+  <data name="Scheduled" xml:space="preserve">
+    <value>Programada</value>
+  </data>
+  <data name="Cancelled" xml:space="preserve">
+    <value>Cancelada</value>
+  </data>
+  <data name="NoShow" xml:space="preserve">
+    <value>No asistió</value>
+  </data>
+  <data name="Draft" xml:space="preserve">
+    <value>Borrador</value>
+  </data>
+  <data name="Approved" xml:space="preserve">
+    <value>Autorizada</value>
+  </data>
+  <data name="MarkAttended" xml:space="preserve">
+    <value>Registrar atención</value>
+  </data>
+  <data name="MarkNoShow" xml:space="preserve">
+    <value>Registrar inasistencia</value>
+  </data>
+  <data name="CreateLeave" xml:space="preserve">
+    <value>Nueva incapacidad</value>
+  </data>
+  <data name="CreateWindow" xml:space="preserve">
+    <value>Agregar disponibilidad</value>
+  </data>
+  <data name="Disable" xml:space="preserve">
+    <value>Desactivar</value>
+  </data>
+  <data name="Available" xml:space="preserve">
+    <value>Activo</value>
+  </data>
+  <data name="ManageDoctors" xml:space="preserve">
+    <value>Administrar doctores</value>
+  </data>
+  <data name="ManageAccess" xml:space="preserve">
+    <value>Administrar permisos</value>
+  </data>
+  <data name="ReadIntegration" xml:space="preserve">
+    <value>Consultar integración laboral</value>
+  </data>
+  <data name="User" xml:space="preserve">
+    <value>Cuenta</value>
+  </data>
+  <data name="Operation" xml:space="preserve">
+    <value>Operación</value>
+  </data>
+  <data name="Entity" xml:space="preserve">
+    <value>Registro</value>
+  </data>
+  <data name="UpdatedAt" xml:space="preserve">
+    <value>Actualización</value>
+  </data>
+  <data name="Denied" xml:space="preserve">
+    <value>No tienes permiso para realizar esta operación.</value>
+  </data>
+  <data name="Trace" xml:space="preserve">
+    <value>Identificador de seguimiento</value>
+  </data>
+  <data name="UnexpectedError" xml:space="preserve">
+    <value>No fue posible completar la operación. Comparte el identificador con soporte.</value>
+  </data>
+  <data name="InvalidTime" xml:space="preserve">
+    <value>La hora seleccionada no existe o es ambigua en la zona configurada.</value>
+  </data>
+  <data name="InvalidInterval" xml:space="preserve">
+    <value>La fecha final debe ser posterior a la inicial.</value>
+  </data>
+  <data name="OutsideHorizon" xml:space="preserve">
+    <value>Selecciona una fecha futura dentro del horizonte permitido.</value>
+  </data>
+  <data name="UnavailableSlot" xml:space="preserve">
+    <value>El horario seleccionado no está disponible.</value>
+  </data>
+  <data name="Overlap" xml:space="preserve">
+    <value>El intervalo coincide con otro registro. Actualiza la página y elige otro horario.</value>
+  </data>
+  <data name="InvalidTransition" xml:space="preserve">
+    <value>El registro ya cambió o la operación no corresponde a su estado.</value>
+  </data>
+  <data name="Forbidden" xml:space="preserve">
+    <value>No tienes permiso para esta operación.</value>
+  </data>
+  <data name="FutureAttendance" xml:space="preserve">
+    <value>La cita aún no comienza.</value>
+  </data>
+  <data name="ReasonRequired" xml:space="preserve">
+    <value>Escribe el motivo de la operación.</value>
+  </data>
+  <data name="NotFound" xml:space="preserve">
+    <value>El registro no existe o no está disponible.</value>
+  </data>
+  <data name="InvalidAppointment" xml:space="preserve">
+    <value>Selecciona una cita atendida del mismo empleado y doctor.</value>
+  </data>
+  <data name="Concurrency" xml:space="preserve">
+    <value>Otro usuario modificó el registro. Actualiza la página antes de intentar nuevamente.</value>
+  </data>
+  <data name="Duplicate" xml:space="preserve">
+    <value>Ya existe un registro con ese identificador o folio.</value>
+  </data>
+  <data name="InvalidRange" xml:space="preserve">
+    <value>Selecciona un rango de hasta 92 días.</value>
+  </data>
+  <data name="ExistingAppointments" xml:space="preserve">
+    <value>Primero cancela o atiende las citas pendientes de este horario o doctor.</value>
+  </data>
+  <data name="SelfRevoke" xml:space="preserve">
+    <value>No puedes retirar tu propio permiso de administración.</value>
+  </data>
+  <data name="PermissionsHelp" xml:space="preserve">
+    <value>Los empleados consultan sus datos. Los doctores se habilitan desde su catálogo. Estos permisos administrativos son independientes.</value>
+  </data>
+  <data name="LeaveHelp" xml:space="preserve">
+    <value>Una cita no genera una incapacidad. Los borradores no afectan la disponibilidad laboral; solo las incapacidades autorizadas la restringen.</value>
+  </data>
+  <data name="IntegrationNotice" xml:space="preserve">
+    <value>La aplicación registra cambios para WFMCore. Su aplicación en asistencia y overtime requiere habilitar y verificar el consumidor de integración.</value>
+  </data>
+  <data name="TimeZone" xml:space="preserve">
+    <value>Zona horaria</value>
+  </data>
+  <data name="Version" xml:space="preserve">
+    <value>Versión</value>
+  </data>
+  <data name="ConfirmAction" xml:space="preserve">
+    <value>Confirmar operación</value>
+  </data>
+  <data name="ConfirmDetail" xml:space="preserve">
+    <value>Se registrará el cambio y su responsable.</value>
+  </data>
+  <data name="Page" xml:space="preserve">
+    <value>Página</value>
+  </data>
+  <data name="Total" xml:space="preserve">
+    <value>Total</value>
+  </data>
+  <data name="ClinicalPrivacy" xml:space="preserve">
+    <value>Esta aplicación administra citas e incapacidades; no captura diagnósticos ni expediente clínico.</value>
+  </data>
+  <data name="UnknownPerson" xml:space="preserve">
+    <value>Persona histórica</value>
+  </data>
+  <data name="UnavailableDatabase" xml:space="preserve">
+    <value>Configura la conexión y aplica la migración revisada antes de iniciar sesión.</value>
+  </data>
+  <data name="Remove" xml:space="preserve">
+    <value>Retirar</value>
+  </data>
+  <data name="AccessAccountHelp" xml:space="preserve">
+    <value>Busca una cuenta existente. Para actualizar permisos conserva la versión actual del registro.</value>
+  </data>
+  <data name="ReadOnly" xml:space="preserve">
+    <value>Consulta propia</value>
+  </data>
+  <data name="SearchHint" xml:space="preserve">
+    <value>Escribe al menos dos caracteres</value>
+  </data>
+  <data name="NoAgenda" xml:space="preserve">
+    <value>No hay horarios disponibles. Consulta otra fecha o al servicio médico.</value>
+  </data>
+  <data name="SearchPage" xml:space="preserve">
+    <value>Buscar en esta página:</value>
+  </data>
+  <data name="NoMatches" xml:space="preserve">
+    <value>Sin coincidencias</value>
+  </data>
+  <data name="Columns" xml:space="preserve">
+    <value>Columnas visibles</value>
+  </data>
+  <data name="FilterColumn" xml:space="preserve">
+    <value>Filtrar</value>
+  </data>
+  <data name="ClearFilters" xml:space="preserve">
+    <value>Limpiar filtros</value>
+  </data>
+  <data name="Confirm" xml:space="preserve">
+    <value>Confirmar</value>
+  </data>
+  <data name="Yes" xml:space="preserve">
+    <value>Sí</value>
+  </data>
+  <data name="No" xml:space="preserve">
+    <value>No</value>
+  </data>
+</root>

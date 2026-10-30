@@ -1,0 +1,19 @@
+root = true
+[*]
+indent_style = space
+indent_size = 4
+charset = utf-8
+insert_final_newline = true
+trim_trailing_whitespace = true
+[*.{json,css,js,cshtml}]
+indent_size = 2
+[*.cs]
+csharp_style_namespace_declarations = file_scoped:warning
+csharp_prefer_braces = true:warning
+
+[**/Migrations/*.cs]
+generated_code = true
+
+[MedicApp.Tests/*.cs]
+dotnet_diagnostic.CA1707.severity = none
+dotnet_diagnostic.xUnit1051.severity = none

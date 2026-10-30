@@ -1,0 +1,4 @@
+<Solution>
+  <Project Path="MedicApp/MedicApp.csproj" />
+  <Project Path="MedicApp.Tests/MedicApp.Tests.csproj" />
+</Solution>

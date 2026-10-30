@@ -1,0 +1,3 @@
+@model ListPage<AuditEntry>
+@{ViewData["Title"]=T["Audit"]; var names=(Dictionary<string,string>)ViewBag.AccountNames;}
+<h1>@T["Audit"]</h1><section class="panel"><div class="table-responsive"><table class="table" data-local-table><thead><tr><th>@T["UpdatedAt"]</th><th>@T["User"]</th><th>@T["Entity"]</th><th>@T["Operation"]</th><th>@T["Reason"]</th></tr></thead><tbody>@foreach(var row in Model.Items){<tr><td>@Clock.Local(row.LastUpdated).ToString("dd/MM/yyyy HH:mm")</td><td>@names.GetValueOrDefault(row.UpdatedById)</td><td>@row.EntityType #@row.EntityId</td><td>@row.Operation</td><td>@row.Reason</td></tr>}</tbody></table></div><partial name="_Pager" model="Model"/></section>
