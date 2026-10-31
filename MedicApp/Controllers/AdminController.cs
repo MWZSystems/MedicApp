@@ -73,6 +73,8 @@ public class AdminController(MedicDbContext db, TrainifyDbContext shared, Medica
         profile.ManageAccess = input.ManageAccess;
         profile.ManageDoctors = input.ManageDoctors;
         profile.ReadIntegration = input.ReadIntegration;
+        profile.ManageClinicalRecords = input.ManageClinicalRecords;
+        profile.ManageInventory = input.ManageInventory;
         service.Stamp(profile);
         await db.SaveChangesAsync(ct);
         service.Audit("AccessProfile", profile.Id, "SetPermissions");

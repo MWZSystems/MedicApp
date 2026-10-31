@@ -76,15 +76,16 @@ public class EvidenceStorage(IOptions<MedicalOptions> medical, IOptions<Document
         catch (IOException) { /* A failed compensation leaves an unreachable encrypted orphan, never a public file. */ }
         catch (UnauthorizedAccessException) { }
     }
-    public async Task<byte[]> ReadAsync(LeaveDocument document, CancellationToken ct)
+    public Task<byte[]> ReadAsync(LeaveDocument document, CancellationToken ct) => ReadAsync(document.StorageKey, document.ByteCount, document.Sha256, ct);
+    public async Task<byte[]> ReadAsync(string storageKey, long byteCount, string sha256, CancellationToken ct)
     {
-        var path = FilePath(document.StorageKey);
+        var path = FilePath(storageKey);
         try
         {
             if (new FileInfo(path).Length > 12 * 1048576L) { throw new MedicalRuleException("EvidenceUnavailable"); }
             var encrypted = await File.ReadAllBytesAsync(path, ct);
-            var bytes = protection.CreateProtector("MedicApp.LeaveEvidence.v1", document.StorageKey).Unprotect(encrypted);
-            if (bytes.LongLength != document.ByteCount || Convert.ToHexString(SHA256.HashData(bytes)) != document.Sha256) { throw new MedicalRuleException("EvidenceUnavailable"); }
+            var bytes = protection.CreateProtector("MedicApp.LeaveEvidence.v1", storageKey).Unprotect(encrypted);
+            if (bytes.LongLength != byteCount || Convert.ToHexString(SHA256.HashData(bytes)) != sha256) { throw new MedicalRuleException("EvidenceUnavailable"); }
             return bytes;
         }
         catch (Exception error) when (error is IOException or CryptographicException or UnauthorizedAccessException) { throw new MedicalRuleException("EvidenceUnavailable"); }

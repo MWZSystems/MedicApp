@@ -11,6 +11,8 @@ public class MedicalAuthorizationHandler(MedicalAccess access, IHttpContextAcces
         var allowed = requirement.Key switch
         {
             "LeaveEntry" => await access.DoctorIdAsync(ct) != null || await access.CanManageDoctorsAsync(ct) || await access.CanManageAccessAsync(ct),
+            "ClinicalRecords" => await access.CanUseClinicalRecordsAsync(ct),
+            "Inventory" => await access.CanUseInventoryAsync(ct),
             "Doctor" => await access.DoctorIdAsync(ct) != null,
             "Doctors" => await access.CanManageDoctorsAsync(ct),
             "Access" => await access.CanManageAccessAsync(ct),

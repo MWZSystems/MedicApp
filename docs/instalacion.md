@@ -10,7 +10,7 @@ Destino común confirmado por el usuario: `sql1002.site4now.net / db_acaa35_trai
    dotnet test MedicApp.slnx -c Release --no-restore
    ```
 3. Guardar `ConnectionStrings:Workforce` en User Secrets de `MedicApp/MedicApp.csproj`, o en `ConnectionStrings__Workforce` del servidor. Usar una cuenta de servicio propia para MedicApp, cifrado obligatorio y verificación del certificado según el proveedor. Nunca publicar con la cuenta administrativa del instalador.
-4. El DBA verifica un respaldo recuperable, ejecuta `database/00_Preflight.sql` y revisa `database/01_InstallMedicApp.sql` en modo SQLCMD en el destino confirmado. El script idempotente instala únicamente `medic`, sus siete tablas, dos vistas y su historial de migraciones. La aplicación no migra al arrancar. La migración no cambia tablas compartidas, ni activa RCSI en una base en uso; el DBA revisa ese ajuste de instancia por separado.
+4. El DBA verifica un respaldo recuperable, ejecuta `database/00_Preflight.sql` y revisa `database/01_InstallMedicApp.sql` en modo SQLCMD en el destino confirmado. El script idempotente instala únicamente `medic`, sus doce tablas, dos vistas y su historial de migraciones. La aplicación no migra al arrancar. La migración no cambia tablas compartidas, ni activa RCSI en una base en uso; el DBA revisa ese ajuste de instancia por separado.
 5. Revisar `database/02_RuntimeRoles.sql`. Asociar el usuario SQL propio al rol `MedicAppRuntime`; dar a la cuenta WFM el rol `WfmMedicalReader` solo al habilitar la integración. El instalador conserva los permisos DDL; la cuenta web no los necesita.
 6. Seleccionar una cuenta compartida activa con contraseña ya actualizada. Configurar `Bootstrap:UserName` mediante secretos y ejecutar una sola vez:
    ```powershell

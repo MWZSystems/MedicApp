@@ -12,3 +12,8 @@
 .dropdown-item .medic-icon{color:#117d8b}.dropdown-item{min-height:42px;display:flex;align-items:center;gap:2px}.form-label .medic-icon{color:#117d8b}.table th .medic-icon{width:16px;height:16px;vertical-align:-3px;margin-right:5px}
 .hero .btn .medic-icon:last-child{margin-right:0;margin-left:8px}.nav-pills .nav-link{display:inline-flex;align-items:center}.nav-pills .nav-link.active{background:#117d8b}.account-bar>span{display:inline-flex;align-items:center}
 @media(max-width:600px){.hero-emblem{width:48px;height:48px}.hero-emblem .medic-icon{width:27px;height:27px}.stat-label{align-items:flex-start;flex-direction:column;gap:8px}.access-emblem{width:58px;height:58px}.login-panel{margin-top:24px}.table th .medic-icon{width:14px;height:14px}}
+
+.clinical-entry { border:1px solid #d8e8eb; border-radius:12px; background:#fff; }
+.clinical-entry summary { padding:1rem; cursor:pointer; color:#134657; }
+.clinical-notes dd { white-space:pre-wrap; overflow-wrap:anywhere; }
+.app-nav .navbar-nav{flex-wrap:wrap}.app-nav .nav-link{white-space:nowrap}.badge.bg-danger{color:#fff}

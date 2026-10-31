@@ -1,0 +1,43 @@
+@using Microsoft.AspNetCore.Authorization
+@inject IAuthorizationService Authorization
+@model ClinicalRecordPage
+@{ViewData["Title"]=T["ClinicalRecords"];}
+<div class="page-heading"><div><h1><medic-icon name="folder"/>@T["ClinicalRecords"]</h1><p>@T["ClinicalRecordsHelp"]</p></div></div>
+<section class="panel"><form method="get" class="row g-3 align-items-end"><div class="col-md-9"><label for="clinical-person" class="form-label"><medic-icon name="search"/>@T["SearchLeavePerson"]</label><select id="clinical-person" name="personId" class="form-select" data-search-url="@Url.Action("People")" required><option value="">@T["SearchLeavePersonHint"]</option>@if(Model.Person!=null){<option value="@Model.Person.Id" selected>@Model.Person.Label</option>}</select></div><div class="col-md-3"><button class="btn btn-primary w-100"><medic-icon name="folder"/>@T["ShowClinicalRecord"]</button></div></form></section>
+@if(Model.Person==null){<p class="alert alert-info">@T["ChooseRecordPerson"]</p>}else{
+<div class="page-heading"><h2 class="h4">@Model.Person.Label</h2><div class="d-flex gap-2 flex-wrap"><a asp-action="Create" asp-route-personId="@Model.Person.Id" class="btn btn-primary"><medic-icon name="plus"/>@T["AddClinicalVisit"]</a>@if((await Authorization.AuthorizeAsync(User,"ClinicalOrAdmin")).Succeeded){<a asp-controller="LeaveDocuments" asp-action="Record" asp-route-personId="@Model.Person.Id" class="btn btn-outline-secondary"><medic-icon name="file-check"/>@T["PatientFile"]</a>}</div></div>
+<p class="alert alert-info">@T["ClinicalOptionalHelp"]</p>
+<section class="panel"><h2 class="h4"><medic-icon name="stethoscope"/>@T["ClinicalVisits"] (@Model.Visits.Total)</h2>
+@if(Model.Visits.Items.Count==0){<p>@T["NoClinicalVisits"]</p>}
+@foreach(var visit in Model.Visits.Items){<details class="clinical-entry mb-3"><summary><medic-icon name="clipboard"/><strong>@Clock.Local(visit.VisitedAt).ToString("dd/MM/yyyy HH:mm")</strong> · @T["ClinicalVisitNumber",visit.Id]</summary><div class="p-3">
+<p class="small text-muted">@T["RecordedAt"]: @Clock.Local(visit.LastUpdated).ToString("dd/MM/yyyy HH:mm") · @T["RecordedBy"]: @Model.AccountNames.GetValueOrDefault(visit.UpdatedById)</p>
+<dl class="row clinical-notes">
+@foreach(var field in new[]{("VisitReason",visit.Reason),("Findings",visit.Findings),("Diagnosis",visit.Diagnosis),("Treatment",visit.Treatment),("Prescription",visit.Prescription),("ClinicalNotes",visit.Notes)}){if(!string.IsNullOrWhiteSpace(field.Item2)){<dt class="col-md-3">@T[field.Item1]</dt><dd class="col-md-9">@field.Item2</dd>}}
+</dl>
+<div class="d-flex flex-wrap gap-3 mb-3">
+@if(visit.Weight!=null){<span><medic-icon name="heart"/>@T["Weight"]: @visit.Weight</span>}
+@if(visit.Height!=null){<span>@T["Height"]: @visit.Height</span>}
+@if(visit.Temperature!=null){<span>@T["Temperature"]: @visit.Temperature</span>}
+@if(visit.Systolic!=null){<span>@T["Systolic"]: @visit.Systolic</span>}
+@if(visit.Diastolic!=null){<span>@T["Diastolic"]: @visit.Diastolic</span>}
+@if(visit.Pulse!=null){<span>@T["Pulse"]: @visit.Pulse</span>}
+@if(visit.RespiratoryRate!=null){<span>@T["RespiratoryRate"]: @visit.RespiratoryRate</span>}
+@if(visit.OxygenSaturation!=null){<span>@T["OxygenSaturation"]: @visit.OxygenSaturation</span>}
+@if(visit.Glucose!=null){<span>@T["Glucose"]: @visit.Glucose</span>}
+</div><a class="btn btn-sm btn-outline-primary" asp-route-personId="@Model.Person.Id" asp-route-visitId="@visit.Id" asp-fragment="clinical-upload"><medic-icon name="paperclip"/>@T["AttachToVisit"]</a>
+</div></details>}
+<nav class="pager"><span>@T["Total"]: @Model.Visits.Total</span>@if(Model.Visits.Page>1){<a class="btn btn-outline-secondary" asp-route-personId="@Model.Person.Id" asp-route-visitsPage="@(Model.Visits.Page-1)" asp-route-filesPage="@Model.Documents.Page"><medic-icon name="chevron-left"/>@T["Previous"]</a>}@if(Model.Visits.Page*10<Model.Visits.Total){<a class="btn btn-outline-secondary" asp-route-personId="@Model.Person.Id" asp-route-visitsPage="@(Model.Visits.Page+1)" asp-route-filesPage="@Model.Documents.Page"><medic-icon name="chevron-right"/>@T["Next"]</a>}</nav>
+</section>
+<section class="panel" id="clinical-upload"><h2 class="h4"><medic-icon name="upload"/>@T["UploadPatientFiles"]</h2><p>@T["ClinicalFileLimits",Model.Limits.MaxFilesPerUpload,Model.Limits.MaxFileSizeMb,Model.Limits.MaxBatchSizeMb,Model.Limits.MaxDocumentsPerPatient]</p><div asp-validation-summary="All" class="text-danger"></div>
+<form asp-action="Upload" method="post" enctype="multipart/form-data" class="row g-3">
+<input type="hidden" name="PersonId" value="@Model.Person.Id"/><input type="hidden" name="RequestKey" value="@Guid.NewGuid()"/>
+@if(Model.SelectedVisit!=null){<input type="hidden" name="ClinicalVisitId" value="@Model.SelectedVisit.Id"/><p class="col-12 alert alert-info">@T["ClinicalVisitNumber",Model.SelectedVisit.Id] · @Clock.Local(Model.SelectedVisit.VisitedAt).ToString("dd/MM/yyyy HH:mm") <a asp-route-personId="@Model.Person.Id" asp-fragment="clinical-upload">@T["UseGeneralFile"]</a></p>}
+<div class="col-md-4"><label for="file-kind" class="form-label"><medic-icon name="folder"/>@T["DocumentKind"]</label><select id="file-kind" name="Kind" class="form-select">@foreach(var kind in Enum.GetValues<PatientDocumentKind>()){<option value="@((int)kind)">@T["PatientFile"+kind]</option>}</select></div>
+<div class="col-md-8"><label for="file-description" class="form-label"><medic-icon name="document"/>@T["FileDescription"]</label><input id="file-description" name="Description" class="form-control" maxlength="1000"/></div>
+<div class="col-md-9"><label for="patient-files" class="form-label"><medic-icon name="paperclip"/>@T["EvidenceFiles"]</label><input id="patient-files" name="Files" type="file" accept=".pdf,.jpg,.jpeg,.png" multiple required class="form-control"/></div><div class="col-md-3 align-self-end"><button class="btn btn-primary"><medic-icon name="upload"/>@T["UploadPatientFiles"]</button></div>
+</form></section>
+<section class="panel"><h2 class="h4"><medic-icon name="document"/>@T["PatientDocuments"] (@Model.Documents.Total)</h2><div class="table-responsive"><table class="table"><thead><tr><th>@T["EvidenceFiles"]</th><th>@T["DocumentKind"]</th><th>@T["ClinicalVisits"]</th><th>@T["RecordedBy"]</th><th>@T["Date"]</th><th>@T["Actions"]</th></tr></thead><tbody>
+@foreach(var file in Model.Documents.Items){<tr><td>@file.OriginalName<br/><small>@file.Description · @((file.ByteCount/1024.0).ToString("N1")) KB</small></td><td>@T["PatientFile"+file.Kind]</td><td>@if(file.ClinicalVisitId!=null){@T["ClinicalVisitNumber",file.ClinicalVisitId]}else{@T["PatientFileGeneral"]}</td><td>@Model.AccountNames.GetValueOrDefault(file.UpdatedById)</td><td>@Clock.Local(file.LastUpdated).ToString("dd/MM/yyyy HH:mm")</td><td><a asp-action="Download" asp-route-id="@file.Id" class="btn btn-sm btn-outline-primary"><medic-icon name="download"/>@T["Download"]</a></td></tr>}
+</tbody></table></div>@if(Model.Documents.Total==0){<p>@T["NoPatientDocuments"]</p>}
+<nav class="pager"><span>@T["Total"]: @Model.Documents.Total</span>@if(Model.Documents.Page>1){<a class="btn btn-outline-secondary" asp-route-personId="@Model.Person.Id" asp-route-filesPage="@(Model.Documents.Page-1)" asp-route-visitsPage="@Model.Visits.Page"><medic-icon name="chevron-left"/>@T["Previous"]</a>}@if(Model.Documents.Page*25<Model.Documents.Total){<a class="btn btn-outline-secondary" asp-route-personId="@Model.Person.Id" asp-route-filesPage="@(Model.Documents.Page+1)" asp-route-visitsPage="@Model.Visits.Page"><medic-icon name="chevron-right"/>@T["Next"]</a>}</nav>
+</section>}

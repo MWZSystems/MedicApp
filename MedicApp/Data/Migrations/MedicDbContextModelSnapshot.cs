@@ -74,7 +74,13 @@ namespace MedicApp.Data.Migrations
                     b.Property<bool>("ManageAccess")
                         .HasColumnType("bit");
 
+                    b.Property<bool>("ManageClinicalRecords")
+                        .HasColumnType("bit");
+
                     b.Property<bool>("ManageDoctors")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("ManageInventory")
                         .HasColumnType("bit");
 
                     b.Property<bool>("ReadIntegration")
@@ -316,6 +322,126 @@ namespace MedicApp.Data.Migrations
                             t.HasCheckConstraint("CK_Windows_Dates", "[EndsAt] > [StartsAt]");
 
                             t.HasCheckConstraint("CK_Windows_Slot", "[SlotMinutes] BETWEEN 5 AND 120");
+                        });
+                });
+
+            modelBuilder.Entity("MedicApp.Models.Entities.ClinicalVisit", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasColumnName("PKClinicalVisit");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<bool>("Available")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(true);
+
+                    b.Property<string>("Diagnosis")
+                        .IsRequired()
+                        .HasMaxLength(2000)
+                        .HasColumnType("nvarchar(2000)");
+
+                    b.Property<int?>("Diastolic")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Findings")
+                        .IsRequired()
+                        .HasMaxLength(4000)
+                        .HasColumnType("nvarchar(4000)");
+
+                    b.Property<decimal?>("Glucose")
+                        .HasPrecision(7, 2)
+                        .HasColumnType("decimal(7,2)");
+
+                    b.Property<decimal?>("Height")
+                        .HasPrecision(7, 2)
+                        .HasColumnType("decimal(7,2)");
+
+                    b.Property<DateTime>("LastUpdated")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2(0)")
+                        .HasDefaultValueSql("SYSUTCDATETIME()");
+
+                    b.Property<string>("Notes")
+                        .IsRequired()
+                        .HasMaxLength(4000)
+                        .HasColumnType("nvarchar(4000)");
+
+                    b.Property<int?>("OxygenSaturation")
+                        .HasColumnType("int");
+
+                    b.Property<int>("PersonId")
+                        .HasColumnType("int")
+                        .HasColumnName("FKPerson");
+
+                    b.Property<string>("Prescription")
+                        .IsRequired()
+                        .HasMaxLength(4000)
+                        .HasColumnType("nvarchar(4000)");
+
+                    b.Property<int?>("Pulse")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Reason")
+                        .IsRequired()
+                        .HasMaxLength(1000)
+                        .HasColumnType("nvarchar(1000)");
+
+                    b.Property<Guid>("RequestKey")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<int?>("RespiratoryRate")
+                        .HasColumnType("int");
+
+                    b.Property<byte[]>("RowVersion")
+                        .IsConcurrencyToken()
+                        .IsRequired()
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("rowversion");
+
+                    b.Property<int?>("Systolic")
+                        .HasColumnType("int");
+
+                    b.Property<decimal?>("Temperature")
+                        .HasPrecision(7, 2)
+                        .HasColumnType("decimal(7,2)");
+
+                    b.Property<string>("Treatment")
+                        .IsRequired()
+                        .HasMaxLength(4000)
+                        .HasColumnType("nvarchar(4000)");
+
+                    b.Property<string>("UpdatedById")
+                        .IsRequired()
+                        .HasMaxLength(450)
+                        .HasColumnType("nvarchar(450)")
+                        .HasColumnName("FKUserUpdater");
+
+                    b.Property<DateTime>("VisitedAt")
+                        .HasColumnType("datetime2(0)");
+
+                    b.Property<decimal?>("Weight")
+                        .HasPrecision(7, 2)
+                        .HasColumnType("decimal(7,2)");
+
+                    b.HasKey("Id")
+                        .HasName("PK_SY_ClinicalVisits");
+
+                    SqlServerKeyBuilderExtensions.IsClustered(b.HasKey("Id"));
+
+                    b.HasIndex("RequestKey")
+                        .IsUnique();
+
+                    b.HasIndex("UpdatedById");
+
+                    b.HasIndex("PersonId", "VisitedAt");
+
+                    b.ToTable("SY_ClinicalVisits", "medic", t =>
+                        {
+                            t.HasCheckConstraint("CK_ClinicalVisits_Vitals", "([Weight] IS NULL OR [Weight] BETWEEN 0.1 AND 700) AND ([Height] IS NULL OR [Height] BETWEEN 1 AND 300) AND ([Temperature] IS NULL OR [Temperature] BETWEEN 20 AND 50) AND ([Systolic] IS NULL OR [Systolic] BETWEEN 20 AND 300) AND ([Diastolic] IS NULL OR [Diastolic] BETWEEN 10 AND 200) AND ([Pulse] IS NULL OR [Pulse] BETWEEN 1 AND 300) AND ([RespiratoryRate] IS NULL OR [RespiratoryRate] BETWEEN 1 AND 150) AND ([OxygenSaturation] IS NULL OR [OxygenSaturation] BETWEEN 1 AND 100) AND ([Glucose] IS NULL OR [Glucose] BETWEEN 1 AND 1500)");
                         });
                 });
 
@@ -631,6 +757,264 @@ namespace MedicApp.Data.Migrations
                         });
                 });
 
+            modelBuilder.Entity("MedicApp.Models.Entities.PatientDocument", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasColumnName("PKPatientDocument");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<bool>("Available")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(true);
+
+                    b.Property<long>("ByteCount")
+                        .HasColumnType("bigint");
+
+                    b.Property<int?>("ClinicalVisitId")
+                        .HasColumnType("int")
+                        .HasColumnName("FKClinicalVisit");
+
+                    b.Property<string>("ContentType")
+                        .IsRequired()
+                        .HasMaxLength(80)
+                        .IsUnicode(false)
+                        .HasColumnType("varchar(80)");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasMaxLength(1000)
+                        .HasColumnType("nvarchar(1000)");
+
+                    b.Property<int>("Kind")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("LastUpdated")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2(0)")
+                        .HasDefaultValueSql("SYSUTCDATETIME()");
+
+                    b.Property<int>("Ordinal")
+                        .HasColumnType("int");
+
+                    b.Property<string>("OriginalName")
+                        .IsRequired()
+                        .HasMaxLength(180)
+                        .HasColumnType("nvarchar(180)");
+
+                    b.Property<int>("PersonId")
+                        .HasColumnType("int")
+                        .HasColumnName("FKPerson");
+
+                    b.Property<Guid>("RequestKey")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<byte[]>("RowVersion")
+                        .IsConcurrencyToken()
+                        .IsRequired()
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("rowversion");
+
+                    b.Property<string>("Sha256")
+                        .IsRequired()
+                        .HasMaxLength(64)
+                        .IsUnicode(false)
+                        .HasColumnType("varchar(64)");
+
+                    b.Property<string>("StorageKey")
+                        .IsRequired()
+                        .HasMaxLength(32)
+                        .IsUnicode(false)
+                        .HasColumnType("varchar(32)");
+
+                    b.Property<string>("UpdatedById")
+                        .IsRequired()
+                        .HasMaxLength(450)
+                        .HasColumnType("nvarchar(450)")
+                        .HasColumnName("FKUserUpdater");
+
+                    b.HasKey("Id")
+                        .HasName("PK_SY_PatientDocuments");
+
+                    SqlServerKeyBuilderExtensions.IsClustered(b.HasKey("Id"));
+
+                    b.HasIndex("ClinicalVisitId");
+
+                    b.HasIndex("StorageKey")
+                        .IsUnique();
+
+                    b.HasIndex("UpdatedById");
+
+                    b.HasIndex("PersonId", "LastUpdated");
+
+                    b.HasIndex("PersonId", "RequestKey", "Ordinal")
+                        .IsUnique();
+
+                    b.ToTable("SY_PatientDocuments", "medic", t =>
+                        {
+                            t.HasCheckConstraint("CK_PatientDocuments_Kind", "[Kind] BETWEEN 0 AND 4");
+
+                            t.HasCheckConstraint("CK_PatientDocuments_Ordinal", "[Ordinal] BETWEEN 0 AND 4");
+
+                            t.HasCheckConstraint("CK_PatientDocuments_Size", "[ByteCount] BETWEEN 1 AND 10485760");
+                        });
+                });
+
+            modelBuilder.Entity("MedicApp.Models.Entities.StockItem", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasColumnName("PKStockItem");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<bool>("Available")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(true);
+
+                    b.Property<string>("Code")
+                        .IsRequired()
+                        .HasMaxLength(80)
+                        .HasColumnType("nvarchar(80)");
+
+                    b.Property<decimal>("CurrentStock")
+                        .HasPrecision(12, 3)
+                        .HasColumnType("decimal(12,3)");
+
+                    b.Property<DateOnly?>("ExpiresOn")
+                        .HasColumnType("date");
+
+                    b.Property<DateTime>("LastUpdated")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2(0)")
+                        .HasDefaultValueSql("SYSUTCDATETIME()");
+
+                    b.Property<string>("Lot")
+                        .IsRequired()
+                        .HasMaxLength(80)
+                        .HasColumnType("nvarchar(80)");
+
+                    b.Property<decimal>("MinimumStock")
+                        .HasPrecision(12, 3)
+                        .HasColumnType("decimal(12,3)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(180)
+                        .HasColumnType("nvarchar(180)");
+
+                    b.Property<byte[]>("RowVersion")
+                        .IsConcurrencyToken()
+                        .IsRequired()
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("rowversion");
+
+                    b.Property<string>("Unit")
+                        .IsRequired()
+                        .HasMaxLength(40)
+                        .HasColumnType("nvarchar(40)");
+
+                    b.Property<string>("UpdatedById")
+                        .IsRequired()
+                        .HasMaxLength(450)
+                        .HasColumnType("nvarchar(450)")
+                        .HasColumnName("FKUserUpdater");
+
+                    b.HasKey("Id")
+                        .HasName("PK_CT_StockItems");
+
+                    SqlServerKeyBuilderExtensions.IsClustered(b.HasKey("Id"));
+
+                    b.HasIndex("Code")
+                        .IsUnique();
+
+                    b.HasIndex("UpdatedById");
+
+                    b.ToTable("CT_StockItems", "medic", t =>
+                        {
+                            t.HasCheckConstraint("CK_StockItems_Stock", "[MinimumStock] >= 0 AND [CurrentStock] >= 0");
+                        });
+                });
+
+            modelBuilder.Entity("MedicApp.Models.Entities.StockMovement", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasColumnName("PKStockMovement");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<bool>("Available")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(true);
+
+                    b.Property<decimal>("Balance")
+                        .HasPrecision(12, 3)
+                        .HasColumnType("decimal(12,3)");
+
+                    b.Property<int>("Kind")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("LastUpdated")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2(0)")
+                        .HasDefaultValueSql("SYSUTCDATETIME()");
+
+                    b.Property<decimal>("Quantity")
+                        .HasPrecision(12, 3)
+                        .HasColumnType("decimal(12,3)");
+
+                    b.Property<string>("Reason")
+                        .IsRequired()
+                        .HasMaxLength(1000)
+                        .HasColumnType("nvarchar(1000)");
+
+                    b.Property<Guid>("RequestKey")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<byte[]>("RowVersion")
+                        .IsConcurrencyToken()
+                        .IsRequired()
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("rowversion");
+
+                    b.Property<int>("StockItemId")
+                        .HasColumnType("int")
+                        .HasColumnName("FKStockItem");
+
+                    b.Property<string>("UpdatedById")
+                        .IsRequired()
+                        .HasMaxLength(450)
+                        .HasColumnType("nvarchar(450)")
+                        .HasColumnName("FKUserUpdater");
+
+                    b.HasKey("Id")
+                        .HasName("PK_IX_StockMovements");
+
+                    SqlServerKeyBuilderExtensions.IsClustered(b.HasKey("Id"));
+
+                    b.HasIndex("RequestKey")
+                        .IsUnique();
+
+                    b.HasIndex("UpdatedById");
+
+                    b.HasIndex("StockItemId", "Id");
+
+                    b.ToTable("IX_StockMovements", "medic", t =>
+                        {
+                            t.HasCheckConstraint("CK_StockMovements_Kind", "[Kind] BETWEEN 0 AND 2");
+
+                            t.HasCheckConstraint("CK_StockMovements_Quantity", "[Quantity] > 0 AND [Balance] >= 0");
+                        });
+                });
+
             modelBuilder.Entity("MedicApp.Models.Entities.AccessProfile", b =>
                 {
                     b.HasOne("MedicApp.Data.SharedUser", null)
@@ -687,6 +1071,21 @@ namespace MedicApp.Data.Migrations
                     b.HasOne("MedicApp.Models.Entities.Doctor", null)
                         .WithMany()
                         .HasForeignKey("DoctorId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("MedicApp.Data.SharedUser", null)
+                        .WithMany()
+                        .HasForeignKey("UpdatedById")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("MedicApp.Models.Entities.ClinicalVisit", b =>
+                {
+                    b.HasOne("MedicApp.Data.SharedPerson", null)
+                        .WithMany()
+                        .HasForeignKey("PersonId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
@@ -764,6 +1163,50 @@ namespace MedicApp.Data.Migrations
                     b.HasOne("MedicApp.Data.SharedPerson", null)
                         .WithMany()
                         .HasForeignKey("PersonId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("MedicApp.Data.SharedUser", null)
+                        .WithMany()
+                        .HasForeignKey("UpdatedById")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("MedicApp.Models.Entities.PatientDocument", b =>
+                {
+                    b.HasOne("MedicApp.Models.Entities.ClinicalVisit", null)
+                        .WithMany()
+                        .HasForeignKey("ClinicalVisitId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("MedicApp.Data.SharedPerson", null)
+                        .WithMany()
+                        .HasForeignKey("PersonId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("MedicApp.Data.SharedUser", null)
+                        .WithMany()
+                        .HasForeignKey("UpdatedById")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("MedicApp.Models.Entities.StockItem", b =>
+                {
+                    b.HasOne("MedicApp.Data.SharedUser", null)
+                        .WithMany()
+                        .HasForeignKey("UpdatedById")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("MedicApp.Models.Entities.StockMovement", b =>
+                {
+                    b.HasOne("MedicApp.Models.Entities.StockItem", null)
+                        .WithMany()
+                        .HasForeignKey("StockItemId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 

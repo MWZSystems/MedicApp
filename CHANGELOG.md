@@ -1,5 +1,14 @@
 # Changelog
 
+## [1.6.0] - 2026-10-30
+
+- Expediente clínico por nombre/control con consultas, recetas, notas y nueve signos vitales opcionales; autor/fecha y registros conservados sin sobrescribir.
+- Archivos PDF/JPG/PNG cifrados por persona o consulta, categorías, límites configurables, auditoría, descarga autorizada e idempotencia.
+- Inventario médico por lote/caducidad, mínimos, alertas, entradas/salidas/bajas con historial y saldos; evita negativos, duplicados y entrega de lotes caducados.
+- Permisos independientes para enfermería en Accesos y nuevos menús con iconos. No afecta el flujo de citas/incapacidades ni descuenta medicamentos al registrar recetas.
+- Migración aditiva de cuatro tablas y dos permisos médicos, sin cambios al esquema compartido de WFMCore.
+
+
 ## [1.5.1] - 2026-10-30
 
 ### Interfaz

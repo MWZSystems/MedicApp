@@ -4,6 +4,10 @@ namespace MedicApp.Data;
 
 public class MedicDbContext(DbContextOptions<MedicDbContext> options) : DbContext(options)
 {
+    public DbSet<ClinicalVisit> ClinicalVisits => Set<ClinicalVisit>();
+    public DbSet<PatientDocument> PatientDocuments => Set<PatientDocument>();
+    public DbSet<StockItem> StockItems => Set<StockItem>();
+    public DbSet<StockMovement> StockMovements => Set<StockMovement>();
     public DbSet<Doctor> Doctors => Set<Doctor>();
     public DbSet<AvailabilityWindow> Windows => Set<AvailabilityWindow>();
     public DbSet<Appointment> Appointments => Set<Appointment>();

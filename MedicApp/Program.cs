@@ -58,12 +58,14 @@ builder.Services.AddScoped<LeaveCalendarReader>();
 builder.Services.AddScoped<LeaveRecordAccess>();
 builder.Services.AddScoped<EvidenceStorage>();
 builder.Services.AddScoped<LeaveEvidenceService>();
+builder.Services.AddScoped<ClinicalRecordService>();
+builder.Services.AddScoped<InventoryService>();
 builder.Services.AddOptions<DocumentOptions>().BindConfiguration("Documents").ValidateDataAnnotations().Validate(x => x.MaxBatchSizeMb >= x.MaxFileSizeMb && x.MaxDocumentsPerLeave >= x.MaxFilesPerUpload, "Invalid document limits").ValidateOnStart();
 builder.Services.AddScoped<IAuthorizationHandler, MedicalAuthorizationHandler>();
 builder.Services.AddAuthorization(o =>
 {
     o.FallbackPolicy = new AuthorizationPolicyBuilder().RequireAuthenticatedUser().Build();
-    foreach (var key in (string[])["Doctor", "Doctors", "Access", "Integration", "LeaveEntry"])
+    foreach (var key in (string[])["Doctor", "Doctors", "Access", "Integration", "LeaveEntry", "ClinicalRecords", "Inventory"])
     { o.AddPolicy(key, p => p.RequireAuthenticatedUser().AddRequirements(new MedicalRequirement(key))); }
     o.AddPolicy("ClinicalOrAdmin", p => p.RequireAuthenticatedUser().RequireAssertion(async context =>
     {

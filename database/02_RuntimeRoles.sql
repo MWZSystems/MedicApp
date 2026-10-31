@@ -26,6 +26,9 @@ GRANT SELECT ON OBJECT::dbo.SC_RoleClaims TO MedicAppRuntime;
 GRANT SELECT ON OBJECT::dbo.SC_UserLogins TO MedicAppRuntime;
 GRANT SELECT ON OBJECT::dbo.SC_UserTokens TO MedicAppRuntime;
 DENY UPDATE, DELETE ON OBJECT::medic.SY_LeaveDocuments TO MedicAppRuntime;
+DENY UPDATE, DELETE ON OBJECT::medic.SY_ClinicalVisits TO MedicAppRuntime;
+DENY UPDATE, DELETE ON OBJECT::medic.SY_PatientDocuments TO MedicAppRuntime;
+DENY UPDATE, DELETE ON OBJECT::medic.IX_StockMovements TO MedicAppRuntime;
 GRANT SELECT ON OBJECT::medic.vw_ApprovedLaborRestrictions TO WfmMedicalReader;
 GRANT SELECT ON OBJECT::medic.vw_LaborEvents TO WfmMedicalReader;
 -- Account membership is configured by the installer with the client's existing database users.

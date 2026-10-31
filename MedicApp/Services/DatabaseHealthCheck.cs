@@ -13,6 +13,11 @@ public class DatabaseHealthCheck(MedicDbContext db) : IHealthCheck
             if (!accessible) { return HealthCheckResult.Unhealthy(); }
             await db.Doctors.AsNoTracking().Select(x => x.Id).Take(1).ToListAsync(cancellationToken);
             await db.LeaveDocuments.AsNoTracking().Select(x => x.Id).Take(1).ToListAsync(cancellationToken);
+            await db.ClinicalVisits.AsNoTracking().Select(x => x.Id).Take(1).ToListAsync(cancellationToken);
+            await db.PatientDocuments.AsNoTracking().Select(x => x.Id).Take(1).ToListAsync(cancellationToken);
+            await db.StockItems.AsNoTracking().Select(x => x.Id).Take(1).ToListAsync(cancellationToken);
+            await db.StockMovements.AsNoTracking().Select(x => x.Id).Take(1).ToListAsync(cancellationToken);
+            await db.AccessProfiles.AsNoTracking().Select(x => new { x.ManageClinicalRecords, x.ManageInventory }).Take(1).ToListAsync(cancellationToken);
             return HealthCheckResult.Healthy();
         }
         catch (Microsoft.Data.SqlClient.SqlException) { return HealthCheckResult.Unhealthy(); }

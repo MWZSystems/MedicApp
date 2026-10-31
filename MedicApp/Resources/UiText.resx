@@ -512,4 +512,237 @@
   <data name="EvidenceUnavailable" xml:space="preserve"><value>No fue posible recuperar el documento. Contacta a la administración para revisar su respaldo.</value></data>
 <data name="LeaveRegistryAdminHelp" xml:space="preserve"><value>Agrega la incapacidad y asigna al doctor responsable. Adjunta los comprobantes y consulta el expediente; el doctor responsable realiza la autorización o cancelación.</value></data>
 <data name="ConfigureDoctors" xml:space="preserve"><value>Configurar doctores responsables</value></data>
+
+<data name="ClinicalRecords" xml:space="preserve">
+    <value>Expediente clínico</value>
+  </data>
+  <data name="ClinicalRecordsHelp" xml:space="preserve">
+    <value>Consulta el historial de atención de cada persona por su nombre o número de control.</value>
+  </data>
+  <data name="ShowClinicalRecord" xml:space="preserve">
+    <value>Abrir expediente</value>
+  </data>
+  <data name="AddClinicalVisit" xml:space="preserve">
+    <value>Agregar consulta</value>
+  </data>
+  <data name="ClinicalVisits" xml:space="preserve">
+    <value>Consultas</value>
+  </data>
+  <data name="NoClinicalVisits" xml:space="preserve">
+    <value>Esta persona aún no tiene consultas registradas.</value>
+  </data>
+  <data name="ClinicalVisitNumber" xml:space="preserve">
+    <value>Consulta #{0}</value>
+  </data>
+  <data name="RecordedAt" xml:space="preserve">
+    <value>Capturado el</value>
+  </data>
+  <data name="RecordedBy" xml:space="preserve">
+    <value>Registrado por</value>
+  </data>
+  <data name="VisitDate" xml:space="preserve">
+    <value>Fecha y hora de atención</value>
+  </data>
+  <data name="VisitReason" xml:space="preserve">
+    <value>Motivo de consulta</value>
+  </data>
+  <data name="Findings" xml:space="preserve">
+    <value>Exploración y hallazgos</value>
+  </data>
+  <data name="Diagnosis" xml:space="preserve">
+    <value>Diagnóstico / impresión clínica</value>
+  </data>
+  <data name="Treatment" xml:space="preserve">
+    <value>Tratamiento e indicaciones</value>
+  </data>
+  <data name="Prescription" xml:space="preserve">
+    <value>Receta / medicamentos y dosis</value>
+  </data>
+  <data name="ClinicalNotes" xml:space="preserve">
+    <value>Notas y seguimiento</value>
+  </data>
+  <data name="VitalSigns" xml:space="preserve">
+    <value>Signos vitales (opcionales)</value>
+  </data>
+  <data name="VisitDetails" xml:space="preserve">
+    <value>Información de la consulta (opcional)</value>
+  </data>
+  <data name="Weight" xml:space="preserve">
+    <value>Peso (kg)</value>
+  </data>
+  <data name="Height" xml:space="preserve">
+    <value>Estatura (cm)</value>
+  </data>
+  <data name="Temperature" xml:space="preserve">
+    <value>Temperatura (°C)</value>
+  </data>
+  <data name="Systolic" xml:space="preserve">
+    <value>Presión sistólica (mmHg)</value>
+  </data>
+  <data name="Diastolic" xml:space="preserve">
+    <value>Presión diastólica (mmHg)</value>
+  </data>
+  <data name="Pulse" xml:space="preserve">
+    <value>Pulso (lpm)</value>
+  </data>
+  <data name="RespiratoryRate" xml:space="preserve">
+    <value>Frecuencia respiratoria (rpm)</value>
+  </data>
+  <data name="OxygenSaturation" xml:space="preserve">
+    <value>Saturación de oxígeno (%)</value>
+  </data>
+  <data name="Glucose" xml:space="preserve">
+    <value>Glucosa (mg/dL)</value>
+  </data>
+  <data name="ClinicalOptionalHelp" xml:space="preserve">
+    <value>El registro clínico es opcional. Puedes capturar solo lo necesario y adjuntar archivos ahora o después. No es requisito para reservar una cita o registrar una incapacidad.</value>
+  </data>
+  <data name="VisitAppendOnly" xml:space="preserve">
+    <value>La consulta se conserva con su autor y fecha. Para aclarar o complementar el historial, agrega una nueva nota de seguimiento. Registrar una receta no descuenta inventario.</value>
+  </data>
+  <data name="AttachToVisit" xml:space="preserve">
+    <value>Adjuntar archivos a esta consulta</value>
+  </data>
+  <data name="UploadPatientFiles" xml:space="preserve">
+    <value>Subir archivos al expediente</value>
+  </data>
+  <data name="UseGeneralFile" xml:space="preserve">
+    <value>Usar archivo general de la persona</value>
+  </data>
+  <data name="DocumentKind" xml:space="preserve">
+    <value>Tipo de documento</value>
+  </data>
+  <data name="FileDescription" xml:space="preserve">
+    <value>Descripción (opcional)</value>
+  </data>
+  <data name="ClinicalFileLimits" xml:space="preserve">
+    <value>PDF, JPG y PNG. Hasta {0} archivos por carga, {1} MB por archivo y {2} MB en total. Límite de {3} documentos por persona. Los archivos no son obligatorios.</value>
+  </data>
+  <data name="PatientDocuments" xml:space="preserve">
+    <value>Archivos del expediente</value>
+  </data>
+  <data name="NoPatientDocuments" xml:space="preserve">
+    <value>No hay archivos en este expediente clínico.</value>
+  </data>
+  <data name="PatientFileGeneral" xml:space="preserve">
+    <value>General</value>
+  </data>
+  <data name="PatientFilePrescription" xml:space="preserve">
+    <value>Receta</value>
+  </data>
+  <data name="PatientFileStudy" xml:space="preserve">
+    <value>Estudio / resultado</value>
+  </data>
+  <data name="PatientFileMedication" xml:space="preserve">
+    <value>Medicamento</value>
+  </data>
+  <data name="PatientFileOther" xml:space="preserve">
+    <value>Otro</value>
+  </data>
+  <data name="ManageClinicalRecords" xml:space="preserve">
+    <value>Expedientes clínicos (personal de enfermería)</value>
+  </data>
+  <data name="ManageInventory" xml:space="preserve">
+    <value>Inventario médico (personal de enfermería)</value>
+  </data>
+  <data name="InvalidClinicalInput" xml:space="preserve">
+    <value>Revisa los datos de la consulta o del documento. Los signos vitales deben estar dentro del rango permitido.</value>
+  </data>
+  <data name="InvalidClinicalDate" xml:space="preserve">
+    <value>La fecha de atención no puede ser futura ni anterior a 1900.</value>
+  </data>
+  <data name="InvalidBloodPressure" xml:space="preserve">
+    <value>La presión sistólica debe ser mayor que la diastólica.</value>
+  </data>
+  <data name="DemoClinicalForbidden" xml:space="preserve">
+    <value>Las personas de demostración no pueden registrar ni recibir expedientes clínicos reales.</value>
+  </data>
+  <data name="Inventory" xml:space="preserve">
+    <value>Inventario médico</value>
+  </data>
+  <data name="InventoryHelp" xml:space="preserve">
+    <value>Controla medicamentos e insumos, lotes, caducidades y movimientos de existencias.</value>
+  </data>
+  <data name="AddStockItem" xml:space="preserve">
+    <value>Agregar medicamento o insumo</value>
+  </data>
+  <data name="StockCode" xml:space="preserve">
+    <value>Código único por lote</value>
+  </data>
+  <data name="StockName" xml:space="preserve">
+    <value>Medicamento / insumo</value>
+  </data>
+  <data name="StockUnit" xml:space="preserve">
+    <value>Unidad (pieza, caja, ml…)</value>
+  </data>
+  <data name="StockLot" xml:space="preserve">
+    <value>Lote</value>
+  </data>
+  <data name="ExpiresOn" xml:space="preserve">
+    <value>Caducidad</value>
+  </data>
+  <data name="MinimumStock" xml:space="preserve">
+    <value>Existencia mínima</value>
+  </data>
+  <data name="CurrentStock" xml:space="preserve">
+    <value>Existencia actual</value>
+  </data>
+  <data name="SearchStock" xml:space="preserve">
+    <value>Buscar por código, nombre o lote</value>
+  </data>
+  <data name="StockMovements" xml:space="preserve">
+    <value>Historial de movimientos</value>
+  </data>
+  <data name="LowStock" xml:space="preserve">
+    <value>Existencia baja</value>
+  </data>
+  <data name="Expired" xml:space="preserve">
+    <value>Caducado</value>
+  </data>
+  <data name="ExpiringSoon" xml:space="preserve">
+    <value>Caduca en 30 días</value>
+  </data>
+  <data name="StockLotHelp" xml:space="preserve">
+    <value>Registra cada lote por separado con su propio código. Lote y caducidad son opcionales para insumos que no los requieren.</value>
+  </data>
+  <data name="StockInitialZero" xml:space="preserve">
+    <value>El artículo comienza en cero. Después de guardarlo, registra una entrada para cargar las existencias iniciales.</value>
+  </data>
+  <data name="AddStockMovement" xml:space="preserve">
+    <value>Registrar movimiento</value>
+  </data>
+  <data name="MovementKind" xml:space="preserve">
+    <value>Tipo de movimiento</value>
+  </data>
+  <data name="StockEntry" xml:space="preserve">
+    <value>Entrada</value>
+  </data>
+  <data name="StockExit" xml:space="preserve">
+    <value>Salida / entrega</value>
+  </data>
+  <data name="StockLoss" xml:space="preserve">
+    <value>Baja / merma</value>
+  </data>
+  <data name="Quantity" xml:space="preserve">
+    <value>Cantidad</value>
+  </data>
+  <data name="StockBalance" xml:space="preserve">
+    <value>Saldo después del movimiento</value>
+  </data>
+  <data name="MovementReason" xml:space="preserve">
+    <value>Motivo / referencia</value>
+  </data>
+  <data name="StockMovementHelp" xml:space="preserve">
+    <value>Las salidas y bajas descuentan existencias. No se permite saldo negativo ni entregar un lote caducado. Los errores se corrigen con un movimiento compensatorio; el historial se conserva.</value>
+  </data>
+  <data name="InvalidStockInput" xml:space="preserve">
+    <value>Revisa el artículo, la cantidad y el motivo. Se permiten hasta tres decimales y cantidades positivas.</value>
+  </data>
+  <data name="StockInsufficient" xml:space="preserve">
+    <value>No hay existencias suficientes para este movimiento.</value>
+  </data>
+  <data name="StockExpired" xml:space="preserve">
+    <value>No se puede entregar un lote caducado. Registra una baja si corresponde.</value>
+  </data>
+  <data name="Download" xml:space="preserve"><value>Descargar</value></data>
 </root>

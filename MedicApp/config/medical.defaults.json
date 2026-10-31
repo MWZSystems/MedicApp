@@ -11,6 +11,7 @@
     "MaxFileSizeMb": 10,
     "MaxBatchSizeMb": 20,
     "MaxFilesPerUpload": 5,
-    "MaxDocumentsPerLeave": 20
+    "MaxDocumentsPerLeave": 20,
+    "MaxDocumentsPerPatient": 200
   }
 }

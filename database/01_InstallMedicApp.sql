@@ -553,3 +553,261 @@ END;
 COMMIT;
 GO
 
+BEGIN TRANSACTION;
+IF NOT EXISTS (
+    SELECT * FROM [medic].[__EFMigrationsHistory]
+    WHERE [MigrationId] = N'20261031043107_ClinicalRecordsAndInventory'
+)
+BEGIN
+    ALTER TABLE [medic].[SC_AccessProfiles] ADD [ManageClinicalRecords] bit NOT NULL DEFAULT CAST(0 AS bit);
+END;
+
+IF NOT EXISTS (
+    SELECT * FROM [medic].[__EFMigrationsHistory]
+    WHERE [MigrationId] = N'20261031043107_ClinicalRecordsAndInventory'
+)
+BEGIN
+    ALTER TABLE [medic].[SC_AccessProfiles] ADD [ManageInventory] bit NOT NULL DEFAULT CAST(0 AS bit);
+END;
+
+IF NOT EXISTS (
+    SELECT * FROM [medic].[__EFMigrationsHistory]
+    WHERE [MigrationId] = N'20261031043107_ClinicalRecordsAndInventory'
+)
+BEGIN
+    CREATE TABLE [medic].[CT_StockItems] (
+        [PKStockItem] int NOT NULL IDENTITY,
+        [Code] nvarchar(80) NOT NULL,
+        [Name] nvarchar(180) NOT NULL,
+        [Unit] nvarchar(40) NOT NULL,
+        [Lot] nvarchar(80) NOT NULL,
+        [ExpiresOn] date NULL,
+        [MinimumStock] decimal(12,3) NOT NULL,
+        [CurrentStock] decimal(12,3) NOT NULL,
+        [Available] bit NOT NULL DEFAULT CAST(1 AS bit),
+        [FKUserUpdater] nvarchar(450) NOT NULL,
+        [LastUpdated] datetime2(0) NOT NULL DEFAULT (SYSUTCDATETIME()),
+        [RowVersion] rowversion NOT NULL,
+        CONSTRAINT [PK_CT_StockItems] PRIMARY KEY CLUSTERED ([PKStockItem]),
+        CONSTRAINT [CK_StockItems_Stock] CHECK ([MinimumStock] >= 0 AND [CurrentStock] >= 0),
+        CONSTRAINT [FK_CT_StockItems_SC_Users_FKUserUpdater] FOREIGN KEY ([FKUserUpdater]) REFERENCES [dbo].[SC_Users] ([Id]) ON DELETE NO ACTION
+    );
+END;
+
+IF NOT EXISTS (
+    SELECT * FROM [medic].[__EFMigrationsHistory]
+    WHERE [MigrationId] = N'20261031043107_ClinicalRecordsAndInventory'
+)
+BEGIN
+    CREATE TABLE [medic].[SY_ClinicalVisits] (
+        [PKClinicalVisit] int NOT NULL IDENTITY,
+        [FKPerson] int NOT NULL,
+        [VisitedAt] datetime2(0) NOT NULL,
+        [RequestKey] uniqueidentifier NOT NULL,
+        [Reason] nvarchar(1000) NOT NULL,
+        [Findings] nvarchar(4000) NOT NULL,
+        [Diagnosis] nvarchar(2000) NOT NULL,
+        [Treatment] nvarchar(4000) NOT NULL,
+        [Prescription] nvarchar(4000) NOT NULL,
+        [Notes] nvarchar(4000) NOT NULL,
+        [Weight] decimal(7,2) NULL,
+        [Height] decimal(7,2) NULL,
+        [Temperature] decimal(7,2) NULL,
+        [Systolic] int NULL,
+        [Diastolic] int NULL,
+        [Pulse] int NULL,
+        [RespiratoryRate] int NULL,
+        [OxygenSaturation] int NULL,
+        [Glucose] decimal(7,2) NULL,
+        [Available] bit NOT NULL DEFAULT CAST(1 AS bit),
+        [FKUserUpdater] nvarchar(450) NOT NULL,
+        [LastUpdated] datetime2(0) NOT NULL DEFAULT (SYSUTCDATETIME()),
+        [RowVersion] rowversion NOT NULL,
+        CONSTRAINT [PK_SY_ClinicalVisits] PRIMARY KEY CLUSTERED ([PKClinicalVisit]),
+        CONSTRAINT [CK_ClinicalVisits_Vitals] CHECK (([Weight] IS NULL OR [Weight] BETWEEN 0.1 AND 700) AND ([Height] IS NULL OR [Height] BETWEEN 1 AND 300) AND ([Temperature] IS NULL OR [Temperature] BETWEEN 20 AND 50) AND ([Systolic] IS NULL OR [Systolic] BETWEEN 20 AND 300) AND ([Diastolic] IS NULL OR [Diastolic] BETWEEN 10 AND 200) AND ([Pulse] IS NULL OR [Pulse] BETWEEN 1 AND 300) AND ([RespiratoryRate] IS NULL OR [RespiratoryRate] BETWEEN 1 AND 150) AND ([OxygenSaturation] IS NULL OR [OxygenSaturation] BETWEEN 1 AND 100) AND ([Glucose] IS NULL OR [Glucose] BETWEEN 1 AND 1500)),
+        CONSTRAINT [FK_SY_ClinicalVisits_SC_Users_FKUserUpdater] FOREIGN KEY ([FKUserUpdater]) REFERENCES [dbo].[SC_Users] ([Id]) ON DELETE NO ACTION,
+        CONSTRAINT [FK_SY_ClinicalVisits_SY_People_FKPerson] FOREIGN KEY ([FKPerson]) REFERENCES [dbo].[SY_People] ([Id]) ON DELETE NO ACTION
+    );
+END;
+
+IF NOT EXISTS (
+    SELECT * FROM [medic].[__EFMigrationsHistory]
+    WHERE [MigrationId] = N'20261031043107_ClinicalRecordsAndInventory'
+)
+BEGIN
+    CREATE TABLE [medic].[IX_StockMovements] (
+        [PKStockMovement] int NOT NULL IDENTITY,
+        [FKStockItem] int NOT NULL,
+        [Kind] int NOT NULL,
+        [Quantity] decimal(12,3) NOT NULL,
+        [Balance] decimal(12,3) NOT NULL,
+        [Reason] nvarchar(1000) NOT NULL,
+        [RequestKey] uniqueidentifier NOT NULL,
+        [Available] bit NOT NULL DEFAULT CAST(1 AS bit),
+        [FKUserUpdater] nvarchar(450) NOT NULL,
+        [LastUpdated] datetime2(0) NOT NULL DEFAULT (SYSUTCDATETIME()),
+        [RowVersion] rowversion NOT NULL,
+        CONSTRAINT [PK_IX_StockMovements] PRIMARY KEY CLUSTERED ([PKStockMovement]),
+        CONSTRAINT [CK_StockMovements_Kind] CHECK ([Kind] BETWEEN 0 AND 2),
+        CONSTRAINT [CK_StockMovements_Quantity] CHECK ([Quantity] > 0 AND [Balance] >= 0),
+        CONSTRAINT [FK_IX_StockMovements_CT_StockItems_FKStockItem] FOREIGN KEY ([FKStockItem]) REFERENCES [medic].[CT_StockItems] ([PKStockItem]) ON DELETE NO ACTION,
+        CONSTRAINT [FK_IX_StockMovements_SC_Users_FKUserUpdater] FOREIGN KEY ([FKUserUpdater]) REFERENCES [dbo].[SC_Users] ([Id]) ON DELETE NO ACTION
+    );
+END;
+
+IF NOT EXISTS (
+    SELECT * FROM [medic].[__EFMigrationsHistory]
+    WHERE [MigrationId] = N'20261031043107_ClinicalRecordsAndInventory'
+)
+BEGIN
+    CREATE TABLE [medic].[SY_PatientDocuments] (
+        [PKPatientDocument] int NOT NULL IDENTITY,
+        [FKPerson] int NOT NULL,
+        [FKClinicalVisit] int NULL,
+        [Kind] int NOT NULL,
+        [Description] nvarchar(1000) NOT NULL,
+        [StorageKey] varchar(32) NOT NULL,
+        [OriginalName] nvarchar(180) NOT NULL,
+        [ContentType] varchar(80) NOT NULL,
+        [ByteCount] bigint NOT NULL,
+        [Sha256] varchar(64) NOT NULL,
+        [RequestKey] uniqueidentifier NOT NULL,
+        [Ordinal] int NOT NULL,
+        [Available] bit NOT NULL DEFAULT CAST(1 AS bit),
+        [FKUserUpdater] nvarchar(450) NOT NULL,
+        [LastUpdated] datetime2(0) NOT NULL DEFAULT (SYSUTCDATETIME()),
+        [RowVersion] rowversion NOT NULL,
+        CONSTRAINT [PK_SY_PatientDocuments] PRIMARY KEY CLUSTERED ([PKPatientDocument]),
+        CONSTRAINT [CK_PatientDocuments_Kind] CHECK ([Kind] BETWEEN 0 AND 4),
+        CONSTRAINT [CK_PatientDocuments_Ordinal] CHECK ([Ordinal] BETWEEN 0 AND 4),
+        CONSTRAINT [CK_PatientDocuments_Size] CHECK ([ByteCount] BETWEEN 1 AND 10485760),
+        CONSTRAINT [FK_SY_PatientDocuments_SC_Users_FKUserUpdater] FOREIGN KEY ([FKUserUpdater]) REFERENCES [dbo].[SC_Users] ([Id]) ON DELETE NO ACTION,
+        CONSTRAINT [FK_SY_PatientDocuments_SY_ClinicalVisits_FKClinicalVisit] FOREIGN KEY ([FKClinicalVisit]) REFERENCES [medic].[SY_ClinicalVisits] ([PKClinicalVisit]) ON DELETE NO ACTION,
+        CONSTRAINT [FK_SY_PatientDocuments_SY_People_FKPerson] FOREIGN KEY ([FKPerson]) REFERENCES [dbo].[SY_People] ([Id]) ON DELETE NO ACTION
+    );
+END;
+
+IF NOT EXISTS (
+    SELECT * FROM [medic].[__EFMigrationsHistory]
+    WHERE [MigrationId] = N'20261031043107_ClinicalRecordsAndInventory'
+)
+BEGIN
+    CREATE UNIQUE INDEX [IX_CT_StockItems_Code] ON [medic].[CT_StockItems] ([Code]);
+END;
+
+IF NOT EXISTS (
+    SELECT * FROM [medic].[__EFMigrationsHistory]
+    WHERE [MigrationId] = N'20261031043107_ClinicalRecordsAndInventory'
+)
+BEGIN
+    CREATE INDEX [IX_CT_StockItems_FKUserUpdater] ON [medic].[CT_StockItems] ([FKUserUpdater]);
+END;
+
+IF NOT EXISTS (
+    SELECT * FROM [medic].[__EFMigrationsHistory]
+    WHERE [MigrationId] = N'20261031043107_ClinicalRecordsAndInventory'
+)
+BEGIN
+    CREATE INDEX [IX_IX_StockMovements_FKStockItem_PKStockMovement] ON [medic].[IX_StockMovements] ([FKStockItem], [PKStockMovement]);
+END;
+
+IF NOT EXISTS (
+    SELECT * FROM [medic].[__EFMigrationsHistory]
+    WHERE [MigrationId] = N'20261031043107_ClinicalRecordsAndInventory'
+)
+BEGIN
+    CREATE INDEX [IX_IX_StockMovements_FKUserUpdater] ON [medic].[IX_StockMovements] ([FKUserUpdater]);
+END;
+
+IF NOT EXISTS (
+    SELECT * FROM [medic].[__EFMigrationsHistory]
+    WHERE [MigrationId] = N'20261031043107_ClinicalRecordsAndInventory'
+)
+BEGIN
+    CREATE UNIQUE INDEX [IX_IX_StockMovements_RequestKey] ON [medic].[IX_StockMovements] ([RequestKey]);
+END;
+
+IF NOT EXISTS (
+    SELECT * FROM [medic].[__EFMigrationsHistory]
+    WHERE [MigrationId] = N'20261031043107_ClinicalRecordsAndInventory'
+)
+BEGIN
+    CREATE INDEX [IX_SY_ClinicalVisits_FKPerson_VisitedAt] ON [medic].[SY_ClinicalVisits] ([FKPerson], [VisitedAt]);
+END;
+
+IF NOT EXISTS (
+    SELECT * FROM [medic].[__EFMigrationsHistory]
+    WHERE [MigrationId] = N'20261031043107_ClinicalRecordsAndInventory'
+)
+BEGIN
+    CREATE INDEX [IX_SY_ClinicalVisits_FKUserUpdater] ON [medic].[SY_ClinicalVisits] ([FKUserUpdater]);
+END;
+
+IF NOT EXISTS (
+    SELECT * FROM [medic].[__EFMigrationsHistory]
+    WHERE [MigrationId] = N'20261031043107_ClinicalRecordsAndInventory'
+)
+BEGIN
+    CREATE UNIQUE INDEX [IX_SY_ClinicalVisits_RequestKey] ON [medic].[SY_ClinicalVisits] ([RequestKey]);
+END;
+
+IF NOT EXISTS (
+    SELECT * FROM [medic].[__EFMigrationsHistory]
+    WHERE [MigrationId] = N'20261031043107_ClinicalRecordsAndInventory'
+)
+BEGIN
+    CREATE INDEX [IX_SY_PatientDocuments_FKClinicalVisit] ON [medic].[SY_PatientDocuments] ([FKClinicalVisit]);
+END;
+
+IF NOT EXISTS (
+    SELECT * FROM [medic].[__EFMigrationsHistory]
+    WHERE [MigrationId] = N'20261031043107_ClinicalRecordsAndInventory'
+)
+BEGIN
+    CREATE INDEX [IX_SY_PatientDocuments_FKPerson_LastUpdated] ON [medic].[SY_PatientDocuments] ([FKPerson], [LastUpdated]);
+END;
+
+IF NOT EXISTS (
+    SELECT * FROM [medic].[__EFMigrationsHistory]
+    WHERE [MigrationId] = N'20261031043107_ClinicalRecordsAndInventory'
+)
+BEGIN
+    CREATE UNIQUE INDEX [IX_SY_PatientDocuments_FKPerson_RequestKey_Ordinal] ON [medic].[SY_PatientDocuments] ([FKPerson], [RequestKey], [Ordinal]);
+END;
+
+IF NOT EXISTS (
+    SELECT * FROM [medic].[__EFMigrationsHistory]
+    WHERE [MigrationId] = N'20261031043107_ClinicalRecordsAndInventory'
+)
+BEGIN
+    CREATE INDEX [IX_SY_PatientDocuments_FKUserUpdater] ON [medic].[SY_PatientDocuments] ([FKUserUpdater]);
+END;
+
+IF NOT EXISTS (
+    SELECT * FROM [medic].[__EFMigrationsHistory]
+    WHERE [MigrationId] = N'20261031043107_ClinicalRecordsAndInventory'
+)
+BEGIN
+    CREATE UNIQUE INDEX [IX_SY_PatientDocuments_StorageKey] ON [medic].[SY_PatientDocuments] ([StorageKey]);
+END;
+
+IF NOT EXISTS (
+    SELECT * FROM [medic].[__EFMigrationsHistory]
+    WHERE [MigrationId] = N'20261031043107_ClinicalRecordsAndInventory'
+)
+BEGIN
+    IF DATABASE_PRINCIPAL_ID(N'MedicAppRuntime') IS NOT NULL BEGIN DENY UPDATE, DELETE ON OBJECT::medic.SY_ClinicalVisits TO MedicAppRuntime; DENY UPDATE, DELETE ON OBJECT::medic.SY_PatientDocuments TO MedicAppRuntime; DENY UPDATE, DELETE ON OBJECT::medic.IX_StockMovements TO MedicAppRuntime; END
+END;
+
+IF NOT EXISTS (
+    SELECT * FROM [medic].[__EFMigrationsHistory]
+    WHERE [MigrationId] = N'20261031043107_ClinicalRecordsAndInventory'
+)
+BEGIN
+    INSERT INTO [medic].[__EFMigrationsHistory] ([MigrationId], [ProductVersion])
+    VALUES (N'20261031043107_ClinicalRecordsAndInventory', N'10.0.14');
+END;
+
+COMMIT;
+GO
+
