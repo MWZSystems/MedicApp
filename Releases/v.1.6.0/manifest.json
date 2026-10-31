@@ -1,0 +1,13 @@
+{
+  "Application": "MedicApp",
+  "Release": "v1.6.0",
+  "Version": "1.6.0",
+  "SourceCommit": "725221b68ef8e4076f87c838d0f00c4af9061dde",
+  "Archive": "MedicApp-1.6.0.zip",
+  "Sha256": "86E576EE81EC94685A41BB6EB4CD6420111ED2B12974588741EFA34CB090B620",
+  "Bytes": 34164629,
+  "Files": 329,
+  "Database": "ClinicalRecordsAndInventory aditiva: cuatro tablas médicas y dos permisos. No cambia tablas compartidas de personas/Identity ni integración laboral",
+  "TestsPassed": 104,
+  "Configuration": "Sin SQL privado, claves, perfiles ni datos. Publicar con scripts/Publicar-MedicApp.ps1 sin InitializeCalendar para conservar la configuración."
+}
