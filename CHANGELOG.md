@@ -1,5 +1,15 @@
 # Changelog
 
+## [1.8.0] - 2026-11-01
+
+- Menú de Configuración con accesos por apartado y navegación interna adaptable a móvil.
+- General: nombre visible de la aplicación y zona horaria. Citas: horizonte, duración, horario de atención y modo de reservas de prueba.
+- Documentos: tamaños, archivos por carga y cupos por incapacidad y por expediente clínico. Inventario: días de anticipación de avisos de caducidad.
+- Accesos a doctores, permisos, auditoría, incapacidades, expediente, inventario y datos DEMO según las autorizaciones existentes.
+- Opciones tipadas por solicitud, validación de rangos y relaciones, persistencia compatible con archivos anteriores, revisión de concurrencia y auditoría por ajuste.
+- Sin cambios de esquema ni inicialización de datos. El publish conserva los ajustes existentes.
+
+
 ## [1.7.0] - 2026-11-01
 
 - Guía PowerPoint de 31 diapositivas y 29 capturas reales con datos ficticios para empleados, doctores, enfermería y administración.

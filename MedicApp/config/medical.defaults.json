@@ -13,5 +13,8 @@
     "MaxFilesPerUpload": 5,
     "MaxDocumentsPerLeave": 20,
     "MaxDocumentsPerPatient": 200
+  },
+  "Inventory": {
+    "ExpiryWarningDays": 30
   }
 }

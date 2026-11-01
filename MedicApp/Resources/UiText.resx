@@ -759,4 +759,51 @@
   <data name="ManualClinicalContents" xml:space="preserve"><value>Doctores y enfermería: atención de citas, incapacidades, expediente clínico, signos vitales, archivos e inventario según sus permisos.</value></data>
   <data name="ManualAdminContents" xml:space="preserve"><value>Administración: doctores, accesos, configuración, datos de ejemplo y auditoría.</value></data>
   <data name="ManualPrivacy" xml:space="preserve"><value>Las capturas usan datos ficticios de capacitación. Los menús y acciones disponibles dependen de los permisos de tu cuenta.</value></data>
+  <data name="ApplicationConfiguration" xml:space="preserve"><value>Configuración de la aplicación</value></data>
+  <data name="AllConfigurationHelp" xml:space="preserve"><value>Administra los apartados de MedicApp desde un solo lugar. Los cambios requieren permiso de administrar accesos.</value></data>
+  <data name="ConfigurationSections" xml:space="preserve"><value>Apartados de configuración</value></data>
+  <data name="ConfigurationGeneral" xml:space="preserve"><value>General</value></data>
+  <data name="ConfigurationAppointments" xml:space="preserve"><value>Citas y horarios</value></data>
+  <data name="ConfigurationDocuments" xml:space="preserve"><value>Documentos e incapacidades</value></data>
+  <data name="ConfigurationAdministration" xml:space="preserve"><value>Administración</value></data>
+  <data name="AllConfiguration" xml:space="preserve"><value>Todos los ajustes</value></data>
+  <data name="ReloadConfiguration" xml:space="preserve"><value>Recargar configuración</value></data>
+  <data name="ApplicationDisplayName" xml:space="preserve"><value>Nombre visible de la aplicación</value></data>
+  <data name="ApplicationTimeZone" xml:space="preserve"><value>Zona horaria de atención</value></data>
+  <data name="ApplicationNameHelp" xml:space="preserve"><value>Se muestra en el encabezado, el título de las páginas y el pie de la aplicación.</value></data>
+  <data name="ApplicationZoneHelp" xml:space="preserve"><value>La zona se usa para mostrar fechas y calcular nuevas disponibilidades. Los registros existentes conservan sus instantes guardados. Revisa las citas al cambiar la zona.</value></data>
+  <data name="MaxFileSizeMb" xml:space="preserve"><value>Tamaño máximo por archivo (MB)</value></data>
+  <data name="MaxBatchSizeMb" xml:space="preserve"><value>Tamaño máximo por carga (MB)</value></data>
+  <data name="MaxFilesPerUpload" xml:space="preserve"><value>Archivos por carga</value></data>
+  <data name="MaxDocumentsPerLeave" xml:space="preserve"><value>Documentos por incapacidad</value></data>
+  <data name="MaxDocumentsPerPatient" xml:space="preserve"><value>Documentos por persona en el expediente clínico</value></data>
+  <data name="DocumentConfigurationHelp" xml:space="preserve"><value>Límites para las evidencias de incapacidades y los archivos del expediente clínico. Formatos admitidos: PDF, JPG y PNG.</value></data>
+  <data name="DocumentLimitsHelp" xml:space="preserve"><value>Hasta 10 MB por archivo, 20 MB por carga y 5 archivos por envío. El total de la carga debe admitir un archivo completo. El cupo por incapacidad no puede ser menor al número de archivos por carga.</value></data>
+  <data name="ClinicalConfigurationHelp" xml:space="preserve"><value>Configura la capacidad documental del expediente clínico. Las notas, recetas y signos vitales siguen siendo opcionales.</value></data>
+  <data name="ClinicalLimitsHelp" xml:space="preserve"><value>Los límites de tamaño y archivos por carga se comparten con el apartado Documentos. Reducir un cupo no borra documentos existentes ni impide su consulta. Los permisos de enfermería se administran desde Permisos.</value></data>
+  <data name="OpenClinicalModule" xml:space="preserve"><value>Abrir expediente clínico</value></data>
+  <data name="InventoryConfigurationHelp" xml:space="preserve"><value>Define la anticipación de las alertas de caducidad del inventario médico.</value></data>
+  <data name="ExpiryWarningDays" xml:space="preserve"><value>Avisar días antes de la caducidad</value></data>
+  <data name="InventoryRulesHelp" xml:space="preserve"><value>Entre 1 y 365 días. La existencia mínima se define por artículo al darlo de alta. Se conservan los controles de saldo y caducidad de las salidas.</value></data>
+  <data name="OpenInventoryCatalog" xml:space="preserve"><value>Abrir catálogo de inventario</value></data>
+  <data name="ConfigurationPersistenceHelp" xml:space="preserve"><value>Guardar aplica todos los apartados del formulario. Los cambios se conservan al publicar y se usan en las siguientes solicitudes. Recarga las pantallas que ya estén abiertas.</value></data>
+  <data name="SaveAllConfiguration" xml:space="preserve"><value>Guardar toda la configuración</value></data>
+  <data name="AdministrationConfigurationHelp" xml:space="preserve"><value>Abre los catálogos, permisos y registros relacionados. Estos accesos no modifican los permisos de tu cuenta.</value></data>
+  <data name="InvalidApplicationName" xml:space="preserve"><value>Escribe un nombre de aplicación de hasta 80 caracteres, sin caracteres de control.</value></data>
+  <data name="InvalidApplicationTimeZone" xml:space="preserve"><value>Selecciona una zona horaria válida.</value></data>
+  <data name="InvalidDocumentBatch" xml:space="preserve"><value>El tamaño máximo de la carga debe ser igual o mayor al de un archivo.</value></data>
+  <data name="InvalidLeaveDocumentLimit" xml:space="preserve"><value>El cupo por incapacidad debe admitir al menos una carga completa de archivos.</value></data>
+  <data name="InvalidConfiguration" xml:space="preserve"><value>Revisa los valores de configuración antes de guardar.</value></data>
+  <data name="InvalidGeneralConfiguration" xml:space="preserve"><value>Revisa el nombre y la zona horaria de la aplicación.</value></data>
+  <data name="InvalidDocumentConfiguration" xml:space="preserve"><value>Revisa los límites de documentos. El tamaño de carga y el cupo por incapacidad deben admitir una carga válida.</value></data>
+  <data name="InvalidInventoryConfiguration" xml:space="preserve"><value>La anticipación de caducidad debe estar entre 1 y 365 días.</value></data>
+  <data name="ExpiringSoonDays" xml:space="preserve"><value>Caduca en {0} días</value></data>
+  <data name="Zone_America_Mexico_City" xml:space="preserve"><value>Ciudad de México</value></data>
+  <data name="Zone_America_Chihuahua" xml:space="preserve"><value>Chihuahua</value></data>
+  <data name="Zone_America_Ciudad_Juarez" xml:space="preserve"><value>Ciudad Juárez</value></data>
+  <data name="Zone_America_Hermosillo" xml:space="preserve"><value>Hermosillo</value></data>
+  <data name="Zone_America_Tijuana" xml:space="preserve"><value>Tijuana</value></data>
+  <data name="Zone_America_Monterrey" xml:space="preserve"><value>Monterrey</value></data>
+  <data name="Zone_America_Cancun" xml:space="preserve"><value>Cancún</value></data>
+  <data name="Zone_UTC" xml:space="preserve"><value>UTC</value></data>
 </root>

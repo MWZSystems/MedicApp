@@ -19,6 +19,8 @@ var dataDirectory = Path.GetFullPath(builder.Configuration["Medical:DataDirector
 if (dataDirectory.StartsWith(Path.Combine(builder.Environment.ContentRootPath, "wwwroot"), StringComparison.OrdinalIgnoreCase))
 { throw new InvalidOperationException("DataDirectory must be outside wwwroot."); }
 builder.Services.AddScoped<IOptions<MedicalOptions>>(services => services.GetRequiredService<IOptionsSnapshot<MedicalOptions>>());
+builder.Services.AddScoped<IOptions<DocumentOptions>>(services => services.GetRequiredService<IOptionsSnapshot<DocumentOptions>>());
+builder.Services.AddScoped<IOptions<InventoryOptions>>(services => services.GetRequiredService<IOptionsSnapshot<InventoryOptions>>());
 builder.Services.AddScoped<ApplicationConfiguration>();
 builder.Services.AddScoped<DemoDataService>();
 builder.Services.AddScoped<BookingSetup>();
@@ -60,7 +62,8 @@ builder.Services.AddScoped<EvidenceStorage>();
 builder.Services.AddScoped<LeaveEvidenceService>();
 builder.Services.AddScoped<ClinicalRecordService>();
 builder.Services.AddScoped<InventoryService>();
-builder.Services.AddOptions<DocumentOptions>().BindConfiguration("Documents").ValidateDataAnnotations().Validate(x => x.MaxBatchSizeMb >= x.MaxFileSizeMb && x.MaxDocumentsPerLeave >= x.MaxFilesPerUpload, "Invalid document limits").ValidateOnStart();
+builder.Services.AddOptions<DocumentOptions>().BindConfiguration("Documents").PostConfigure<IConfiguration, IWebHostEnvironment>(MedicalConfigurationLoader.ApplyDocuments).ValidateDataAnnotations().ValidateOnStart();
+builder.Services.AddOptions<InventoryOptions>().BindConfiguration("Inventory").PostConfigure<IConfiguration, IWebHostEnvironment>(MedicalConfigurationLoader.ApplyInventory).ValidateDataAnnotations().ValidateOnStart();
 builder.Services.AddScoped<IAuthorizationHandler, MedicalAuthorizationHandler>();
 builder.Services.AddAuthorization(o =>
 {

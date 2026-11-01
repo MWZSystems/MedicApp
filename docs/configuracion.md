@@ -1,5 +1,7 @@
 # Configuración de MedicApp
 
+La configuración vigente y todos sus apartados se describen en [configuración integral 1.8.0](configuracion-integral.md). Esta página conserva el detalle histórico de versiones anteriores.
+
 Para los valores vigentes y la agenda operativa 1.3.0 consultar [agenda operativa](agenda-operativa.md). El horizonte inicial ahora es siete días; la duración inicial es treinta minutos, con máximo de treinta. La configuración incluye DemoBookingEnabled y el catálogo permite horario recurrente. El resto de esta sección documenta la configuración introducida en 1.2.0.
 
 
