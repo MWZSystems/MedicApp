@@ -1,0 +1,13 @@
+{
+  "Application": "MedicApp",
+  "Release": "v1.8.0",
+  "Version": "1.8.0",
+  "SourceCommit": "9a5ee2276d28474a3cc995346c31b769d1a3cd38",
+  "Archive": "MedicApp-1.8.0.zip",
+  "Sha256": "8F1D1057F2E348E09FA6651760E7E6E8D53AA54F6FB03D747B3E8AB4AA5D972C",
+  "Bytes": 35846943,
+  "Files": 333,
+  "Database": "Sin migraciones, cambios de datos ni configuración. Conserva el esquema médico de 1.6.0.",
+  "TestsPassed": 121,
+  "Configuration": "Sin SQL privado, claves, perfiles ni datos. Publicar con scripts/Publicar-MedicApp.ps1 sin InitializeCalendar para conservar la configuración."
+}
