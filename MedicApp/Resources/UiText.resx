@@ -745,4 +745,6 @@
     <value>No se puede entregar un lote caducado. Registra una baja si corresponde.</value>
   </data>
   <data name="Download" xml:space="preserve"><value>Descargar</value></data>
+  <data name="ShowPassword" xml:space="preserve"><value>Mostrar contraseña</value></data>
+  <data name="HidePassword" xml:space="preserve"><value>Ocultar contraseña</value></data>
 </root>

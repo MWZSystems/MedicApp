@@ -17,3 +17,5 @@
 .clinical-entry summary { padding:1rem; cursor:pointer; color:#134657; }
 .clinical-notes dd { white-space:pre-wrap; overflow-wrap:anywhere; }
 .app-nav .navbar-nav{flex-wrap:wrap}.app-nav .nav-link{white-space:nowrap}.badge.bg-danger{color:#fff}
+
+.password-toggle{display:inline-flex;align-items:center;justify-content:center;gap:6px;border-color:#bed1d6;padding:9px 12px;font-size:13px}.password-toggle[hidden],.password-toggle [hidden]{display:none!important}.password-toggle .medic-icon{margin:0}.password-toggle [data-password-label]{max-width:85px;line-height:1.2;text-align:left}

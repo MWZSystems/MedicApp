@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.6.1] - 2026-10-31
+
+- Botón accesible con icono y texto para mostrar/ocultar la contraseña del login. Inicia oculta y vuelve a ocultarse al enviar el formulario o salir de la página.
+- Recurso JavaScript local, sin guardar contraseñas ni cambiar autenticación, permisos, esquema o configuración.
+- Actualizada la comprobación del instalador idempotente para las doce tablas médicas introducidas hasta 1.6.0.
+
+
 ## [1.6.0] - 2026-10-30
 
 - Expediente clínico por nombre/control con consultas, recetas, notas y nueve signos vitales opcionales; autor/fecha y registros conservados sin sobrescribir.

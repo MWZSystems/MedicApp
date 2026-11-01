@@ -58,7 +58,7 @@ public partial class DeliveryTests(SqlFixture fixture)
             }
             await using var count = connection.CreateCommand();
             count.CommandText = "SELECT COUNT(*) FROM sys.tables AS T WHERE SCHEMA_NAME(T.schema_id) = N'medic' AND T.name <> N'__EFMigrationsHistory';";
-            Assert.Equal(8, Convert.ToInt32(await count.ExecuteScalarAsync(ct), System.Globalization.CultureInfo.InvariantCulture));
+            Assert.Equal(12, Convert.ToInt32(await count.ExecuteScalarAsync(ct), System.Globalization.CultureInfo.InvariantCulture));
             Assert.Equal(0, await shared.Users.CountAsync(ct));
             Assert.Equal(0, await shared.People.CountAsync(ct));
         }
