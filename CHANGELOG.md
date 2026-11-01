@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.7.0] - 2026-11-01
+
+- Guía PowerPoint de 31 diapositivas y 29 capturas reales con datos ficticios para empleados, doctores, enfermería y administración.
+- Nuevo menú Ayuda y manual, acceso desde Inicio y descarga autenticada del PPTX como adjunto. Se incluye el archivo en el publish fuera de wwwroot.
+- Instrucciones de funciones y botones para citas, incapacidades, evidencias, expediente clínico, inventario, doctores, permisos, configuración y auditoría.
+- Actualizado el texto de privacidad de Inicio para reflejar el expediente clínico actual. Sin cambios de esquema, datos o configuración.
+
+
 ## [1.6.1] - 2026-10-31
 
 - Botón accesible con icono y texto para mostrar/ocultar la contraseña del login. Inicia oculta y vuelve a ocultarse al enviar el formulario o salir de la página.

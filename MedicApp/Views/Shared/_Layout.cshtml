@@ -20,6 +20,7 @@
 @if((await Authorization.AuthorizeAsync(User,"Doctor")).Succeeded){<a class="nav-link" asp-controller="Agenda" asp-action="Index"><medic-icon name="clock"/>@T["Agenda"]</a>}
 @if((await Authorization.AuthorizeAsync(User,"Doctors")).Succeeded){<a class="nav-link" asp-controller="Admin" asp-action="Doctors"><medic-icon name="stethoscope"/>@T["Doctors"]</a>}
 @if((await Authorization.AuthorizeAsync(User,"Access")).Succeeded){<a class="nav-link" asp-controller="Admin" asp-action="Access"><medic-icon name="shield"/>@T["Access"]</a><a class="nav-link" asp-controller="Configuration" asp-action="Index"><medic-icon name="settings"/>@T["Configuration"]</a><a class="nav-link" asp-controller="Admin" asp-action="Audit"><medic-icon name="history"/>@T["Audit"]</a>}
+<a class="nav-link" asp-controller="Help" asp-action="Index"><medic-icon name="document"/>@T["HelpManual"]</a>
 <a class="nav-link" asp-controller="Account" asp-action="ChangePassword"><medic-icon name="key"/>@T["ChangePassword"]</a></div></div></nav>}
 </div></header>
 <main class="container-fluid app-width py-4" id="main-content">

@@ -1,0 +1,4 @@
+@{ViewData["Title"] = T["HelpManual"];}
+<div class="page-heading"><div><h1><medic-icon name="document"/>@T["HelpManual"]</h1><p>@T["ManualIntro"]</p></div></div>
+<section class="panel"><h2><medic-icon name="download"/>@T["ManualTitle"]</h2><p>@T["ManualSummary"]</p><p>@T["ManualAudience"]</p><a class="btn btn-primary" asp-action="Download"><medic-icon name="download"/>@T["DownloadManual"]</a><p class="form-text mt-3">@T["ManualFormat"]</p></section>
+<section class="panel"><h2>@T["ManualContents"]</h2><ul><li>@T["ManualEmployeeContents"]</li><li>@T["ManualClinicalContents"]</li><li>@T["ManualAdminContents"]</li></ul><p class="text-muted">@T["ManualPrivacy"]</p></section>

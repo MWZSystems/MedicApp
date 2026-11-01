@@ -32,6 +32,29 @@ public partial class HttpTests(SqlFixture fixture)
         Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
     }
     [Fact]
+    public async Task Guide_RequiresSignInAndDownloadsCompletePowerPoint()
+    {
+        await using var factory = Factory(); using var client = Client(factory);
+        using var anonymous = await client.GetAsync("/Help/Download");
+        Assert.Equal(HttpStatusCode.Redirect, anonymous.StatusCode);
+        Assert.Contains("/Account/Login", anonymous.Headers.Location?.ToString());
+        await LoginAsync(client, "employee");
+        var page = await client.GetStringAsync("/Help");
+        Assert.Contains("/Help/Download", page);
+        using var download = await client.GetAsync("/Help/Download");
+        Assert.Equal(HttpStatusCode.OK, download.StatusCode);
+        Assert.Equal("application/vnd.openxmlformats-officedocument.presentationml.presentation", download.Content.Headers.ContentType?.MediaType);
+        Assert.Equal("attachment", download.Content.Headers.ContentDisposition?.DispositionType);
+        Assert.Contains("no-store", download.Headers.CacheControl?.ToString());
+        using var bytes = new MemoryStream(await download.Content.ReadAsByteArrayAsync());
+        using var archive = new System.IO.Compression.ZipArchive(bytes);
+        Assert.NotNull(archive.GetEntry("ppt/presentation.xml"));
+        Assert.Equal(31, archive.Entries.Count(x => Regex.IsMatch(x.FullName, @"^ppt/slides/slide\d+\.xml$")));
+        Assert.True(archive.Entries.Count(x => x.FullName.StartsWith("ppt/media/", StringComparison.Ordinal)) >= 29);
+        using var directFile = await client.GetAsync("/Guides/MedicApp-Guia-de-Uso.pptx");
+        Assert.Equal(HttpStatusCode.NotFound, directFile.StatusCode);
+    }
+    [Fact]
     public async Task Employee_ClinicalAndAdminRoutes_Forbidden()
     {
         await using var factory = Factory(); using var client = Client(factory);

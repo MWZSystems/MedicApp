@@ -303,7 +303,7 @@
     <value>Total</value>
   </data>
   <data name="ClinicalPrivacy" xml:space="preserve">
-    <value>Esta aplicación administra citas e incapacidades; no captura diagnósticos ni expediente clínico.</value>
+    <value>La información clínica y los documentos solo están disponibles para las cuentas autorizadas.</value>
   </data>
   <data name="UnknownPerson" xml:space="preserve">
     <value>Persona histórica</value>
@@ -747,4 +747,16 @@
   <data name="Download" xml:space="preserve"><value>Descargar</value></data>
   <data name="ShowPassword" xml:space="preserve"><value>Mostrar contraseña</value></data>
   <data name="HidePassword" xml:space="preserve"><value>Ocultar contraseña</value></data>
+  <data name="HelpManual" xml:space="preserve"><value>Ayuda y manual</value></data>
+  <data name="ManualIntro" xml:space="preserve"><value>Consulta la guía con capturas de pantalla y explicaciones de funciones y botones.</value></data>
+  <data name="ManualTitle" xml:space="preserve"><value>Guía de uso de MedicApp</value></data>
+  <data name="ManualSummary" xml:space="preserve"><value>Una presentación PowerPoint para empleados, personal médico y administradores.</value></data>
+  <data name="ManualAudience" xml:space="preserve"><value>La guía explica qué puede hacer cada perfil y cómo usar las pantallas paso a paso.</value></data>
+  <data name="DownloadManual" xml:space="preserve"><value>Descargar presentación (.pptx)</value></data>
+  <data name="ManualFormat" xml:space="preserve"><value>Archivo PowerPoint descargable. Puedes abrirlo en PowerPoint o en un visor compatible. Guía de la versión 1.7.0.</value></data>
+  <data name="ManualContents" xml:space="preserve"><value>Contenido de la presentación</value></data>
+  <data name="ManualEmployeeContents" xml:space="preserve"><value>Empleados: acceso, citas, calendario, incapacidades y consulta de documentos.</value></data>
+  <data name="ManualClinicalContents" xml:space="preserve"><value>Doctores y enfermería: atención de citas, incapacidades, expediente clínico, signos vitales, archivos e inventario según sus permisos.</value></data>
+  <data name="ManualAdminContents" xml:space="preserve"><value>Administración: doctores, accesos, configuración, datos de ejemplo y auditoría.</value></data>
+  <data name="ManualPrivacy" xml:space="preserve"><value>Las capturas usan datos ficticios de capacitación. Los menús y acciones disponibles dependen de los permisos de tu cuenta.</value></data>
 </root>

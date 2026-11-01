@@ -16,6 +16,10 @@ dotnet test MedicApp.slnx -c Release --no-restore
 
 Configurar `ConnectionStrings:Workforce` fuera del repositorio; la base definitiva confirmada es sql1002 / db_acaa35_trainify. Revisar [instalación](docs/instalacion.md) para ejecutar los scripts, habilitar el primer administrador y levantar HTTPS. No hay contraseña predeterminada ni migración automática al inicio.
 
+## Guía de uso 1.7.0
+
+El menú **Ayuda y manual** y el acceso de Inicio permiten descargar un PowerPoint con 31 diapositivas y 29 capturas de la aplicación usando únicamente datos ficticios. La guía explica las funciones y botones para empleados, doctores, enfermería y administradores. La descarga requiere iniciar sesión y usa `Help/Download`; el archivo se publica desde `MedicApp/Guides`, fuera de wwwroot. Ver [guía y mantenimiento](docs/guia-de-uso.md).
+
 ## Expediente clínico e inventario 1.6.0
 
 **Expediente clínico** permite buscar por nombre o número de control, registrar consultas, notas, recetas y signos vitales opcionales, y adjuntar archivos generales o por consulta. **Inventario médico** controla medicamentos/insumos por lote y caducidad, entradas, salidas y bajas con historial. Doctores y administradores tienen acceso; enfermería recibe permisos independientes desde **Accesos**. El registro no es obligatorio para usar citas o incapacidades. Ver [uso, permisos y migración](docs/expediente-inventario.md).
