@@ -89,3 +89,5 @@ La integración automática con asistencia y overtime continúa pendiente de inc
 Citas abre el calendario compartido de la interfaz, con alcance por usuario. El empleado ve solo sus citas; cada doctor ve las propias y las asignadas. Reservar requiere fecha y hora. El empleado, doctor disponible, duración y auditoría se resuelven en el servidor. Las flechas, vistas, navegación por días y detalle permiten consultar y cancelar sin salir del calendario. La lista paginada sigue disponible como alternativa.
 
 La disponibilidad depende de doctores activos y ventanas previamente configuradas en Mi agenda; no se inventan horarios ni se crean reservas fuera de agenda. El horizonte de reserva configurado se conserva. No hay cambio SQL en esta versión.
+
+La versión de MedicApp se muestra en una barra inferior fija en todas las pantallas, incluido el acceso, y se obtiene del ensamblado de la aplicación. Durante el desarrollo permanece en v1.0.0.
