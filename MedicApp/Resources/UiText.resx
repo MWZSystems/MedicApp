@@ -806,4 +806,30 @@
   <data name="Zone_America_Monterrey" xml:space="preserve"><value>Monterrey</value></data>
   <data name="Zone_America_Cancun" xml:space="preserve"><value>Cancún</value></data>
   <data name="Zone_UTC" xml:space="preserve"><value>UTC</value></data>
+  <data name="FeedbackSuccess" xml:space="preserve"><value>Listo</value></data>
+  <data name="FeedbackInfo" xml:space="preserve"><value>Información</value></data>
+  <data name="FeedbackWarning" xml:space="preserve"><value>Atención</value></data>
+  <data name="FeedbackError" xml:space="preserve"><value>Error</value></data>
+  <data name="FeedbackClose" xml:space="preserve"><value>Cerrar aviso</value></data>
+  <data name="FeedbackInvalidForm" xml:space="preserve"><value>Revisa los datos marcados en el formulario.</value></data>
+  <data name="FeedbackActionFailed" xml:space="preserve"><value>No se pudo completar la acción</value></data>
+  <data name="FeedbackRetry" xml:space="preserve"><value>Revisa el aviso e intenta nuevamente.</value></data>
+  <data name="FeedbackAgendaSaved" xml:space="preserve"><value>Horario de atención agregado.</value></data>
+  <data name="FeedbackAgendaDisabled" xml:space="preserve"><value>Horario de atención desactivado.</value></data>
+  <data name="FeedbackDoctorSaved" xml:space="preserve"><value>Datos del doctor guardados.</value></data>
+  <data name="FeedbackDoctorDisabled" xml:space="preserve"><value>Doctor desactivado. No recibirá nuevas citas.</value></data>
+  <data name="FeedbackPermissionsSaved" xml:space="preserve"><value>Permisos guardados.</value></data>
+  <data name="FeedbackLogin" xml:space="preserve"><value>Sesión iniciada.</value></data>
+  <data name="FeedbackLogout" xml:space="preserve"><value>Sesión cerrada.</value></data>
+  <data name="FeedbackPasswordRequired" xml:space="preserve"><value>Cambia tu contraseña para continuar.</value></data>
+  <data name="FeedbackPasswordSaved" xml:space="preserve"><value>Contraseña actualizada.</value></data>
+  <data name="FeedbackLeavePending" xml:space="preserve"><value>La incapacidad está en borrador. Puedes adjuntar evidencia antes de aprobarla.</value></data>
+  <data name="FeedbackLeaveCancelled" xml:space="preserve"><value>Incapacidad cancelada. Ya no se considera vigente.</value></data>
+  <data name="FeedbackLeaveUpdated" xml:space="preserve"><value>Incapacidad actualizada.</value></data>
+  <data name="FeedbackVisitSaved" xml:space="preserve"><value>Consulta registrada en el expediente.</value></data>
+  <data name="FeedbackStockCreated" xml:space="preserve"><value>Artículo agregado al inventario.</value></data>
+  <data name="FeedbackStockMoved" xml:space="preserve"><value>Movimiento de inventario registrado.</value></data>
+  <data name="FeedbackAppointmentCancelled" xml:space="preserve"><value>Cita cancelada. El horario queda disponible.</value></data>
+  <data name="FeedbackAppointmentUpdated" xml:space="preserve"><value>Estado de la cita actualizado.</value></data>
+  <data name="FeedbackAlreadyReserved" xml:space="preserve"><value>Esta cita ya estaba reservada. No se creó otra.</value></data>
 </root>

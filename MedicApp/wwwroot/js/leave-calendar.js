@@ -27,9 +27,10 @@
                 url.searchParams.set("personId", labels.personId);
                 url.searchParams.set("from", range.startStr.slice(0, 10));
                 url.searchParams.set("to", range.endStr.slice(0, 10));
-                const response = await fetch(url, { credentials: "same-origin", signal: pending.signal, headers: { Accept: "application/json" } });
+                let response;
+                try { response = await fetch(url, { credentials: "same-origin", signal: pending.signal, headers: { Accept: "application/json" } }); } catch (error) { if (error.name === "AbortError") { throw error; } throw new Error(labels.error); }
                 if (response.redirected || !response.headers.get("content-type")?.includes("json")) throw new Error(labels.error);
-                const body = await response.json();
+                const body = await response.json().catch(() => { throw new Error(labels.error); });
                 if (!response.ok) throw new Error(body.title || labels.error);
                 if (request !== sequence) return;
                 success(body);
@@ -37,7 +38,7 @@
                 status.className = body.length ? "alert d-none" : "alert alert-info";
             } catch (error) {
                 if (error.name === "AbortError" || request !== sequence) return;
-                status.textContent = error.message; status.className = "alert alert-danger"; failure(error);
+                window.App.toast("error", error.message); failure(error);
             }
         },
         eventClick: info => {

@@ -91,3 +91,71 @@ Citas abre el calendario compartido de la interfaz, con alcance por usuario. El 
 La disponibilidad depende de doctores activos y ventanas previamente configuradas en Mi agenda; no se inventan horarios ni se crean reservas fuera de agenda. El horizonte de reserva configurado se conserva. No hay cambio SQL en esta versión.
 
 La versión de MedicApp se muestra en una barra inferior fija en todas las pantallas, incluido el acceso, y se obtiene del ensamblado de la aplicación. Durante el desarrollo permanece en v1.0.0.
+
+## Avisos emergentes
+
+MedicApp usa el mismo diseño de avisos de Trainify, adaptado a las variables y al catálogo de iconos de MedicApp. El componente común está en `Services/Feedback.cs`, `Views/Shared/_Feedback.cshtml`, `wwwroot/js/medicapp.js` y `wwwroot/css/medicapp.css`. Todos los módulos y el login comparten `_Layout`, que incluye la parcial antes de los scripts. La versión de desarrollo sigue siendo **1.0.0**.
+
+| Tipo | Título | Cuándo usarlo | Cierre automático |
+|---|---|---|---|
+| `success` | Listo | Acción completada: guardar, registrar, cargar o generar | 5 segundos |
+| `info` | Información | Sin cambios, por ejemplo una reserva reenviada que ya existía | 7 segundos |
+| `warning` | Atención | Acción con consecuencia o algo pendiente, como cancelación o borrador | 9 segundos |
+| `error` | Error | No se pudo completar, formulario inválido, regla o conflicto | No; botón Cerrar aviso |
+
+### Uso en servidor y JavaScript
+
+En un controlador que importe `MedicApp.Services`, agregar el aviso después de completar la operación y antes de redirigir:
+
+```csharp
+await servicio.GuardarAsync(input, ct);
+this.Success("Saved"); // Clave de UiText.resx, traducida al renderizar.
+return RedirectToAction(nameof(Index));
+// También: this.Info("Sin cambios."), this.Warning("Falta adjuntar evidencia."), this.Error("UnexpectedError").
+```
+
+Para mensajes nuevos reutilizables, agregar una clave con texto breve en español a `Resources/UiText.resx`. `Feedback.Add(TempData, FeedbackKind.Success, texto)` está disponible cuando no se utiliza la extensión. La lista JSON en `TempData["Feedback"]` permite varios avisos tras un Post/Redirect/Get. Se ignoran textos vacíos, se eliminan duplicados y se consumen una sola vez. Las claves anteriores `Success`, `Info`, `Warning` y `Error` siguen admitidas.
+
+```javascript
+window.App.toast("success", "Cambios guardados correctamente.");
+window.App.toast("info", "No hubo cambios.");
+window.App.toast("warning", "Falta adjuntar evidencia.");
+window.App.toast("error", "No se pudo guardar. Intenta nuevamente.");
+```
+
+Los textos se insertan como texto, nunca como HTML. Las respuestas JSON del calendario pueden añadir `kind` y `message`; no se encolan también en TempData, para no repetir el mismo aviso en la siguiente navegación. No mostrar mensajes de excepciones, SQL, contraseñas, archivos ni detalles clínicos en un aviso.
+
+### Acciones cubiertas
+
+| Acción | Aviso |
+|---|---|
+| Iniciar sesión | Éxito; advertencia si debe cambiar contraseña; error si se rechaza el acceso |
+| Cerrar sesión | Éxito |
+| Cambiar contraseña | Éxito o error de validación |
+| Agregar horario de agenda | Éxito |
+| Desactivar horario | Éxito; error si no se permite |
+| Guardar/activar doctor | Éxito |
+| Desactivar doctor | Advertencia por impedir nuevas citas |
+| Guardar permisos | Éxito |
+| Reservar cita, formulario y calendario | Éxito; información si el mismo RequestKey ya estaba reservado |
+| Cambiar estado de cita | Éxito; advertencia al cancelar |
+| Registrar incapacidad | Éxito y advertencia de borrador pendiente de aprobación |
+| Aprobar incapacidad | Éxito |
+| Cancelar incapacidad | Advertencia |
+| Adjuntar evidencia a incapacidad | Éxito |
+| Registrar consulta en expediente | Éxito |
+| Subir documentos al expediente | Éxito |
+| Agregar artículo al inventario | Éxito |
+| Registrar movimiento de inventario | Éxito |
+| Guardar configuración | Éxito |
+| Generar datos DEMO, solo con la acción explícita existente | Éxito |
+| Formulario inválido, permisos rechazados, reglas, concurrencia y error inesperado | Error amable sin detalles técnicos; se conservan los estados HTTP |
+| Calendario sin disponibilidad / fallos de solicitudes | Información de disponibilidad / error |
+
+No se agregan acciones de eliminación ni se cambian reglas, permisos, transacciones, reservas, datos o esquema. En los formularios se conservan los errores junto a los campos; los errores generales se muestran también como toast. Si solo hay errores de campo se muestra «Revisa los datos marcados en el formulario.». Los POST HTML rechazados con 400 mantienen ese estado y presentan una página con el aviso. Los errores globales HTML mantienen el layout y la versión; las API conservan ProblemDetails. El entorno Development puede mostrar su página de diagnóstico de ASP.NET para excepciones; Testing y producción usan el manejador global.
+
+### Comportamiento y accesibilidad
+
+Los avisos se ubican debajo de la cabecera y se recolocan al abrir menús o cambiar el tamaño. En teléfono ocupan el ancho disponible con márgenes. Los errores aparecen primero; los restantes conservan el orden. Todos tienen cierre con etiqueta accesible y foco de teclado. Error y advertencia usan `role="alert"`; éxito e información `role="status"`; el contenedor tiene `aria-live="polite"`. El temporizador conserva el tiempo restante al pasar el cursor, enfocar o dejar la pestaña en segundo plano. Los errores permanecen hasta cerrarlos. La animación respeta `prefers-reduced-motion`. Las variables `--app-toast-*` definen colores con contraste y variantes para `data-bs-theme="dark"`; no se agrega un nuevo modo oscuro al producto.
+
+Las comprobaciones incluyen pruebas unitarias de prioridad, consumo, duplicados y compatibilidad; pruebas HTTP de PRG, login, formularios inválidos, status 400 y errores HTML/JSON; y revisión local en escritorio y a 390 px con datos ficticios. No hay pantalla ni ruta de demostración de toasts en producción.

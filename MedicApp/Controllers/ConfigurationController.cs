@@ -22,7 +22,7 @@ public class ConfigurationController(ApplicationConfiguration settings, DemoData
         {
             try
             {
-                await settings.SaveAsync(input, ct); TempData["Success"] = "ConfigurationSaved";
+                await settings.SaveAsync(input, ct); this.Success("ConfigurationSaved");
                 return RedirectToAction(nameof(Index));
             }
             catch (MedicalRuleException error) when (error.Message is "InvalidConfiguration" or "InvalidGeneralConfiguration" or "InvalidDocumentConfiguration" or "InvalidInventoryConfiguration" or "InvalidHours" or "Concurrency")
@@ -47,6 +47,6 @@ public class ConfigurationController(ApplicationConfiguration settings, DemoData
     [HttpPost]
     public async Task<IActionResult> GenerateDemo(CancellationToken ct)
     {
-        await demo.CreateAsync(access.UserId, ct); TempData["Success"] = "DemoCreated"; return RedirectToAction(nameof(Demo));
+        await demo.CreateAsync(access.UserId, ct); this.Success("DemoCreated"); return RedirectToAction(nameof(Demo));
     }
 }

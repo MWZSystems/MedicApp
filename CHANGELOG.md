@@ -1,5 +1,11 @@
 # Changelog
 
+## [Desarrollo 1.0.0] - 2026-11-02
+
+- Avisos emergentes unificados de éxito, información, advertencia y error con diseño de Trainify, accesibilidad y adaptación a teléfono.
+- Mensajes para todas las acciones de escritura, PRG, formularios y errores globales HTML; respuestas JSON conservadas.
+- Documentación de tipos, acciones y ejemplos para agregar avisos. Sin cambios de esquema ni nueva Release.
+
 ## [1.8.1] - 2026-11-01
 
 - Retiradas las flechas decorativas de los botones y enlaces de Inicio y eliminado su icono del catálogo común.

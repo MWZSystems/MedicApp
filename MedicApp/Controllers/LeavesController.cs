@@ -74,7 +74,8 @@ public class LeavesController(MedicDbContext db, MedicalAccess access, Trainify.
         if (!(bool)ViewBag.IsDoctor && input.DoctorId == null) { ModelState.AddModelError(nameof(input.DoctorId), text["ResponsibleDoctorRequired"]); }
         if (!ModelState.IsValid) { return View(input); }
         var id = await service.CreateLeaveAsync(input.PersonId, input.StartsAt, input.EndsAt, input.Reference, input.AppointmentId, ct, input.DoctorId);
-        TempData["Success"] = "LeaveDraftSaved";
+        this.Success("LeaveDraftSaved");
+        this.Warning("FeedbackLeavePending");
         return RedirectToAction("Index", "LeaveDocuments", new { leaveId = id });
     }
     [Authorize(Policy = "Doctor"), HttpPost]
@@ -82,7 +83,7 @@ public class LeavesController(MedicDbContext db, MedicalAccess access, Trainify.
     {
         if (!ModelState.IsValid) { return BadRequest(); }
         await service.ChangeLeaveAsync(input.Id, (LeaveStatus)input.Status, input.Reason, input.Version, ct);
-        TempData["Success"] = "Saved";
+        if ((LeaveStatus)input.Status == LeaveStatus.Cancelled) { this.Warning("FeedbackLeaveCancelled"); } else { this.Success("FeedbackLeaveUpdated"); }
         return RedirectToAction(nameof(Index));
     }
 }

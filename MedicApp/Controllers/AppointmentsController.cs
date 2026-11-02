@@ -40,9 +40,11 @@ public class AppointmentsController(MedicDbContext db, MedicalAccess access, Med
     public async Task<IActionResult> Reserve(ReserveForm input, CancellationToken ct)
     {
         if (!ModelState.IsValid || input.Date == null || input.Time == null || input.RequestKey == Guid.Empty) { throw new MedicalRuleException("InvalidReservation"); }
+        var alreadyReserved = await db.Appointments.AsNoTracking().AnyAsync(x => x.RequestKey == input.RequestKey && x.PersonId == access.PersonId, ct);
         var id = await service.BookAtAsync(input.Date.Value.ToDateTime(input.Time.Value), input.RequestKey, ct);
-        if (WantsJson()) { return Json(new { id, message = text["BookingSaved"].Value }); }
-        TempData["Success"] = "BookingSaved";
+        var message = alreadyReserved ? "FeedbackAlreadyReserved" : "BookingSaved";
+        if (WantsJson()) { return Json(new { id, message = text[message].Value, kind = alreadyReserved ? "info" : "success" }); }
+        if (alreadyReserved) { this.Info(message); } else { this.Success(message); }
         return RedirectToAction(nameof(Index), new { date = input.Date.Value.ToString("yyyy-MM-dd", System.Globalization.CultureInfo.InvariantCulture) });
     }
     private async Task<CalendarPage> CalendarPageAsync(DateOnly? date, bool openBooking, CancellationToken ct)
@@ -68,8 +70,9 @@ public class AppointmentsController(MedicDbContext db, MedicalAccess access, Med
     public async Task<IActionResult> Book(BookingForm input, CancellationToken ct)
     {
         if (!ModelState.IsValid || input.RequestKey == Guid.Empty) { return BadRequest(); }
+        var alreadyReserved = await db.Appointments.AsNoTracking().AnyAsync(x => x.RequestKey == input.RequestKey && x.PersonId == access.PersonId, ct);
         await service.BookAsync(input.WindowId, input.StartsAt, input.RequestKey, ct);
-        TempData["Success"] = "BookingSaved";
+        if (alreadyReserved) { this.Info("FeedbackAlreadyReserved"); } else { this.Success("BookingSaved"); }
         return RedirectToAction(nameof(Index));
     }
     [HttpPost]
@@ -77,8 +80,10 @@ public class AppointmentsController(MedicDbContext db, MedicalAccess access, Med
     {
         if (!ModelState.IsValid) { return BadRequest(); }
         await service.ChangeAppointmentAsync(input.Id, (AppointmentStatus)input.Status, input.Reason, input.Version, ct);
-        if (WantsJson()) { return Json(new { message = text["Saved"].Value }); }
-        TempData["Success"] = "Saved";
+        var cancelled = (AppointmentStatus)input.Status == AppointmentStatus.Cancelled;
+        var message = cancelled ? "FeedbackAppointmentCancelled" : "FeedbackAppointmentUpdated";
+        if (WantsJson()) { return Json(new { message = text[message].Value, kind = cancelled ? "warning" : "success" }); }
+        if (cancelled) { this.Warning(message); } else { this.Success(message); }
         return RedirectToAction(nameof(Index));
     }
 }

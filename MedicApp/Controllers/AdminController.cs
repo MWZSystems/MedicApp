@@ -41,7 +41,7 @@ public class AdminController(MedicDbContext db, TrainifyDbContext shared, Medica
         service.Audit("Doctor", doctor.Id, input.Id == 0 ? "Create" : "Update");
         await db.SaveChangesAsync(ct);
         await tx.CommitAsync(ct);
-        TempData["Success"] = "Saved";
+        if (input.Available) { this.Success("FeedbackDoctorSaved"); } else { this.Warning("FeedbackDoctorDisabled"); }
         return RedirectToAction(nameof(Doctors));
     }
     [Authorize(Policy = "Access"), HttpGet]
@@ -80,7 +80,7 @@ public class AdminController(MedicDbContext db, TrainifyDbContext shared, Medica
         service.Audit("AccessProfile", profile.Id, "SetPermissions");
         await db.SaveChangesAsync(ct);
         await tx.CommitAsync(ct);
-        TempData["Success"] = "Saved";
+        this.Success("FeedbackPermissionsSaved");
         return RedirectToAction(nameof(Access));
     }
     [Authorize(Policy = "Access"), HttpGet]

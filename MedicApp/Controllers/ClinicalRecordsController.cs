@@ -59,7 +59,7 @@ public class ClinicalRecordsController(MedicDbContext db, TrainifyDbContext shar
         {
             try
             {
-                await records.AddVisitAsync(input, ct); TempData["Success"] = "Saved";
+                await records.AddVisitAsync(input, ct); this.Success("FeedbackVisitSaved");
                 return RedirectToAction(nameof(Index), new { personId = input.PersonId });
             }
             catch (MedicalRuleException error) when (error.Message is "InvalidClinicalInput" or "InvalidClinicalDate" or "InvalidBloodPressure") { ModelState.AddModelError("", text[error.Message]); }
@@ -74,7 +74,7 @@ public class ClinicalRecordsController(MedicDbContext db, TrainifyDbContext shar
         {
             try
             {
-                await records.UploadAsync(input, ct); TempData["Success"] = "EvidenceSaved";
+                await records.UploadAsync(input, ct); this.Success("EvidenceSaved");
                 return RedirectToAction(nameof(Index), new { personId = input.PersonId });
             }
             catch (MedicalRuleException error) when (error.Message is "EvidenceLimits" or "EvidenceInvalid" or "InvalidClinicalInput") { ModelState.AddModelError("", text[error.Message]); }

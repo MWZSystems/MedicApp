@@ -27,7 +27,7 @@ public class InventoryController(MedicDbContext db, TrainifyDbContext shared, In
     {
         if (ModelState.IsValid)
         {
-            try { var id = await inventory.CreateAsync(input, ct); TempData["Success"] = "Saved"; return RedirectToAction(nameof(Item), new { id }); }
+            try { var id = await inventory.CreateAsync(input, ct); this.Success("FeedbackStockCreated"); return RedirectToAction(nameof(Item), new { id }); }
             catch (MedicalRuleException error) when (error.Message is "InvalidStockInput" or "Duplicate") { ModelState.AddModelError("", text[error.Message]); }
         }
         Response.StatusCode = StatusCodes.Status422UnprocessableEntity; return View(input);
@@ -48,7 +48,7 @@ public class InventoryController(MedicDbContext db, TrainifyDbContext shared, In
     {
         if (ModelState.IsValid)
         {
-            try { await inventory.MoveAsync(input, ct); TempData["Success"] = "Saved"; return RedirectToAction(nameof(Item), new { id = input.StockItemId }); }
+            try { await inventory.MoveAsync(input, ct); this.Success("FeedbackStockMoved"); return RedirectToAction(nameof(Item), new { id = input.StockItemId }); }
             catch (MedicalRuleException error) when (error.Message is "InvalidStockInput" or "StockInsufficient" or "StockExpired") { ModelState.AddModelError("", text[error.Message]); }
         }
         Response.StatusCode = StatusCodes.Status422UnprocessableEntity; return View("Item", await PageAsync(input.StockItemId, 1, input, ct));

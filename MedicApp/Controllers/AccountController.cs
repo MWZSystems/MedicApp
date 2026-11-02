@@ -23,7 +23,8 @@ public class AccountController(IdentityService ids, SignInManager<AppUser> signI
             var result = await signIn.PasswordSignInAsync(user, input.Password, false, true);
             if (result.Succeeded)
             {
-                if (user.MustChangePassword) { return RedirectToAction(nameof(ChangePassword)); }
+                if (user.MustChangePassword) { this.Warning("FeedbackPasswordRequired"); return RedirectToAction(nameof(ChangePassword)); }
+                this.Success("FeedbackLogin");
                 return Url.IsLocalUrl(input.ReturnUrl) ? LocalRedirect(input.ReturnUrl) : RedirectToAction("Index", "Home");
             }
         }
@@ -33,7 +34,7 @@ public class AccountController(IdentityService ids, SignInManager<AppUser> signI
         input.Password = "";
         return View(input);
     }
-    [HttpPost] public async Task<IActionResult> Logout() { await signIn.SignOutAsync(); return RedirectToAction(nameof(Login)); }
+    [HttpPost] public async Task<IActionResult> Logout() { await signIn.SignOutAsync(); this.Success("FeedbackLogout"); return RedirectToAction(nameof(Login)); }
     [HttpGet] public IActionResult ChangePassword() => View(new PasswordForm());
     [HttpPost]
     public async Task<IActionResult> ChangePassword(PasswordForm input)
@@ -47,7 +48,8 @@ public class AccountController(IdentityService ids, SignInManager<AppUser> signI
         var updated = await users.UpdateAsync(user);
         if (!updated.Succeeded) { ModelState.AddModelError("", text["PasswordRejected"]); return View(input); }
         await signIn.RefreshSignInAsync(user);
+        this.Success("FeedbackPasswordSaved");
         return RedirectToAction("Index", "Home");
     }
-    [AllowAnonymous, HttpGet] public IActionResult Denied() { Response.StatusCode = 403; return View(); }
+    [AllowAnonymous, HttpGet] public IActionResult Denied() { Response.StatusCode = 403; this.Error("Forbidden"); return View(); }
 }

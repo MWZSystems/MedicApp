@@ -84,6 +84,7 @@ builder.Services.AddControllersWithViews(o =>
 {
     o.Filters.Add(new AutoValidateAntiforgeryTokenAttribute());
     o.Filters.Add<AccountSafetyFilter>();
+    o.Filters.Add<FeedbackResultFilter>();
 }).AddDataAnnotationsLocalization(o => o.DataAnnotationLocalizerProvider = (_, factory) => factory.Create(typeof(MedicApp.UiText)));
 builder.Services.AddExceptionHandler<MedicalExceptionHandler>();
 builder.Services.AddProblemDetails();

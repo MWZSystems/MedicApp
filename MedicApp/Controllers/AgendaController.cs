@@ -22,7 +22,7 @@ public class AgendaController(MedicDbContext db, MedicalAccess access, MedicalSe
     {
         if (!ModelState.IsValid) { return BadRequest(); }
         await service.AddWindowAsync(input.StartsAt, input.EndsAt, input.SlotMinutes, ct);
-        TempData["Success"] = "Saved";
+        this.Success("FeedbackAgendaSaved");
         return RedirectToAction(nameof(Index));
     }
     [HttpPost]
@@ -39,6 +39,7 @@ public class AgendaController(MedicDbContext db, MedicalAccess access, MedicalSe
         service.Audit("AvailabilityWindow", item.Id, "Disable");
         await db.SaveChangesAsync(ct);
         await tx.CommitAsync(ct);
+        this.Success("FeedbackAgendaDisabled");
         return RedirectToAction(nameof(Index));
     }
 }

@@ -34,7 +34,7 @@ public class LeaveDocumentsController(MedicDbContext db, TrainifyDbContext share
             Response.StatusCode = StatusCodes.Status422UnprocessableEntity;
             return View("Index", await PageAsync(input.LeaveId, ct));
         }
-        TempData["Success"] = "EvidenceSaved";
+        this.Success("EvidenceSaved");
         return RedirectToAction(nameof(Index), new { leaveId = input.LeaveId });
     }
     [HttpGet]

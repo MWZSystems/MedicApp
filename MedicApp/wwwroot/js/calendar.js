@@ -7,20 +7,19 @@
   const timeInput = document.getElementById("booking-time");
   const reserveButton = document.getElementById("reserve-button");
   const status = document.getElementById("slots-status");
-  const message = document.getElementById("calendar-message");
   const panel = document.getElementById("booking-panel");
   let slotRequest;
   let booking = false;
   let loading = false;
   let selectionSequence = 0;
   const signalMessage = (text, kind = "success") => {
-    message.className = `alert alert-${kind}`;
-    message.textContent = text;
+    window.App.toast(kind === "danger" ? "error" : kind, text);
   };
   const jsonRequest = async (url, settings = {}) => {
-    const response = await fetch(url, { credentials: "same-origin", ...settings, headers: { Accept: "application/json", ...(settings.headers || {}) } });
+    let response;
+    try { response = await fetch(url, { credentials: "same-origin", ...settings, headers: { Accept: "application/json", ...(settings.headers || {}) } }); } catch (error) { if (error.name === "AbortError") { throw error; } throw new Error(labels.requestError); }
     if (response.redirected || !response.headers.get("content-type")?.includes("json")) { throw new Error(labels.requestError); }
-    const body = await response.json();
+    const body = await response.json().catch(() => { throw new Error(labels.requestError); });
     if (!response.ok) { throw new Error(body.title || labels.requestError); }
     return body;
   };
@@ -40,7 +39,7 @@
       if (preferredTime && slots.some(slot => slot.time === preferredTime)) { timeInput.value = preferredTime; }
       status.textContent = slots.length ? labels.autoDoctor : labels.noSlots;
     } catch (error) {
-      if (error.name !== "AbortError" && sequence === selectionSequence) { status.textContent = error.message; }
+      if (error.name !== "AbortError" && sequence === selectionSequence) { status.textContent = error.message; signalMessage(error.message, "error"); }
     } finally {
       if (sequence === selectionSequence) { loading = false; timeInput.disabled = false; updateButton(); }
     }
@@ -74,7 +73,6 @@
       showDetail(info.event);
     },
     eventDidMount: info => { info.el.setAttribute("title", info.event.title); },
-    datesSet: () => { message.classList.add("d-none"); }
   });
   calendar.render();
   dayInput.addEventListener("change", () => {
@@ -89,7 +87,7 @@
     booking = true; updateButton();
     try {
       const result = await jsonRequest(form.action, { method: "POST", body: new FormData(form) });
-      signalMessage(result.message); form.elements.RequestKey.value = crypto.randomUUID();
+      signalMessage(result.message, result.kind || "success"); form.elements.RequestKey.value = crypto.randomUUID();
       calendar.refetchEvents(); await loadSlots(dayInput.value);
     } catch (error) { signalMessage(error.message, "danger"); calendar.refetchEvents(); await loadSlots(dayInput.value); }
     finally { booking = false; updateButton(); }
@@ -117,8 +115,8 @@
   detailForm.addEventListener("submit", async event => {
     event.preventDefault(); if (!detailForm.reportValidity()) { return; }
     const button = detailForm.querySelector("button[type=submit],button:not([type])"); button.disabled = true;
-    try { const result = await jsonRequest(detailForm.action, { method: "POST", body: new FormData(detailForm) }); modal.hide(); signalMessage(result.message); calendar.refetchEvents(); await loadSlots(dayInput.value); }
-    catch (error) { document.getElementById("detail-error").textContent = error.message; }
+    try { const result = await jsonRequest(detailForm.action, { method: "POST", body: new FormData(detailForm) }); modal.hide(); signalMessage(result.message, result.kind || "success"); calendar.refetchEvents(); await loadSlots(dayInput.value); }
+    catch (error) { signalMessage(error.message, "error"); }
     finally { button.disabled = false; }
   });
   loadSlots(dayInput.value);

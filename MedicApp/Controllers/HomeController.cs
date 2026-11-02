@@ -17,5 +17,5 @@ public class HomeController(MedicDbContext db, MedicalAccess access, MedicalCloc
         ViewBag.IsDoctor = doctor != null;
         return View();
     }
-    [AllowAnonymous] public IActionResult Error() { Response.StatusCode = 500; return View(); }
+    [AllowAnonymous] public IActionResult Error() { Response.StatusCode = 500; this.Error("UnexpectedError"); return View(); }
 }

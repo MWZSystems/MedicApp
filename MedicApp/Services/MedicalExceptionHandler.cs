@@ -17,6 +17,7 @@ public class MedicalExceptionHandler(ILogger<MedicalExceptionHandler> logger, IS
             Microsoft.Data.SqlClient.SqlException { Number: 1205 or 50010 } => "Concurrency",
             _ => "UnexpectedError"
         };
+        if (text[key].ResourceNotFound) { key = "UnexpectedError"; }
         var status = key switch { "Forbidden" => 403, "NotFound" => 404, "Concurrency" or "Duplicate" or "Overlap" => 409, "UnexpectedError" => 500, _ => 422 };
         var trace = Activity.Current?.Id ?? httpContext.TraceIdentifier;
         // SQL errors can contain personal values. Log only type and correlation identifier.
@@ -25,9 +26,15 @@ public class MedicalExceptionHandler(ILogger<MedicalExceptionHandler> logger, IS
         httpContext.Response.Headers.CacheControl = "no-store";
         if (httpContext.Request.Headers.Accept.Any(x => x != null && x.Contains("text/html", StringComparison.OrdinalIgnoreCase)))
         {
-            httpContext.Response.ContentType = "text/html; charset=utf-8";
-            var message = System.Net.WebUtility.HtmlEncode(text[key].Value);
-            await httpContext.Response.WriteAsync($"<!doctype html><html lang='es'><meta charset='utf-8'><title>MedicApp</title><body><h1>{message}</h1><p>{System.Net.WebUtility.HtmlEncode(text["Trace"].Value)}: {System.Net.WebUtility.HtmlEncode(trace)}</p><a href='{httpContext.Request.PathBase}/'>{System.Net.WebUtility.HtmlEncode(text["Home"].Value)}</a></body></html>", cancellationToken);
+            var state = new Microsoft.AspNetCore.Mvc.ModelBinding.ModelStateDictionary();
+            state.AddModelError("", text[key]);
+            var result = new ViewResult { ViewName = "~/Views/Shared/RequestError.cshtml", StatusCode = status, ViewData = new(new Microsoft.AspNetCore.Mvc.ModelBinding.EmptyModelMetadataProvider(), state) };
+            // Exception middleware clears the endpoint. Restore it while rendering so tag helpers use endpoint routing.
+            var endpoint = httpContext.GetEndpoint();
+            var failed = httpContext.Features.Get<IExceptionHandlerFeature>()?.Endpoint;
+            httpContext.SetEndpoint(failed ?? endpoint ?? new Endpoint(_ => Task.CompletedTask, EndpointMetadataCollection.Empty, "Feedback rendering"));
+            try { await result.ExecuteResultAsync(new ActionContext(httpContext, httpContext.GetRouteData(), new Microsoft.AspNetCore.Mvc.Abstractions.ActionDescriptor())); }
+            finally { httpContext.SetEndpoint(endpoint); }
         }
         else
         {
