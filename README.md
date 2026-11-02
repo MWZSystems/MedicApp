@@ -1,5 +1,7 @@
 # MedicApp
 
+MedicApp está en desarrollo y mantiene la versión **1.0.0**. Los cambios se acumulan mediante commits y publicaciones del sitio, sin generar una nueva Release por cada ajuste. Las entregas anteriores se conservan como historial.
+
 Aplicación médica.
 
 Aplicación ASP.NET Core MVC / Razor en .NET 10 para citas médicas e incapacidades de empleados. Comparte cuentas y personas con WFMCore; mantiene cookies, claves de protección, permisos y tablas médicas independientes. Interfaz basada en Insove con Bootstrap 5, Select2, DataTables y SweetAlert2 servidos localmente.
