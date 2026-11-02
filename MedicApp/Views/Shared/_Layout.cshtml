@@ -27,7 +27,7 @@
 @if(TempData["Success"] is string success){<div class="alert alert-success" role="status">@T[success]</div>}
 @RenderBody()
 </main><footer class="container-fluid app-width app-footer"><span>@Settings.Value.DisplayName</span><span><medic-icon name="clock"/>@T["TimeZone"]: @Settings.Value.TimeZoneId</span></footer>
-<div class="app-version-bar"><span>@T["Version"] <strong>v@typeof(Program).Assembly.GetName().Version?.ToString(3)</strong></span></div>
+<div class="app-version-bar"><span>@T["Version"] <strong>v@(typeof(Program).Assembly.GetName().Version?.ToString(3))</strong></span></div>
 <script src="~/lib/jquery/dist/jquery.min.js"></script><script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script><script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script><script src="~/lib/jquery-validation-unobtrusive/dist/jquery.validate.unobtrusive.min.js"></script><script src="~/lib/select2/select2.min.js"></script><script src="~/lib/select2/es.js"></script><script src="~/lib/datatables/dataTables.min.js"></script><script src="~/lib/datatables/dataTables.bootstrap5.min.js"></script><script src="~/lib/sweetalert2/sweetalert2.all.min.js"></script><script src="~/js/medicapp.js" asp-append-version="true"></script>
 @await RenderSectionAsync("Scripts", required: false)
 </body></html>
