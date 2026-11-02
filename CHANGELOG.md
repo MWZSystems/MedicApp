@@ -1,5 +1,10 @@
 # Changelog
 
+## [1.8.1] - 2026-11-01
+
+- Retiradas las flechas decorativas de los botones y enlaces de Inicio y eliminado su icono del catálogo común.
+- Sin cambios de datos, permisos ni configuración.
+
 ## [1.8.0] - 2026-11-01
 
 - Menú de Configuración con accesos por apartado y navegación interna adaptable a móvil.
