@@ -832,4 +832,11 @@
   <data name="FeedbackAppointmentCancelled" xml:space="preserve"><value>Cita cancelada. El horario queda disponible.</value></data>
   <data name="FeedbackAppointmentUpdated" xml:space="preserve"><value>Estado de la cita actualizado.</value></data>
   <data name="FeedbackAlreadyReserved" xml:space="preserve"><value>Esta cita ya estaba reservada. No se creó otra.</value></data>
+  <data name="MainNavigation" xml:space="preserve"><value>Navegación principal</value></data>
+  <data name="ToggleNavigation" xml:space="preserve"><value>Mostrar u ocultar el menú principal</value></data>
+  <data name="NavigationMenu" xml:space="preserve"><value>Menú</value></data>
+  <data name="MedicalCareMenu" xml:space="preserve"><value>Atención médica</value></data>
+  <data name="MedicalResourcesMenu" xml:space="preserve"><value>Recursos médicos</value></data>
+  <data name="AppointmentCalendarMenu" xml:space="preserve"><value>Calendario de citas</value></data>
+  <data name="HelpAccountMenu" xml:space="preserve"><value>Ayuda y cuenta</value></data>
 </root>

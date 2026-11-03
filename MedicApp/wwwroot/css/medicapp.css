@@ -16,7 +16,7 @@
 .clinical-entry { border:1px solid #d8e8eb; border-radius:12px; background:#fff; }
 .clinical-entry summary { padding:1rem; cursor:pointer; color:#134657; }
 .clinical-notes dd { white-space:pre-wrap; overflow-wrap:anywhere; }
-.app-nav .navbar-nav{flex-wrap:wrap}.app-nav .nav-link{white-space:nowrap}.badge.bg-danger{color:#fff}
+.app-nav .navbar-nav{flex-wrap:nowrap}.app-nav .nav-link{white-space:nowrap}.badge.bg-danger{color:#fff}
 
 .password-toggle{display:inline-flex;align-items:center;justify-content:center;gap:6px;border-color:#bed1d6;padding:9px 12px;font-size:13px}.password-toggle[hidden],.password-toggle [hidden]{display:none!important}.password-toggle .medic-icon{margin:0}.password-toggle [data-password-label]{max-width:85px;line-height:1.2;text-align:left}
 
@@ -37,3 +37,8 @@ body{padding-bottom:calc(40px + env(safe-area-inset-bottom,0px))}.app-version-ba
 @media(max-width:575.98px){.toast-stack{left:.5rem;right:.5rem;width:auto}.app-toast{padding:.75rem}}
 @media(prefers-reduced-motion:reduce){.app-toast{animation:none}.app-toast.hiding{transition:none}}
 @media print{.toast-stack{display:none}}
+
+/* Categorized navigation: one row on desktop, expandable sections on smaller screens. */
+.app-nav .navbar-nav{width:100%;gap:4px}.app-nav .nav-item{min-width:0}.app-nav button.nav-link{border:0;background:transparent;font-family:inherit;text-align:left;min-height:44px}.app-nav .nav-link{padding:10px 12px!important;border-radius:10px;white-space:nowrap;flex-shrink:0}.app-nav .nav-link.active,.app-nav .nav-link[aria-expanded="true"]{background:#fff;color:#125e6b}.app-nav .dropdown-toggle::after{content:"+";display:inline-flex;align-items:center;justify-content:center;width:14px;height:18px;margin-left:9px;border:0;font-size:18px;font-weight:400;flex-shrink:0}.app-nav .dropdown-toggle[aria-expanded="true"]::after{content:"−"}.app-nav .dropdown-menu{min-width:260px;max-height:calc(100dvh - 190px);overflow-y:auto;border:1px solid #deeaed;border-radius:14px;box-shadow:0 12px 28px #173f491a;padding:8px;margin-top:8px}.app-nav .dropdown-item{display:flex;align-items:center;gap:0;min-height:42px;padding:9px 12px;border-radius:8px;color:#294b53;font-size:14px;white-space:normal}.app-nav .dropdown-item:hover,.app-nav .dropdown-item[aria-current="page"]{background:#e7f3f4;color:#125e6b}.app-nav .dropdown-header{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:#607a80;padding:9px 12px;margin:0}.app-nav .dropdown-divider{margin:6px 4px}.app-nav .navbar-toggler{display:flex;align-items:center;gap:8px;min-height:44px;font-size:15px;border-color:#bed1d6;color:#234951}.app-nav .navbar-toggler .medic-icon{margin:0}
+@media(min-width:1200px){.app-nav .navbar-toggler{display:none}}
+@media(max-width:1199.98px){.app-nav .navbar-nav{flex-direction:column;padding-top:8px;gap:4px}.app-nav .nav-link{width:100%;justify-content:flex-start}.app-nav .dropdown-toggle::after{margin-left:auto}.app-nav .dropdown-menu{position:static!important;transform:none!important;width:100%;min-width:0;max-height:none;box-shadow:none;margin:4px 0 8px}.app-nav .dropdown-item{padding:10px 12px}.app-nav .navbar-collapse{width:100%}}

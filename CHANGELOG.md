@@ -1,5 +1,10 @@
 # Changelog
 
+## [Desarrollo 1.0.0] - 2026-11-03
+
+- Navegación principal organizada en categorías desplegables, una fila en escritorio y menú compacto en teléfono y tableta.
+- Accesos agrupados por atención médica, recursos, administración, configuración y ayuda/cuenta, respetando permisos y manteniendo el módulo activo.
+
 ## [Desarrollo 1.0.0] - 2026-11-02
 
 - Avisos emergentes unificados de éxito, información, advertencia y error con diseño de Trainify, accesibilidad y adaptación a teléfono.

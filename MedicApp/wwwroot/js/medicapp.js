@@ -1,6 +1,6 @@
 "use strict";
 const labels = document.body.dataset;
-document.querySelectorAll(".app-nav a").forEach(link => { if (link.pathname === window.location.pathname) { link.setAttribute("aria-current", "page"); } });
+document.querySelectorAll(".app-nav a").forEach(link => { if (link.pathname === window.location.pathname && !link.hash) { link.setAttribute("aria-current", "page"); } });
 if (window.jQuery && jQuery.fn.select2) {
   document.querySelectorAll("select[data-search-url]").forEach(element => {
     jQuery(element).select2({ width: "100%", language: "es", minimumInputLength: 2, ajax: { url: element.dataset.searchUrl, dataType: "json", delay: 300, data: params => ({ term: params.term }), processResults: data => data } });
