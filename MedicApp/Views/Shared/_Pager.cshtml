@@ -1,1 +1,65 @@
-<div class="pager"><span>@T["Total"]: @Model.Total · @T["Page"] @Model.Page</span>@if(Model.Page>1){<a class="btn btn-outline-secondary" asp-route-page="@(Model.Page-1)" asp-route-from="@Model.From.ToString("yyyy-MM-dd")" asp-route-to="@Model.To.ToString("yyyy-MM-dd")"><medic-icon name="chevron-left"/>@T["Previous"]</a>}@if(Model.Page*25<Model.Total){<a class="btn btn-outline-secondary" asp-route-page="@(Model.Page+1)" asp-route-from="@Model.From.ToString("yyyy-MM-dd")" asp-route-to="@Model.To.ToString("yyyy-MM-dd")"><medic-icon name="chevron-right"/>@T["Next"]</a>}</div>
+@model object?
+@using Microsoft.AspNetCore.Http
+@using Microsoft.Extensions.Primitives
+@* Pie de un listado paginado en el servidor (Workforce.Shared.Paging): registros mostrados, tamaño de página y páginas.
+   Conserva en los enlaces los filtros y búsquedas que ya están en la URL. Con una sola página de tamaño normal no se muestra. *@
+@{
+    var name = Model as string ?? "";
+    if (ViewData[Paging.ViewDataKey(name)] is not PageInfo info || (info.Pages == 1 && info.Size == Paging.DefaultSize))
+    {
+        return;
+    }
+    var others = Context.Request.Query.Where(x => x.Key != info.PageKey).ToList();
+    string Link(int number)
+    {
+        var query = others.ToList();
+        if (number > 1)
+            query.Add(new(info.PageKey, new StringValues(number.ToString())));
+        return Context.Request.Path + QueryString.Create(query).ToUriComponent();
+    }
+    // Primera, última y dos páginas a cada lado de la actual; los saltos se marcan con puntos suspensivos.
+    var numbers = Enumerable.Range(1, info.Pages).Where(n => n == 1 || n == info.Pages || Math.Abs(n - info.Number) <= 2).ToList();
+}
+<div class="card-footer d-flex flex-wrap gap-2 align-items-center list-pager">
+    <p class="m-0 text-secondary">@T["Mostrando {0} a {1} de {2}", info.From, info.To, info.Total]</p>
+    <form method="get" class="d-flex align-items-center gap-2 ms-md-auto">
+        @foreach (var item in others.Where(x => x.Key != info.SizeKey))
+        {
+            foreach (var value in item.Value)
+            {
+                <input type="hidden" name="@item.Key" value="@value" />
+            }
+        }
+        <label class="text-secondary text-nowrap" for="@(info.SizeKey)-select">@T["Por página"]</label>
+        <select id="@(info.SizeKey)-select" name="@info.SizeKey" class="form-select form-select-sm w-auto" data-autosubmit data-select2="off">
+            @foreach (var size in Paging.Sizes)
+            {
+                <option value="@size" selected="@(size == info.Size)">@size</option>
+            }
+        </select>
+    </form>
+    @if (info.Pages > 1)
+    {
+        <nav aria-label="@T["Páginas"]">
+            <ul class="pagination m-0">
+                <li class="page-item @(info.Number == 1 ? "disabled" : null)">
+                    <a class="page-link" href="@Link(info.Number - 1)" aria-disabled="@(info.Number == 1 ? "true" : null)">@T["Anterior"]</a>
+                </li>
+                @for (var i = 0; i < numbers.Count; i++)
+                {
+                    if (i > 0 && numbers[i] - numbers[i - 1] > 1)
+                    {
+                        <li class="page-item disabled"><span class="page-link">…</span></li>
+                    }
+                    var n = numbers[i];
+                    <li class="page-item @(n == info.Number ? "active" : null)">
+                        <a class="page-link" href="@Link(n)" aria-current="@(n == info.Number ? "page" : null)">@n</a>
+                    </li>
+                }
+                <li class="page-item @(info.Number == info.Pages ? "disabled" : null)">
+                    <a class="page-link" href="@Link(info.Number + 1)" aria-disabled="@(info.Number == info.Pages ? "true" : null)">@T["Siguiente"]</a>
+                </li>
+            </ul>
+        </nav>
+    }
+</div>

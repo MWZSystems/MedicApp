@@ -13,7 +13,12 @@ public class AgendaController(MedicDbContext db, MedicalAccess access, MedicalSe
     public async Task<IActionResult> Index(CancellationToken ct)
     {
         var doctor = await access.DoctorIdAsync(ct);
-        ViewBag.Windows = await db.Windows.AsNoTracking().Where(x => x.DoctorId == doctor && x.Available && x.EndsAt > clock.UtcNow).OrderBy(x => x.StartsAt).Take(100).ToListAsync(ct);
+        var query = db.Windows.AsNoTracking().Where(x => x.DoctorId == doctor);
+        var active = this.Value("active"); if (active != "all") { var available = active != "false"; query = query.Where(x => x.Available == available); }
+        var period = this.Value("period"); if (period == "past") { query = query.Where(x => x.EndsAt <= clock.UtcNow); } else if (period != "all") { query = query.Where(x => x.EndsAt > clock.UtcNow); }
+        var search = this.Search(); if (search != null) { query = int.TryParse(search, out var slot) ? query.Where(x => x.SlotMinutes == slot) : query.Where(x => false); }
+        this.Filters(ListFiltering.Choice("active", "ListAvailability", ("all", "ListAll"), ("true", "ListActive"), ("false", "ListInactive")) with { DefaultValue = "true" }, ListFiltering.Choice("period", "ListPeriod", ("all", "ListAll"), ("future", "ListFuture"), ("past", "ListPast")) with { DefaultValue = "future" });
+        ViewBag.Windows = await query.OrderBy(x => x.StartsAt).ThenBy(x => x.Id).ToPageAsync(this);
         var tomorrow = clock.Local(clock.UtcNow).Date.AddDays(1);
         return View(new WindowForm { StartsAt = tomorrow, EndsAt = tomorrow.AddMinutes(1440 / options.Value.DefaultSlotMinutes * options.Value.DefaultSlotMinutes), SlotMinutes = options.Value.DefaultSlotMinutes });
     }
@@ -23,7 +28,7 @@ public class AgendaController(MedicDbContext db, MedicalAccess access, MedicalSe
         if (!ModelState.IsValid) { return BadRequest(); }
         await service.AddWindowAsync(input.StartsAt, input.EndsAt, input.SlotMinutes, ct);
         this.Success("FeedbackAgendaSaved");
-        return RedirectToAction(nameof(Index));
+        return this.RedirectBack(nameof(Index));
     }
     [HttpPost]
     public async Task<IActionResult> Disable(ChangeForm input, CancellationToken ct)
@@ -40,6 +45,6 @@ public class AgendaController(MedicDbContext db, MedicalAccess access, MedicalSe
         await db.SaveChangesAsync(ct);
         await tx.CommitAsync(ct);
         this.Success("FeedbackAgendaDisabled");
-        return RedirectToAction(nameof(Index));
+        return this.RedirectBack(nameof(Index));
     }
 }

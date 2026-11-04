@@ -14,8 +14,12 @@ public class AppointmentsController(MedicDbContext db, MedicalAccess access, Med
     {
         var doctor = await access.DoctorIdAsync(ct);
         var range = reader.Range(from, to);
-        var query = db.Appointments.AsNoTracking().Where(x => x.Available && (x.PersonId == access.PersonId || x.DoctorId == doctor) && x.StartsAt < range.End && x.EndsAt > range.Start).OrderByDescending(x => x.StartsAt).ThenBy(x => x.Id);
-        var model = await reader.PageAsync(query, page, null, from, to, ct);
+        var query = db.Appointments.AsNoTracking().Where(x => x.Available && (x.PersonId == access.PersonId || x.DoctorId == doctor) && x.StartsAt < range.End && x.EndsAt > range.Start);
+        var search = this.Search();
+        if (search != null) { var people = ListFiltering.People(db, search); var doctorIds = db.Doctors.AsNoTracking().Where(x => people.Contains(x.PersonId)).Select(x => x.Id); query = query.Where(x => people.Contains(x.PersonId) || doctorIds.Contains(x.DoctorId)); }
+        if (int.TryParse(this.Value("state"), out var state) && Enum.IsDefined(typeof(AppointmentStatus), state)) { query = query.Where(x => (int)x.Status == state); }
+        this.Filters(ListFiltering.Choice("state", "Status", Enum.GetValues<AppointmentStatus>().Select(x => (((int)x).ToString(System.Globalization.CultureInfo.InvariantCulture), x.ToString())).ToArray()));
+        var model = await reader.PageAsync(query.OrderByDescending(x => x.StartsAt).ThenBy(x => x.Id), this, search, from, to, ct);
         model.CurrentDoctorId = doctor;
         model.People = await reader.NamesAsync(model.Items.Select(x => x.PersonId), ct);
         var doctors = await db.Doctors.AsNoTracking().Where(x => model.Items.Select(a => a.DoctorId).Contains(x.Id)).Select(x => new { x.Id, x.PersonId }).ToListAsync(ct);
@@ -84,6 +88,7 @@ public class AppointmentsController(MedicDbContext db, MedicalAccess access, Med
         var message = cancelled ? "FeedbackAppointmentCancelled" : "FeedbackAppointmentUpdated";
         if (WantsJson()) { return Json(new { message = text[message].Value, kind = cancelled ? "warning" : "success" }); }
         if (cancelled) { this.Warning(message); } else { this.Success(message); }
+        if (Request.GetTypedHeaders().Referer?.AbsolutePath.TrimEnd('/').Equals(Url.Action(nameof(List)), StringComparison.OrdinalIgnoreCase) == true) { return this.RedirectBack(nameof(List)); }
         return RedirectToAction(nameof(Index));
     }
 }

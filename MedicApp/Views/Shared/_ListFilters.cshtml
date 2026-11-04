@@ -1,0 +1,21 @@
+@model object?
+@using Microsoft.AspNetCore.Http
+@{
+    var name = Model as string ?? "";
+    var filters = ViewData["ListFilters"] as IReadOnlyList<ListFilter> ?? [];
+    var keys = filters.Select(x => x.Key).Append(name + Paging.PageKey).ToArray();
+}
+@if(filters.Count > 0){
+<form method="get" class="filter-row list-filters">
+@foreach(var entry in Context.Request.Query.Where(x => !keys.Contains(x.Key))){foreach(var value in entry.Value){<input type="hidden" name="@entry.Key" value="@value"/>}}
+@foreach(var filter in filters){
+    var value = Context.Request.Query[filter.Key].ToString();
+    if (value.Length == 0) { value = filter.DefaultValue ?? ""; }
+    <div><label class="form-label" for="filter-@filter.Key">@T[filter.Label]</label>
+    @if(filter.Options != null){<select id="filter-@filter.Key" name="@filter.Key" class="form-select" data-select2="off" data-autosubmit>@if(!filter.Options.Any(x => x.Value == "all")){<option value="">@T["ListAll"]</option>}@foreach(var option in filter.Options){<option value="@option.Value" selected="@(value == option.Value)">@T[option.Text]</option>}</select>}
+    else{<input id="filter-@filter.Key" type="@(filter.Date ? "date" : "text")" name="@filter.Key" value="@value" maxlength="100" class="form-control"/>}
+    </div>
+}
+<button class="btn btn-outline-secondary">@T["ListApply"]</button>
+</form>
+}

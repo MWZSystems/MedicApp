@@ -847,4 +847,44 @@
   <data name="VisualSampleLeave" xml:space="preserve"><value>DEMO · Incapacidad de prueba</value></data>
   <data name="VisualSampleBadge" xml:space="preserve"><value>DEMO · Sin efecto laboral</value></data>
   <data name="VisualSampleNotice" xml:space="preserve"><value>Ejemplo ficticio en borrador, sin validez médica ni efectos en asistencias u overtime. Solo se utiliza para visualizar la aplicación.</value></data>
+  <data name="Mostrando {0} a {1} de {2}" xml:space="preserve"><value>Mostrando {0} a {1} de {2}</value></data>
+  <data name="Por página" xml:space="preserve"><value>Por página</value></data>
+  <data name="Páginas" xml:space="preserve"><value>Páginas</value></data>
+  <data name="Anterior" xml:space="preserve"><value>Anterior</value></data>
+  <data name="Siguiente" xml:space="preserve"><value>Siguiente</value></data>
+  <data name="ListClear" xml:space="preserve"><value>Limpiar</value></data>
+  <data name="ListAll" xml:space="preserve"><value>Todos</value></data>
+  <data name="ListApply" xml:space="preserve"><value>Aplicar filtros</value></data>
+  <data name="ListNoMatches" xml:space="preserve"><value>Ninguno coincide con la búsqueda o los filtros.</value></data>
+  <data name="ListActive" xml:space="preserve"><value>Activos</value></data>
+  <data name="ListInactive" xml:space="preserve"><value>Inactivos</value></data>
+  <data name="ListAvailability" xml:space="preserve"><value>Disponibilidad</value></data>
+  <data name="ListRecurring" xml:space="preserve"><value>Horario recurrente</value></data>
+  <data name="ListManual" xml:space="preserve"><value>Manual</value></data>
+  <data name="ListAutomatic" xml:space="preserve"><value>Automático</value></data>
+  <data name="ListPermission" xml:space="preserve"><value>Permiso</value></data>
+  <data name="ListStock" xml:space="preserve"><value>Existencias</value></data>
+  <data name="ListPositive" xml:space="preserve"><value>Con existencias</value></data>
+  <data name="ListZero" xml:space="preserve"><value>Agotados</value></data>
+  <data name="ListExpiry" xml:space="preserve"><value>Caducidad</value></data>
+  <data name="ListValid" xml:space="preserve"><value>Vigentes</value></data>
+  <data name="ListFuture" xml:space="preserve"><value>Próximas</value></data>
+  <data name="ListPast" xml:space="preserve"><value>Pasadas</value></data>
+  <data name="ListPeriod" xml:space="preserve"><value>Periodo</value></data>
+  <data name="ListContentType" xml:space="preserve"><value>Tipo de archivo</value></data>
+  <data name="ListPdf" xml:space="preserve"><value>PDF</value></data>
+  <data name="ListImages" xml:space="preserve"><value>Imágenes</value></data>
+  <data name="ListVisitsSearch" xml:space="preserve"><value>Buscar motivo, diagnóstico, tratamiento o notas</value></data>
+  <data name="ListFilesSearch" xml:space="preserve"><value>Buscar archivo o descripción</value></data>
+  <data name="ListPeopleSearch" xml:space="preserve"><value>Buscar nombre o número de control</value></data>
+  <data name="ListDoctorsSearch" xml:space="preserve"><value>Buscar nombre, control, especialidad o cédula</value></data>
+  <data name="ListAccessSearch" xml:space="preserve"><value>Buscar usuario, nombre o control</value></data>
+  <data name="ListAuditSearch" xml:space="preserve"><value>Buscar entidad, operación, motivo o usuario</value></data>
+  <data name="ListStockSearch" xml:space="preserve"><value>Buscar código, artículo o lote</value></data>
+  <data name="ListMovementSearch" xml:space="preserve"><value>Buscar motivo o usuario</value></data>
+  <data name="ListLeaveSearch" xml:space="preserve"><value>Buscar folio, nombre o control</value></data>
+  <data name="ListAgendaSearch" xml:space="preserve"><value>Buscar duración en minutos</value></data>
+  <data name="ListEntityFilter" xml:space="preserve"><value>Entidad</value></data>
+  <data name="ListOperationFilter" xml:space="preserve"><value>Operación</value></data>
+  <data name="ListSoonExpiry" xml:space="preserve"><value>Próximos a caducar</value></data>
 </root>

@@ -6,12 +6,13 @@ namespace MedicApp.Services;
 
 public class ListReader(TrainifyDbContext shared, MedicalClock clock)
 {
-    public async Task<ListPage<T>> PageAsync<T>(IQueryable<T> query, int page, string? search, DateTime? from, DateTime? to, CancellationToken ct) where T : MedicalRecord
+    public async Task<ListPage<T>> PageAsync<T>(IQueryable<T> query, Microsoft.AspNetCore.Mvc.Controller controller, string? search, DateTime? from, DateTime? to, CancellationToken ct) where T : MedicalRecord
     {
-        page = Math.Clamp(page, 1, 100000);
-        var total = await query.CountAsync(ct);
-        return new ListPage<T> { Items = await query.Skip((page - 1) * 25).Take(25).ToListAsync(ct), Total = total, Page = page, Query = search ?? "", From = from ?? clock.Local(clock.UtcNow).Date.AddDays(-30), To = to ?? clock.Local(clock.UtcNow).Date.AddDays(30) };
+        var items = await query.ToPageAsync(controller);
+        var info = (PageInfo)controller.ViewData[Paging.ViewDataKey()]!;
+        return new ListPage<T> { Items = items, Total = info.Total, Page = info.Number, Query = search ?? "", From = from ?? clock.Local(clock.UtcNow).Date.AddDays(-30), To = to ?? clock.Local(clock.UtcNow).Date.AddDays(30) };
     }
+
     public async Task<Dictionary<int, string>> NamesAsync(IEnumerable<int> ids, CancellationToken ct)
     {
         var keys = ids.Distinct().ToArray();

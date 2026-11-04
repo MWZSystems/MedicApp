@@ -16,8 +16,12 @@ public class LeavesController(MedicDbContext db, MedicalAccess access, Trainify.
         var administrator = await records.IsAdministratorAsync(ct);
         ViewBag.CanRegister = await records.CanRegisterAsync(ct);
         var range = reader.Range(from, to);
-        var query = db.Leaves.AsNoTracking().Where(x => x.Available && (administrator || x.PersonId == access.PersonId || x.DoctorId == doctor) && x.StartsAt < range.End && x.EndsAt > range.Start).OrderByDescending(x => x.StartsAt).ThenBy(x => x.Id);
-        var model = await reader.PageAsync(query, page, null, from, to, ct);
+        var query = db.Leaves.AsNoTracking().Where(x => x.Available && (administrator || x.PersonId == access.PersonId || x.DoctorId == doctor) && x.StartsAt < range.End && x.EndsAt > range.Start);
+        var search = this.Search();
+        if (search != null) { var people = ListFiltering.People(db, search); query = query.Where(x => x.Reference.Contains(search) || people.Contains(x.PersonId)); }
+        if (int.TryParse(this.Value("state"), out var state) && Enum.IsDefined(typeof(LeaveStatus), state)) { query = query.Where(x => (int)x.Status == state); }
+        this.Filters(ListFiltering.Choice("state", "Status", Enum.GetValues<LeaveStatus>().Select(x => (((int)x).ToString(System.Globalization.CultureInfo.InvariantCulture), x.ToString())).ToArray()));
+        var model = await reader.PageAsync(query.OrderByDescending(x => x.StartsAt).ThenBy(x => x.Id), this, search, from, to, ct);
         model.CurrentDoctorId = doctor;
         model.People = await reader.NamesAsync(model.Items.Select(x => x.PersonId), ct);
         var ids = model.Items.Select(x => x.Id).ToArray();
@@ -84,6 +88,6 @@ public class LeavesController(MedicDbContext db, MedicalAccess access, Trainify.
         if (!ModelState.IsValid) { return BadRequest(); }
         await service.ChangeLeaveAsync(input.Id, (LeaveStatus)input.Status, input.Reason, input.Version, ct);
         if ((LeaveStatus)input.Status == LeaveStatus.Cancelled) { this.Warning("FeedbackLeaveCancelled"); } else { this.Success("FeedbackLeaveUpdated"); }
-        return RedirectToAction(nameof(Index));
+        return this.RedirectBack(nameof(Index));
     }
 }

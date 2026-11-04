@@ -17,3 +17,8 @@ generated_code = true
 [MedicApp.Tests/*.cs]
 dotnet_diagnostic.CA1707.severity = none
 dotnet_diagnostic.xUnit1051.severity = none
+
+# Exact upstream Paging.cs from Trainify c0ec7fd: retain its public namespace and formatting.
+[MedicApp/Services/Paging.cs]
+dotnet_diagnostic.CA1716.severity = none
+dotnet_diagnostic.IDE0011.severity = none

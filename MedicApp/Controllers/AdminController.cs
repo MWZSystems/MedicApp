@@ -14,7 +14,12 @@ public class AdminController(MedicDbContext db, TrainifyDbContext shared, Medica
     [Authorize(Policy = "Doctors"), HttpGet]
     public async Task<IActionResult> Doctors(int page = 1, CancellationToken ct = default)
     {
-        var model = await reader.PageAsync(db.Doctors.AsNoTracking().OrderBy(x => x.Id), page, null, null, null, ct);
+        var search = this.Search(); var query = db.Doctors.AsNoTracking();
+        if (search != null) { var people = ListFiltering.People(db, search); query = query.Where(x => x.Specialty.Contains(search) || x.ProfessionalLicense.Contains(search) || people.Contains(x.PersonId)); }
+        if (bool.TryParse(this.Value("active"), out var active)) { query = query.Where(x => x.Available == active); }
+        if (bool.TryParse(this.Value("recurring"), out var recurring)) { query = query.Where(x => x.UseRecurringSchedule == recurring); }
+        this.Filters(ListFiltering.Choice("active", "ListAvailability", ("true", "ListActive"), ("false", "ListInactive")), ListFiltering.Choice("recurring", "ListRecurring", ("true", "ListAutomatic"), ("false", "ListManual")));
+        var model = await reader.PageAsync(query.OrderBy(x => x.Id), this, search, null, null, ct);
         model.People = await reader.NamesAsync(model.Items.Select(x => x.PersonId), ct);
         return View(model);
     }
@@ -42,12 +47,17 @@ public class AdminController(MedicDbContext db, TrainifyDbContext shared, Medica
         await db.SaveChangesAsync(ct);
         await tx.CommitAsync(ct);
         if (input.Available) { this.Success("FeedbackDoctorSaved"); } else { this.Warning("FeedbackDoctorDisabled"); }
-        return RedirectToAction(nameof(Doctors));
+        return this.RedirectBack(nameof(Doctors));
     }
     [Authorize(Policy = "Access"), HttpGet]
     public async Task<IActionResult> Access(int page = 1, CancellationToken ct = default)
     {
-        var model = await reader.PageAsync(db.AccessProfiles.AsNoTracking().OrderBy(x => x.Id), page, null, null, null, ct);
+        var search = this.Search(); var query = db.AccessProfiles.AsNoTracking();
+        if (search != null) { var accounts = ListFiltering.Accounts(db, search); query = query.Where(x => accounts.Contains(x.UserId)); }
+        if (bool.TryParse(this.Value("active"), out var active)) { query = query.Where(x => x.Available == active); }
+        query = this.Value("permission") switch { "doctors" => query.Where(x => x.ManageDoctors), "access" => query.Where(x => x.ManageAccess), "clinical" => query.Where(x => x.ManageClinicalRecords), "inventory" => query.Where(x => x.ManageInventory), "integration" => query.Where(x => x.ReadIntegration), _ => query };
+        this.Filters(ListFiltering.Choice("active", "ListAvailability", ("true", "ListActive"), ("false", "ListInactive")), ListFiltering.Choice("permission", "ListPermission", ("doctors", "ManageDoctors"), ("access", "ManageAccess"), ("clinical", "ManageClinicalRecords"), ("inventory", "ManageInventory"), ("integration", "ReadIntegration")));
+        var model = await reader.PageAsync(query.OrderBy(x => x.Id), this, search, null, null, ct);
         var ids = model.Items.Select(x => x.UserId).ToArray();
         ViewBag.AccountNames = await shared.Users.AsNoTracking().Where(x => ids.Contains(x.Id)).ToDictionaryAsync(x => x.Id, x => x.UserName ?? x.Id, ct);
         return View(model);
@@ -57,7 +67,7 @@ public class AdminController(MedicDbContext db, TrainifyDbContext shared, Medica
     {
         term = term?.Trim();
         if (term == null || term.Length < 2 || term.Length > 80) { return Json(new { results = Array.Empty<object>() }); }
-        return Json(new { results = await shared.Users.AsNoTracking().Where(x => x.Active && x.Person.Active && x.UserName != null && x.UserName.Contains(term)).OrderBy(x => x.UserName).Take(20).Select(x => new { id = x.Id, text = x.UserName }).ToListAsync(ct) });
+        return Json(new { results = await shared.Users.AsNoTracking().Where(x => x.Active && x.Person.Active && x.UserName != null && x.UserName.Contains(term)).OrderBy(x => x.UserName).ThenBy(x => x.Id).Take(20).Select(x => new { id = x.Id, text = x.UserName }).ToListAsync(ct) });
     }
     [Authorize(Policy = "Access"), HttpPost]
     public async Task<IActionResult> Access(AccessForm input, CancellationToken ct)
@@ -81,12 +91,17 @@ public class AdminController(MedicDbContext db, TrainifyDbContext shared, Medica
         await db.SaveChangesAsync(ct);
         await tx.CommitAsync(ct);
         this.Success("FeedbackPermissionsSaved");
-        return RedirectToAction(nameof(Access));
+        return this.RedirectBack(nameof(Access));
     }
     [Authorize(Policy = "Access"), HttpGet]
     public async Task<IActionResult> Audit(int page = 1, CancellationToken ct = default)
     {
-        var model = await reader.PageAsync(db.Audit.AsNoTracking().OrderByDescending(x => x.Id), page, null, null, null, ct);
+        var search = this.Search(); var query = db.Audit.AsNoTracking().Dates(this, clock);
+        if (search != null) { var accounts = ListFiltering.Accounts(db, search); query = query.Where(x => x.EntityType.Contains(search) || x.Operation.Contains(search) || x.Reason.Contains(search) || accounts.Contains(x.UpdatedById)); }
+        var entity = this.Value("entity"); if (entity.Length > 0) { query = query.Where(x => x.EntityType.Contains(entity)); }
+        var operation = this.Value("operation"); if (operation.Length > 0) { query = query.Where(x => x.Operation.Contains(operation)); }
+        this.Filters(new("entity", "ListEntityFilter"), new("operation", "ListOperationFilter"), new("from", "From", Date: true), new("to", "To", Date: true));
+        var model = await reader.PageAsync(query.OrderByDescending(x => x.Id), this, search, null, null, ct);
         var ids = model.Items.Select(x => x.UpdatedById).ToArray();
         ViewBag.AccountNames = await shared.Users.AsNoTracking().Where(x => ids.Contains(x.Id)).ToDictionaryAsync(x => x.Id, x => x.UserName ?? x.Id, ct);
         return View(model);

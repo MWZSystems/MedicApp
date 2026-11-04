@@ -1,5 +1,12 @@
 # Changelog
 
+## [Desarrollo 1.0.0] - 2026-11-04
+
+- Paginación EF en servidor para los 12 listados, con búsqueda, filtros GET, tamaños 25/50/100, total filtrado, orden estable y conservación de página al guardar acciones de fila.
+- Paging.cs de Trainify c0ec7fd sin cambios, metadatos en ViewData y prefijos independientes para consultas y documentos clínicos; se conservan los modelos de vistas y el esquema, sin migraciones.
+- Paginador numérico sin flechas, búsqueda con limpiar, controles que conservan filtros e indicadores de todo el alcance; retirados los filtros locales de DataTables.
+- CONTEXTO.md documenta pantallas, filtros y exclusiones, sin listados paginados en memoria.
+
 ## [Desarrollo 1.0.0] - 2026-11-03
 
 - Inventario DEMO administrativo e idempotente: 15 artículos y 45 movimientos auditados, sin modificar existencias reales ni datos laborales.

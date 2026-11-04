@@ -1,0 +1,27 @@
+@model SearchBox
+@using Microsoft.AspNetCore.Http
+@* Búsqueda en el servidor de un listado paginado. Conserva los demás filtros de la URL y vuelve a la primera página. *@
+@{
+    var key = Model.Name + Paging.SearchKey;
+    var value = Context.Request.Query[key].ToString().Trim();
+    value = value[..Math.Min(value.Length, 100)];
+    var others = Context.Request.Query.Where(x => x.Key != key && x.Key != Model.Name + Paging.PageKey).ToList();
+}
+<form method="get" class="d-flex gap-2 list-search" role="search">
+    @foreach (var item in others)
+    {
+        foreach (var other in item.Value)
+        {
+            <input type="hidden" name="@item.Key" value="@other" />
+        }
+    }
+    <div class="input-icon flex-fill">
+
+        <input type="search" name="@key" value="@value" class="form-control" placeholder="@Model.Placeholder" aria-label="@Model.Placeholder" maxlength="100" />
+    </div>
+    <button class="btn btn-primary">@T["Search"]</button>
+    @if (value.Length > 0)
+    {
+        <a href="@(Context.Request.Path + QueryString.Create(others).ToUriComponent())" class="btn btn-outline-secondary">@T["ListClear"]</a>
+    }
+</form>

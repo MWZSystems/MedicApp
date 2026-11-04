@@ -16,16 +16,27 @@ public class ClinicalRecordsController(MedicDbContext db, TrainifyDbContext shar
     {
         if (personId == null) { return new() { Limits = options.Value }; }
         var person = await records.PersonAsync(personId.Value, false, ct);
-        visitsPage = Math.Clamp(visitsPage, 1, 100000); filesPage = Math.Clamp(filesPage, 1, 100000);
         var visits = db.ClinicalVisits.AsNoTracking().Where(x => x.PersonId == personId && x.Available);
         var documents = db.PatientDocuments.AsNoTracking().Where(x => x.PersonId == personId && x.Available);
+        ViewBag.VisitTotal = await visits.CountAsync(ct); ViewBag.DocumentTotal = await documents.CountAsync(ct);
+        var visitSearch = this.Search("visits"); if (visitSearch != null) { visits = visits.Where(x => x.Reason.Contains(visitSearch) || x.Diagnosis.Contains(visitSearch) || x.Treatment.Contains(visitSearch) || x.Prescription.Contains(visitSearch) || x.Findings.Contains(visitSearch) || x.Notes.Contains(visitSearch)); }
+        var fileSearch = this.Search("files"); if (fileSearch != null) { documents = documents.Where(x => x.OriginalName.Contains(fileSearch) || x.Description.Contains(fileSearch)); }
+        if (DateOnly.TryParse(this.Value("visitsfrom"), out var from)) { var start = clock.ToUtc(from.ToDateTime(TimeOnly.MinValue)); visits = visits.Where(x => x.VisitedAt >= start); }
+        if (DateOnly.TryParse(this.Value("visitsto"), out var to) && to < DateOnly.MaxValue) { var end = clock.ToUtc(to.AddDays(1).ToDateTime(TimeOnly.MinValue)); visits = visits.Where(x => x.VisitedAt < end); }
+        documents = documents.Dates(this, clock, "files");
+        if (int.TryParse(this.Value("fileskind"), out var kind) && Enum.IsDefined(typeof(Models.Entities.PatientDocumentKind), kind)) { documents = documents.Where(x => (int)x.Kind == kind); }
+        ViewData["VisitFilters"] = new ListFilter[] { new("visitsfrom", "From", Date: true), new("visitsto", "To", Date: true) };
+        ViewData["FileFilters"] = new ListFilter[] { ListFiltering.Choice("fileskind", "DocumentKind", Enum.GetValues<Models.Entities.PatientDocumentKind>().Select(x => (((int)x).ToString(System.Globalization.CultureInfo.InvariantCulture), "PatientFile" + x)).ToArray()), new("filesfrom", "From", Date: true), new("filesto", "To", Date: true) };
+        var visitRows = await visits.OrderByDescending(x => x.VisitedAt).ThenByDescending(x => x.Id).ToPageAsync(this, "visits");
+        var fileRows = await documents.OrderByDescending(x => x.Id).ToPageAsync(this, "files");
+        var visitInfo = (PageInfo)ViewData[Paging.ViewDataKey("visits")]!; var fileInfo = (PageInfo)ViewData[Paging.ViewDataKey("files")]!;
         medical.Audit("PatientRecord", personId.Value, "Read"); await db.SaveChangesAsync(ct);
         var result = new ClinicalRecordPage
         {
             Person = person,
             Limits = options.Value,
-            Visits = new() { Page = visitsPage, Total = await visits.CountAsync(ct), Items = await visits.OrderByDescending(x => x.VisitedAt).ThenByDescending(x => x.Id).Skip((visitsPage - 1) * 10).Take(10).ToListAsync(ct) },
-            Documents = new() { Page = filesPage, Total = await documents.CountAsync(ct), Items = await documents.OrderByDescending(x => x.Id).Skip((filesPage - 1) * 25).Take(25).ToListAsync(ct) }
+            Visits = new() { Page = visitInfo.Number, Total = visitInfo.Total, Items = visitRows },
+            Documents = new() { Page = fileInfo.Number, Total = fileInfo.Total, Items = fileRows }
         };
         var users = result.Visits.Items.Select(x => x.UpdatedById).Concat(result.Documents.Items.Select(x => x.UpdatedById)).Distinct().ToArray();
         result.AccountNames = await shared.Users.AsNoTracking().Where(x => users.Contains(x.Id)).ToDictionaryAsync(x => x.Id, x => x.UserName ?? "", ct);
@@ -60,7 +71,7 @@ public class ClinicalRecordsController(MedicDbContext db, TrainifyDbContext shar
             try
             {
                 await records.AddVisitAsync(input, ct); this.Success("FeedbackVisitSaved");
-                return RedirectToAction(nameof(Index), new { personId = input.PersonId });
+                var back = this.RedirectBack(nameof(Index)); return back is RedirectToActionResult ? RedirectToAction(nameof(Index), new { personId = input.PersonId }) : back;
             }
             catch (MedicalRuleException error) when (error.Message is "InvalidClinicalInput" or "InvalidClinicalDate" or "InvalidBloodPressure") { ModelState.AddModelError("", text[error.Message]); }
         }
@@ -75,7 +86,7 @@ public class ClinicalRecordsController(MedicDbContext db, TrainifyDbContext shar
             try
             {
                 await records.UploadAsync(input, ct); this.Success("EvidenceSaved");
-                return RedirectToAction(nameof(Index), new { personId = input.PersonId });
+                var back = this.RedirectBack(nameof(Index)); return back is RedirectToActionResult ? RedirectToAction(nameof(Index), new { personId = input.PersonId }) : back;
             }
             catch (MedicalRuleException error) when (error.Message is "EvidenceLimits" or "EvidenceInvalid" or "InvalidClinicalInput") { ModelState.AddModelError("", text[error.Message]); }
         }
