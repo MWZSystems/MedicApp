@@ -6,7 +6,7 @@ document.querySelectorAll(".app-nav a").forEach(link => { if (link.pathname === 
   const account = document.getElementById("account-menu");
   const menu = document.getElementById("main-nav");
   const closeNavigation = () => {
-    if (window.matchMedia("(max-width: 1199.98px)").matches && menu?.classList.contains("show")) { bootstrap.Collapse.getOrCreateInstance(menu, { toggle: false }).hide(); }
+    if (window.matchMedia("(max-width: 1399.98px)").matches && menu?.classList.contains("show")) { bootstrap.Collapse.getOrCreateInstance(menu, { toggle: false }).hide(); }
   };
   menu?.addEventListener("shown.bs.collapse", () => { if (account?.getAttribute("aria-expanded") === "true") { closeNavigation(); } });
   account?.addEventListener("click", closeNavigation);
