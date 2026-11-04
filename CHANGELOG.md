@@ -2,6 +2,8 @@
 
 ## [Desarrollo 1.0.0] - 2026-11-03
 
+- Inventario DEMO administrativo e idempotente: 15 artículos y 45 movimientos auditados, sin modificar existencias reales ni datos laborales.
+
 - Generación administrativa e idempotente de citas e incapacidades visuales DEMO para una cuenta y dos meses, con auditoría de IDs para retirada posterior.
 - Incapacidades ficticias visibles en calendario como borradores identificados, sin autorización, evidencias ni eventos laborales; no alteran datos existentes, permisos ni configuración.
 

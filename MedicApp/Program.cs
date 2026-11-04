@@ -11,7 +11,7 @@ using Trainify.Data;
 using Trainify.Domain;
 using Trainify.Services;
 
-var builder = WebApplication.CreateBuilder(args.Where(x => x != "--create-personal-samples" && x != "--grant-admin" && x != "--create-demo" && x != "--prepare-booking" && x != "--migrate-medical").ToArray());
+var builder = WebApplication.CreateBuilder(args.Where(x => x != "--create-inventory-samples" && x != "--create-personal-samples" && x != "--grant-admin" && x != "--create-demo" && x != "--prepare-booking" && x != "--migrate-medical").ToArray());
 builder.Configuration.AddJsonFile("config/medical.defaults.json", optional: false, reloadOnChange: true);
 builder.Configuration.AddUserSecrets<Program>(optional: true).AddEnvironmentVariables();
 var connection = builder.Configuration.GetConnectionString("Workforce");
@@ -91,6 +91,21 @@ builder.Services.AddProblemDetails();
 builder.Services.AddHealthChecks().AddCheck<DatabaseHealthCheck>("database");
 builder.Services.AddSerilog((services, configuration) => configuration.MinimumLevel.Information().MinimumLevel.Override("Microsoft", Serilog.Events.LogEventLevel.Warning).Enrich.FromLogContext().WriteTo.Console(formatProvider: System.Globalization.CultureInfo.InvariantCulture).WriteTo.File(Path.Combine(dataDirectory, "Logs", "medic-.log"), rollingInterval: RollingInterval.Day, fileSizeLimitBytes: 10485760, rollOnFileSizeLimit: true, retainedFileCountLimit: 14, formatProvider: System.Globalization.CultureInfo.InvariantCulture));
 var app = builder.Build();
+if (args.Contains("--create-inventory-samples"))
+{
+    try
+    {
+        using var sampleScope = app.Services.CreateScope();
+        var result = await new InventorySampleDataService(builder.Configuration, sampleScope.ServiceProvider.GetRequiredService<MedicalClock>()).CreateAsync(builder.Configuration["InventorySamples:ActorName"] ?? "", CancellationToken.None);
+        Console.WriteLine(System.Text.Json.JsonSerializer.Serialize(result));
+    }
+    catch (Exception error)
+    {
+        Console.Error.WriteLine("No se completó el inventario DEMO. " + (error is MedicalRuleException ? error.Message : error.GetType().Name));
+        Environment.ExitCode = 1;
+    }
+    return;
+}
 if (args.Contains("--create-personal-samples"))
 {
     try
