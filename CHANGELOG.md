@@ -2,6 +2,9 @@
 
 ## [Desarrollo 1.0.0] - 2026-11-03
 
+- Limpieza global de pestañas y botones de navegación repetidos con la barra superior, incluida la navegación secundaria de incapacidades y los atajos generales de Inicio y Configuración.
+- Configuración utiliza todo el ancho; se conservan acciones de trabajo y enlaces contextuales a personas y registros.
+
 - Aumentada la letra y separación de los menús principales, desplegables y de usuario. Se conserva la barra única mediante el menú compacto en anchos menores a 1400 px.
 
 - Cabecera unificada con logo, categorías y menú de usuario en una sola barra. Contraseña, ayuda y cierre de sesión agrupados bajo el avatar.

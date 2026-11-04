@@ -1,6 +1,6 @@
 # Configuración integral — 1.8.0
 
-El menú **Configuración** abre una lista de accesos a cada apartado y a **Todos los ajustes**. La página tiene navegación lateral en escritorio y enlaces que se acomodan en móvil. **Guardar toda la configuración** guarda el formulario completo. **Recargar configuración** descarta la captura de la página y vuelve a leer los valores actuales.
+El menú **Configuración** abre una lista de accesos a cada apartado y a **Todos los ajustes**. La página aprovecha todo el ancho para los controles; la navegación entre apartados está en la barra superior, sin repetir una barra lateral ni botones de acceso a módulos. **Guardar toda la configuración** guarda el formulario completo. **Recargar configuración** descarta la captura de la página y vuelve a leer los valores actuales.
 
 ## Apartados
 
@@ -8,10 +8,10 @@ El menú **Configuración** abre una lista de accesos a cada apartado y a **Todo
 |---|---|
 | General | Nombre visible de 1 a 80 caracteres y zona horaria válida. Se ofrecen zonas de México, UTC y la zona actual si es otra compatible con el servidor. |
 | Citas y horarios | Horizonte de 1 a 365 días, duración de 5 a 30 minutos, atención 24 horas o apertura/cierre con turnos nocturnos y reservas de prueba DEMO. |
-| Documentos e incapacidades | Tamaño por archivo de 1 a 10 MB, carga de 1 a 20 MB, de 1 a 5 archivos por carga y de 1 a 100 documentos por incapacidad. Enlaces al registro y al expediente documental. |
-| Expediente clínico | De 1 a 1000 documentos por persona. Comparte tamaño y cantidad por carga con Documentos. Acceso al módulo clínico. |
-| Inventario | Alerta de caducidad entre 1 y 365 días de anticipación, inicialmente 30. Acceso al catálogo; cada artículo define su mínimo al darse de alta. |
-| Administración | Doctores cuando la cuenta tiene ese permiso, Permisos, Auditoría y Ayuda y manual. |
+| Documentos e incapacidades | Tamaño por archivo de 1 a 10 MB, carga de 1 a 20 MB, de 1 a 5 archivos por carga y de 1 a 100 documentos por incapacidad. Registro y expediente documental accesibles desde Atención médica. |
+| Expediente clínico | De 1 a 1000 documentos por persona. Comparte tamaño y cantidad por carga con Documentos. El módulo clínico está en Recursos médicos. |
+| Inventario | Alerta de caducidad entre 1 y 365 días de anticipación, inicialmente 30. Catálogo en Recursos médicos; cada artículo define su mínimo al darse de alta. |
+| Administración | Indicaciones para gestionar doctores, permisos y auditoría desde Administración. Ayuda y manual se abre desde Mi sesión. |
 | Datos de demostración | Calendario DEMO administrativo y generación explícita de ejemplos. Este bloque está fuera del formulario de ajustes y no se ejecuta al guardarlo. |
 
 La carga máxima debe admitir al menos un archivo de su tamaño máximo. El cupo por incapacidad debe admitir el número de archivos permitido por carga. Los formatos siguen siendo PDF/JPG/PNG y se mantienen las comprobaciones de contenido. Reducir límites no borra registros ni archivos existentes. Las descargas continúan disponibles con su autorización habitual.

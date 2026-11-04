@@ -20,7 +20,7 @@ Configurar `ConnectionStrings:Workforce` fuera del repositorio; la base definiti
 
 ## Configuración integral 1.8.0
 
-**Configuración** ahora reúne General, Citas y horarios, Documentos e incapacidades, Expediente clínico, Inventario, Administración y Datos DEMO. Permite editar el nombre visible y la zona horaria, las reglas de citas, los límites de archivos y documentos y la anticipación de alertas de caducidad. Incluye enlaces a doctores, permisos, auditoría, expedientes e inventario. Solo administra accesos puede guardar. Los ajustes se validan, auditan y conservan al publicar. Ver [configuración integral](docs/configuracion-integral.md).
+**Configuración** ahora reúne General, Citas y horarios, Documentos e incapacidades, Expediente clínico, Inventario, Administración y Datos DEMO. Permite editar el nombre visible y la zona horaria, las reglas de citas, los límites de archivos y documentos y la anticipación de alertas de caducidad. Los accesos a doctores, permisos, auditoría, expedientes e inventario se encuentran en la barra de menú superior. Solo administra accesos puede guardar. Los ajustes se validan, auditan y conservan al publicar. Ver [configuración integral](docs/configuracion-integral.md).
 
 ## Guía de uso 1.7.0
 
@@ -165,3 +165,7 @@ Las comprobaciones incluyen pruebas unitarias de prioridad, consumo, duplicados 
 La cabecera reúne en una sola barra el logo a la izquierda, las categorías Inicio, Atención médica, Recursos médicos, Administración y Configuración al centro, y el menú de usuario a la derecha. El avatar y nombre abren Mi sesión con Ayuda y manual, Cambiar contraseña y Cerrar sesión. El cierre conserva su formulario POST protegido. Cada categoría muestra únicamente las opciones autorizadas. Por debajo de 1400 px los apartados se recogen en el botón Menú; en teléfono el logo, el botón y el avatar comparten la misma fila. Los avisos emergentes respetan también los paneles desplegados.
 
 Los menús principales usan texto de 18 px e iconos de 20 px; los desplegables y el menú de usuario usan 17 px, con filas de al menos 52 px y más separación entre opciones. En anchos menores a 1400 px se utiliza el botón Menú para conservar esta legibilidad sin comprimir la cabecera.
+
+## Pantallas sin navegación duplicada
+
+Los accesos generales a módulos y a los apartados de Configuración se encuentran en la barra superior. Las pantallas no repiten sus pestañas ni botones de navegación general. Se mantienen las acciones de trabajo (agregar, guardar, reservar, adjuntar, descargar), cancelar formularios, paginar, alternar vistas que no están en el menú y abrir un expediente, evidencia o calendario ya filtrado por persona. Inicio conserva sus indicadores y la acción de reservar cita. Configuración aprovecha todo el ancho para sus campos y conserva guardar/recargar y las operaciones DEMO existentes.

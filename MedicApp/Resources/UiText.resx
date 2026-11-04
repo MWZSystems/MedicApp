@@ -788,7 +788,7 @@
   <data name="OpenInventoryCatalog" xml:space="preserve"><value>Abrir catálogo de inventario</value></data>
   <data name="ConfigurationPersistenceHelp" xml:space="preserve"><value>Guardar aplica todos los apartados del formulario. Los cambios se conservan al publicar y se usan en las siguientes solicitudes. Recarga las pantallas que ya estén abiertas.</value></data>
   <data name="SaveAllConfiguration" xml:space="preserve"><value>Guardar toda la configuración</value></data>
-  <data name="AdministrationConfigurationHelp" xml:space="preserve"><value>Abre los catálogos, permisos y registros relacionados. Estos accesos no modifican los permisos de tu cuenta.</value></data>
+  <data name="AdministrationConfigurationHelp" xml:space="preserve"><value>Gestiona doctores, permisos y auditoría desde Administración en la barra de menú superior.</value></data>
   <data name="InvalidApplicationName" xml:space="preserve"><value>Escribe un nombre de aplicación de hasta 80 caracteres, sin caracteres de control.</value></data>
   <data name="InvalidApplicationTimeZone" xml:space="preserve"><value>Selecciona una zona horaria válida.</value></data>
   <data name="InvalidDocumentBatch" xml:space="preserve"><value>El tamaño máximo de la carga debe ser igual o mayor al de un archivo.</value></data>
@@ -841,4 +841,5 @@
   <data name="HelpAccountMenu" xml:space="preserve"><value>Ayuda y cuenta</value></data>
   <data name="AccountMenu" xml:space="preserve"><value>Menú de usuario</value></data>
   <data name="MySession" xml:space="preserve"><value>Mi sesión</value></data>
+  <data name="DoctorsFromMainMenu" xml:space="preserve"><value>Los doctores responsables se gestionan en Administración, desde el menú superior.</value></data>
 </root>

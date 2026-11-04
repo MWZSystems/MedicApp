@@ -1,6 +1,6 @@
 @model StockItemPage
 @{ViewData["Title"]=T["StockMovements"];}
-<div class="page-heading"><div><h1><medic-icon name="inventory"/>@Model.Item.Name</h1><p>@Model.Item.Code · @T["StockLot"]: @Model.Item.Lot · @T["ExpiresOn"]: @Model.Item.ExpiresOn?.ToString("dd/MM/yyyy")</p></div><a asp-action="Index" class="btn btn-outline-secondary"><medic-icon name="chevron-left"/>@T["Inventory"]</a></div>
+<div class="page-heading"><div><h1><medic-icon name="inventory"/>@Model.Item.Name</h1><p>@Model.Item.Code · @T["StockLot"]: @Model.Item.Lot · @T["ExpiresOn"]: @Model.Item.ExpiresOn?.ToString("dd/MM/yyyy")</p></div></div>
 <section class="panel"><h2 class="h4">@T["CurrentStock"]: @Model.Item.CurrentStock.ToString("0.###") @Model.Item.Unit</h2><p>@T["MinimumStock"]: @Model.Item.MinimumStock.ToString("0.###")</p><h2 class="h4"><medic-icon name="plus"/>@T["AddStockMovement"]</h2><p>@T["StockMovementHelp"]</p><div asp-validation-summary="All" class="text-danger"></div>
 <form method="post" asp-action="Move" class="row g-3"><input type="hidden" name="StockItemId" value="@Model.Item.Id"/><input type="hidden" name="RequestKey" value="@Model.Form.RequestKey"/>
 <div class="col-md-4"><label for="move-kind" class="form-label">@T["MovementKind"]</label><select id="move-kind" name="Kind" class="form-select">@foreach(var kind in Enum.GetValues<StockMovementKind>()){<option value="@((int)kind)" selected="@(kind==Model.Form.Kind)">@T["Stock"+kind]</option>}</select></div>
