@@ -842,4 +842,9 @@
   <data name="AccountMenu" xml:space="preserve"><value>Menú de usuario</value></data>
   <data name="MySession" xml:space="preserve"><value>Mi sesión</value></data>
   <data name="DoctorsFromMainMenu" xml:space="preserve"><value>Los doctores responsables se gestionan en Administración, desde el menú superior.</value></data>
+  <data name="VisualSampleReadOnly" xml:space="preserve"><value>Este registro DEMO es solo para visualización. No se puede autorizar ni generar efectos laborales.</value></data>
+  <data name="VisualSampleDoctorMissing" xml:space="preserve"><value>Se requiere el doctor ficticio del lote DEMO antes de generar estos ejemplos.</value></data>
+  <data name="VisualSampleLeave" xml:space="preserve"><value>DEMO · Incapacidad de prueba</value></data>
+  <data name="VisualSampleBadge" xml:space="preserve"><value>DEMO · Sin efecto laboral</value></data>
+  <data name="VisualSampleNotice" xml:space="preserve"><value>Ejemplo ficticio en borrador, sin validez médica ni efectos en asistencias u overtime. Solo se utiliza para visualizar la aplicación.</value></data>
 </root>

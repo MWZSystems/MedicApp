@@ -2,6 +2,9 @@
 
 ## [Desarrollo 1.0.0] - 2026-11-03
 
+- Generación administrativa e idempotente de citas e incapacidades visuales DEMO para una cuenta y dos meses, con auditoría de IDs para retirada posterior.
+- Incapacidades ficticias visibles en calendario como borradores identificados, sin autorización, evidencias ni eventos laborales; no alteran datos existentes, permisos ni configuración.
+
 - Limpieza global de pestañas y botones de navegación repetidos con la barra superior, incluida la navegación secundaria de incapacidades y los atajos generales de Inicio y Configuración.
 - Configuración utiliza todo el ancho; se conservan acciones de trabajo y enlaces contextuales a personas y registros.
 

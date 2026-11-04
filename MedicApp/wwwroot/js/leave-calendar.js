@@ -43,6 +43,8 @@
         },
         eventClick: info => {
             const detail = info.event.extendedProps;
+            document.getElementById("leave-detail-title-text").textContent = info.event.title;
+            document.getElementById("leave-demo-notice").hidden = !detail.isVisualSample;
             document.getElementById("leave-detail-start").textContent = formatTime(detail.startsAtLocal);
             document.getElementById("leave-detail-end").textContent = formatTime(detail.endsAtLocal);
             document.getElementById("leave-detail-through").textContent = formatDate(detail.coveredThrough);

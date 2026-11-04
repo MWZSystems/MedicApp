@@ -58,7 +58,7 @@ public class CalendarReader(MedicDbContext db, TrainifyDbContext shared, Medical
             .Select(x => new { x.Id, x.PersonId, x.DoctorId, x.StartsAt, x.EndsAt, x.Status, x.RowVersion }).ToListAsync(ct);
         if (rows.Count > 5000) { throw new MedicalRuleException("InvalidRange"); }
         var ids = rows.Select(x => x.DoctorId).Distinct().ToArray();
-        var doctors = await db.Doctors.AsNoTracking().Where(x => ids.Contains(x.Id)).Select(x => new { x.Id, x.PersonId }).ToListAsync(ct);
+        var doctors = await db.Doctors.AsNoTracking().Where(x => ids.Contains(x.Id)).Select(x => new { x.Id, x.PersonId, x.ProfessionalLicense }).ToListAsync(ct);
         var people = await names.NamesAsync(rows.Select(x => x.PersonId).Concat(doctors.Select(x => x.PersonId)), ct);
         var doctorNames = doctors.ToDictionary(x => x.Id, x => people.GetValueOrDefault(x.PersonId, text["UnknownPerson"].Value));
         var result = new List<CalendarEvent>();
@@ -68,6 +68,7 @@ public class CalendarReader(MedicDbContext db, TrainifyDbContext shared, Medical
             var employeeName = people.GetValueOrDefault(row.PersonId, text["UnknownPerson"].Value);
             var doctorName = doctorNames.GetValueOrDefault(row.DoctorId, text["UnknownPerson"].Value);
             var title = isDoctor ? employeeName : text["MyAppointment"].Value;
+            if (doctors.Any(x => x.Id == row.DoctorId && x.ProfessionalLicense == DemoDataService.DoctorLicense)) { title = "DEMO · " + title; }
             var state = text[row.Status.ToString()].Value;
             var color = row.Status switch { AppointmentStatus.Attended => "#237b54", AppointmentStatus.Cancelled => "#74818a", AppointmentStatus.NoShow => "#a44f36", _ => "#147d91" };
             result.Add(new(row.Id.ToString(CultureInfo.InvariantCulture), $"{title} · {state}", LocalText(row.StartsAt), LocalText(row.EndsAt), false, color, ["calendar-appointment"],

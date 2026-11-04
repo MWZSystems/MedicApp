@@ -35,7 +35,7 @@ public class LeaveCalendarReader(MedicDbContext db, TrainifyDbContext shared, Me
         var today = DateOnly.FromDateTime(clock.Local(clock.UtcNow));
         if (personId == null) { return new() { CanSearchPeople = canSearch, FocusDate = today }; }
         var person = await PersonAsync(personId.Value, canSearch, ct);
-        var query = db.Leaves.AsNoTracking().Where(x => x.PersonId == person.Id && x.Available && x.Status == LeaveStatus.Approved);
+        var query = db.Leaves.AsNoTracking().Where(x => x.PersonId == person.Id && x.Available && (x.Status == LeaveStatus.Approved || (x.Status == LeaveStatus.Draft && x.Reference.StartsWith(PersonalSampleDataService.Prefix))));
         var now = clock.UtcNow;
         var date = today;
         if (!await query.AnyAsync(x => x.StartsAt <= now && x.EndsAt > now, ct))
@@ -52,8 +52,8 @@ public class LeaveCalendarReader(MedicDbContext db, TrainifyDbContext shared, Me
         await PersonAsync(personId, await CanSearchPeopleAsync(ct), ct);
         var start = clock.ToUtc(from.ToDateTime(TimeOnly.MinValue));
         var end = clock.ToUtc(to.ToDateTime(TimeOnly.MinValue));
-        var rows = await db.Leaves.AsNoTracking().Where(x => x.PersonId == personId && x.Available && x.Status == LeaveStatus.Approved && x.StartsAt < end && x.EndsAt > start)
-            .OrderBy(x => x.StartsAt).ThenBy(x => x.Id).Select(x => new { x.Id, x.StartsAt, x.EndsAt }).Take(5001).ToListAsync(ct);
+        var rows = await db.Leaves.AsNoTracking().Where(x => x.PersonId == personId && x.Available && (x.Status == LeaveStatus.Approved || (x.Status == LeaveStatus.Draft && x.Reference.StartsWith(PersonalSampleDataService.Prefix))) && x.StartsAt < end && x.EndsAt > start)
+            .OrderBy(x => x.StartsAt).ThenBy(x => x.Id).Select(x => new { x.Id, x.StartsAt, x.EndsAt, x.Reference }).Take(5001).ToListAsync(ct);
         if (rows.Count > 5000) { throw new MedicalRuleException("InvalidRange"); }
         return rows.Select(row =>
         {
@@ -62,9 +62,9 @@ public class LeaveCalendarReader(MedicDbContext db, TrainifyDbContext shared, Me
             var firstDay = DateOnly.FromDateTime(localStart);
             var exclusiveEnd = DateOnly.FromDateTime(localEnd);
             if (TimeOnly.FromDateTime(localEnd) != TimeOnly.MinValue) { exclusiveEnd = exclusiveEnd.AddDays(1); }
-            return new LeaveCalendarEvent(row.Id.ToString(CultureInfo.InvariantCulture), text["ApprovedLeaveCalendar"].Value,
-                firstDay.ToString("yyyy-MM-dd", CultureInfo.InvariantCulture), exclusiveEnd.ToString("yyyy-MM-dd", CultureInfo.InvariantCulture), true, "#147d91",
-                new LeaveCalendarDetails(localStart.ToString("yyyy-MM-dd'T'HH:mm:ss", CultureInfo.InvariantCulture), localEnd.ToString("yyyy-MM-dd'T'HH:mm:ss", CultureInfo.InvariantCulture), exclusiveEnd.AddDays(-1).ToString("yyyy-MM-dd", CultureInfo.InvariantCulture)));
+            return new LeaveCalendarEvent(row.Id.ToString(CultureInfo.InvariantCulture), text[PersonalSampleDataService.IsSample(row.Reference) ? "VisualSampleLeave" : "ApprovedLeaveCalendar"].Value,
+                firstDay.ToString("yyyy-MM-dd", CultureInfo.InvariantCulture), exclusiveEnd.ToString("yyyy-MM-dd", CultureInfo.InvariantCulture), true, PersonalSampleDataService.IsSample(row.Reference) ? "#956315" : "#147d91",
+                new LeaveCalendarDetails(localStart.ToString("yyyy-MM-dd'T'HH:mm:ss", CultureInfo.InvariantCulture), localEnd.ToString("yyyy-MM-dd'T'HH:mm:ss", CultureInfo.InvariantCulture), exclusiveEnd.AddDays(-1).ToString("yyyy-MM-dd", CultureInfo.InvariantCulture), PersonalSampleDataService.IsSample(row.Reference)));
         }).ToList();
     }
 }

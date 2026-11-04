@@ -169,3 +169,17 @@ Los menús principales usan texto de 18 px e iconos de 20 px; los desplegables y
 ## Pantallas sin navegación duplicada
 
 Los accesos generales a módulos y a los apartados de Configuración se encuentran en la barra superior. Las pantallas no repiten sus pestañas ni botones de navegación general. Se mantienen las acciones de trabajo (agregar, guardar, reservar, adjuntar, descargar), cancelar formularios, paginar, alternar vistas que no están en el menú y abrir un expediente, evidencia o calendario ya filtrado por persona. Inicio conserva sus indicadores y la acción de reservar cita. Configuración aprovecha todo el ancho para sus campos y conserva guardar/recargar y las operaciones DEMO existentes.
+
+## Datos visuales DEMO por cuenta
+
+El generador administrativo `scripts/Generar-Datos-Visuales.ps1` agrega un lote de dos meses a una cuenta existente: 12 citas de 30 minutos (6 por mes) y 4 incapacidades en borrador (2 por mes). Comprueba simultáneamente usuario y número de control, exige un actor activo con permiso de administrar accesos y reutiliza el doctor ficticio del lote DEMO. No crea cuentas, personas, permisos, consultas ni documentos, ni modifica registros existentes o la configuración de reservas.
+
+```powershell
+.\scripts\Generar-Datos-Visuales.ps1 -UserName 'empleado.ejemplo' -EmployeeNumber '0000' -ActorUserName 'cuenta.admin' -FirstMonth '2026-11-01' -TimeZoneId 'America/Chihuahua'
+```
+
+Verificar primero la zona del sitio y compilar Release. El script utiliza la conexión privada de UserSecrets y valida el destino de base común. No ejecutar el generador para una persona sin su solicitud o autorización. No existe un endpoint web ni una generación automática al publicar.
+
+Las citas del doctor ficticio llevan el prefijo DEMO en el calendario. Las incapacidades se identifican por `MEDIC-DEMO-VISUAL-`, mantienen estado Borrador y se muestran como ejemplos en el calendario de la persona; los borradores ordinarios siguen sin mostrarse. El detalle advierte que son ficticias. Su autorización, cancelación y carga de evidencias están bloqueadas. No se insertan eventos laborales, por lo que no generan efectos en asistencia u overtime. Las disponibilidades auxiliares son generadas y no se ofrecen como nuevos horarios manuales.
+
+El lote se guarda con una transacción y bloqueo, con claves deterministas para las citas. Repetir cuenta y mes inicial conserva el lote sin duplicarlo. La auditoría registra `VisualSampleBatch`, `VisualSampleAppointment`, `VisualSampleLeave` y `VisualSampleWindow`, con el mismo identificador de lote y los IDs exactos para preparar una retirada posterior revisada. No borrar por rangos de fechas ni incluir datos de personas o resultados de ejecución en Git. Las muestras de una persona mantienen los permisos habituales de lectura; no quedan visibles para otros empleados.

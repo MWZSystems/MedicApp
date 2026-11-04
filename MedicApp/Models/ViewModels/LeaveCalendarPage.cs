@@ -10,5 +10,5 @@ public class LeaveCalendarPage
     public LeaveCalendarPerson? Person { get; init; }
     public DateOnly FocusDate { get; init; }
 }
-public record LeaveCalendarDetails(string StartsAtLocal, string EndsAtLocal, string CoveredThrough);
+public record LeaveCalendarDetails(string StartsAtLocal, string EndsAtLocal, string CoveredThrough, bool IsVisualSample = false);
 public record LeaveCalendarEvent(string Id, string Title, string Start, string End, bool AllDay, string Color, LeaveCalendarDetails ExtendedProps);

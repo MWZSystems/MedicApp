@@ -14,7 +14,7 @@ namespace MedicApp.Services;
 public sealed class DemoDataService(IConfiguration configuration, MedicalClock clock, IOptions<MedicalOptions> options)
 {
     public const string Prefix = "MEDIC-DEMO-";
-    private const string License = "MEDIC-DEMO-DOCTOR-001";
+    public const string DoctorLicense = "MEDIC-DEMO-DOCTOR-001";
     public async Task<string> CreateAsync(string actorId, CancellationToken ct)
     {
         await using var connection = new SqlConnection(DatabaseConfiguration.Resolve(configuration));
@@ -24,7 +24,7 @@ public sealed class DemoDataService(IConfiguration configuration, MedicalClock c
         await shared.Database.UseTransactionAsync(tx.GetDbTransaction(), ct);
         await MedicalLocks.AcquireAsync(db, "MedicApp.DemoData", ct);
         if (!await db.AccessProfiles.AnyAsync(x => x.UserId == actorId && x.Available && x.ManageAccess, ct)) { throw new MedicalRuleException("Forbidden"); }
-        var existing = await db.Doctors.AsNoTracking().SingleOrDefaultAsync(x => x.ProfessionalLicense == License, ct);
+        var existing = await db.Doctors.AsNoTracking().SingleOrDefaultAsync(x => x.ProfessionalLicense == DoctorLicense, ct);
         if (existing != null)
         {
             if (!await shared.People.AnyAsync(x => x.Id == existing.PersonId && x.EmployeeNumber == Prefix + "D1", ct)) { throw new MedicalRuleException("Concurrency"); }
@@ -39,7 +39,7 @@ public sealed class DemoDataService(IConfiguration configuration, MedicalClock c
         };
         shared.People.AddRange(people);
         await shared.SaveChangesAsync(ct);
-        var doctor = new Doctor { PersonId = people[0].Id, Specialty = "DEMO Medicina general", ProfessionalLicense = License, UpdatedById = actorId, LastUpdated = clock.UtcNow };
+        var doctor = new Doctor { PersonId = people[0].Id, Specialty = "DEMO Medicina general", ProfessionalLicense = DoctorLicense, UpdatedById = actorId, LastUpdated = clock.UtcNow };
         db.Doctors.Add(doctor);
         await db.SaveChangesAsync(ct);
         var first = clock.Local(clock.UtcNow).Date.AddDays(-3);
@@ -95,7 +95,7 @@ public sealed class DemoDataService(IConfiguration configuration, MedicalClock c
         await using var db = new MedicDbContext(new DbContextOptionsBuilder<MedicDbContext>().UseSqlServer(DatabaseConfiguration.Resolve(configuration)).Options);
         var people = await shared.People.AsNoTracking().Where(x => x.EmployeeNumber.StartsWith(Prefix)).ToDictionaryAsync(x => x.Id, x => x.FirstName, ct);
         var ids = people.Keys.ToArray();
-        var doctors = await db.Doctors.AsNoTracking().Where(x => ids.Contains(x.PersonId) && x.ProfessionalLicense == License).Select(x => x.Id).ToListAsync(ct);
+        var doctors = await db.Doctors.AsNoTracking().Where(x => ids.Contains(x.PersonId) && x.ProfessionalLicense == DoctorLicense).Select(x => x.Id).ToListAsync(ct);
         var start = clock.ToUtc(from.ToDateTime(TimeOnly.MinValue));
         var end = clock.ToUtc(to.ToDateTime(TimeOnly.MinValue));
         var rows = await db.Appointments.AsNoTracking().Where(x => ids.Contains(x.PersonId) && doctors.Contains(x.DoctorId) && x.StartsAt < end && x.EndsAt > start).OrderBy(x => x.StartsAt).Take(1000).ToListAsync(ct);

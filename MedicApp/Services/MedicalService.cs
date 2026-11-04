@@ -122,6 +122,7 @@ public class MedicalService(MedicDbContext db, TrainifyDbContext shared, Medical
         if (personId == access.PersonId) { throw new MedicalRuleException("Forbidden"); }
         if (await shared.People.AsNoTracking().AnyAsync(x => (x.Id == personId || x.Id == access.PersonId || x.Id == doctorPerson) && x.EmployeeNumber.StartsWith(DemoDataService.Prefix), ct)) { throw new MedicalRuleException("DemoLeaveDisabled"); }
         if (!await shared.People.AsNoTracking().AnyAsync(x => x.Id == personId && x.Active, ct)) { throw new MedicalRuleException("NotFound"); }
+        if (PersonalSampleDataService.IsSample(reference.Trim())) { throw new MedicalRuleException("VisualSampleReadOnly"); }
         var start = clock.ToUtc(localStart);
         var end = clock.ToUtc(localEnd);
         MedicalRules.ValidateInterval(start, end);
@@ -143,6 +144,7 @@ public class MedicalService(MedicDbContext db, TrainifyDbContext shared, Medical
         await MedicalLocks.AcquireAsync(db, "MedicApp.LaborEvents", ct);
         var doctor = await access.DoctorIdAsync(ct) ?? throw new MedicalRuleException("Forbidden");
         var leave = await db.Leaves.SingleOrDefaultAsync(x => x.Id == id && x.DoctorId == doctor && x.Available, ct) ?? throw new MedicalRuleException("NotFound");
+        if (PersonalSampleDataService.IsSample(leave.Reference)) { throw new MedicalRuleException("VisualSampleReadOnly"); }
         MedicalRules.ValidateLeaveTransition(leave.Status, status);
         if (string.IsNullOrWhiteSpace(reason)) { throw new MedicalRuleException("ReasonRequired"); }
         if (status == LeaveStatus.Approved && await db.Leaves.AnyAsync(x => x.Id != id && x.PersonId == leave.PersonId && x.Available && x.Status == LeaveStatus.Approved && x.StartsAt < leave.EndsAt && x.EndsAt > leave.StartsAt, ct))

@@ -11,7 +11,7 @@ using Trainify.Data;
 using Trainify.Domain;
 using Trainify.Services;
 
-var builder = WebApplication.CreateBuilder(args.Where(x => x != "--grant-admin" && x != "--create-demo" && x != "--prepare-booking" && x != "--migrate-medical").ToArray());
+var builder = WebApplication.CreateBuilder(args.Where(x => x != "--create-personal-samples" && x != "--grant-admin" && x != "--create-demo" && x != "--prepare-booking" && x != "--migrate-medical").ToArray());
 builder.Configuration.AddJsonFile("config/medical.defaults.json", optional: false, reloadOnChange: true);
 builder.Configuration.AddUserSecrets<Program>(optional: true).AddEnvironmentVariables();
 var connection = builder.Configuration.GetConnectionString("Workforce");
@@ -91,6 +91,23 @@ builder.Services.AddProblemDetails();
 builder.Services.AddHealthChecks().AddCheck<DatabaseHealthCheck>("database");
 builder.Services.AddSerilog((services, configuration) => configuration.MinimumLevel.Information().MinimumLevel.Override("Microsoft", Serilog.Events.LogEventLevel.Warning).Enrich.FromLogContext().WriteTo.Console(formatProvider: System.Globalization.CultureInfo.InvariantCulture).WriteTo.File(Path.Combine(dataDirectory, "Logs", "medic-.log"), rollingInterval: RollingInterval.Day, fileSizeLimitBytes: 10485760, rollOnFileSizeLimit: true, retainedFileCountLimit: 14, formatProvider: System.Globalization.CultureInfo.InvariantCulture));
 var app = builder.Build();
+if (args.Contains("--create-personal-samples"))
+{
+    try
+    {
+        var config = builder.Configuration;
+        var date = DateOnly.ParseExact(config["VisualSamples:FirstMonth"] ?? "", "yyyy-MM-dd", System.Globalization.CultureInfo.InvariantCulture);
+        var sampleClock = new MedicalClock(Options.Create(new MedicalOptions { TimeZoneId = config["VisualSamples:TimeZoneId"] ?? throw new InvalidOperationException("Missing sample time zone.") }), TimeProvider.System);
+        var result = await new PersonalSampleDataService(config, sampleClock).CreateAsync(config["VisualSamples:UserName"] ?? "", config["VisualSamples:EmployeeNumber"] ?? "", config["VisualSamples:ActorName"] ?? "", date, CancellationToken.None);
+        Console.WriteLine(System.Text.Json.JsonSerializer.Serialize(result));
+    }
+    catch (Exception error)
+    {
+        Console.Error.WriteLine("No se completó la generación de datos visuales. " + (error is MedicalRuleException ? error.Message : error.GetType().Name));
+        Environment.ExitCode = 1;
+    }
+    return;
+}
 if (args.Contains("--grant-admin"))
 {
     if (string.IsNullOrWhiteSpace(connection)) { throw new InvalidOperationException("Configure ConnectionStrings:Workforce."); }
