@@ -2,6 +2,9 @@
 
 ## [Desarrollo 1.0.0] - 2026-11-03
 
+- Cabecera unificada con logo, categorías y menú de usuario en una sola barra. Contraseña, ayuda y cierre de sesión agrupados bajo el avatar.
+- Menú móvil desplegable sin una segunda fila permanente y avisos recolocados debajo de los paneles abiertos.
+
 - Navegación principal organizada en categorías desplegables, una fila en escritorio y menú compacto en teléfono y tableta.
 - Accesos agrupados por atención médica, recursos, administración, configuración y ayuda/cuenta, respetando permisos y manteniendo el módulo activo.
 

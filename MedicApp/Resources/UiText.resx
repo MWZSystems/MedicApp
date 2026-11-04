@@ -839,4 +839,6 @@
   <data name="MedicalResourcesMenu" xml:space="preserve"><value>Recursos médicos</value></data>
   <data name="AppointmentCalendarMenu" xml:space="preserve"><value>Calendario de citas</value></data>
   <data name="HelpAccountMenu" xml:space="preserve"><value>Ayuda y cuenta</value></data>
+  <data name="AccountMenu" xml:space="preserve"><value>Menú de usuario</value></data>
+  <data name="MySession" xml:space="preserve"><value>Mi sesión</value></data>
 </root>

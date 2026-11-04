@@ -9,7 +9,6 @@
     var current = ViewContext.RouteData.Values["controller"]?.ToString();
     var medicalActive = current is "Appointments" or "Leaves" or "LeaveDocuments" or "Agenda";
     var resourcesActive = current is "ClinicalRecords" or "Inventory";
-    var helpActive = current is "Help" or "Account";
 }
 <nav class="navbar navbar-expand-xl app-nav" aria-label="@T["MainNavigation"]">
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#main-nav" aria-controls="main-nav" aria-expanded="false" aria-label="@T["ToggleNavigation"]"><medic-icon name="list"/><span>@T["NavigationMenu"]</span></button>
@@ -66,13 +65,7 @@
                     </ul>
                 </div>
             }
-            <div class="nav-item dropdown">
-                <button class="nav-link dropdown-toggle @(helpActive ? "active" : null)" type="button" id="help-account-menu" data-bs-toggle="dropdown" aria-expanded="false"><medic-icon name="user"/>@T["HelpAccountMenu"]</button>
-                <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="help-account-menu">
-                    <li><a class="dropdown-item" asp-controller="Help" asp-action="Index"><medic-icon name="document"/>@T["HelpManual"]</a></li>
-                    <li><a class="dropdown-item" asp-controller="Account" asp-action="ChangePassword"><medic-icon name="key"/>@T["ChangePassword"]</a></li>
-                </ul>
-            </div>
+
         </div>
     </div>
 </nav>

@@ -1,6 +1,18 @@
 "use strict";
 const labels = document.body.dataset;
 document.querySelectorAll(".app-nav a").forEach(link => { if (link.pathname === window.location.pathname && !link.hash) { link.setAttribute("aria-current", "page"); } });
+// Mobile navigation and session controls share one header; show one panel at a time.
+(() => {
+  const account = document.getElementById("account-menu");
+  const menu = document.getElementById("main-nav");
+  const closeNavigation = () => {
+    if (window.matchMedia("(max-width: 1199.98px)").matches && menu?.classList.contains("show")) { bootstrap.Collapse.getOrCreateInstance(menu, { toggle: false }).hide(); }
+  };
+  menu?.addEventListener("shown.bs.collapse", () => { if (account?.getAttribute("aria-expanded") === "true") { closeNavigation(); } });
+  account?.addEventListener("click", closeNavigation);
+  account?.addEventListener("keydown", event => { if (event.key === "ArrowDown" || event.key === "ArrowUp") { closeNavigation(); } });
+  document.querySelector('[data-bs-target="#main-nav"]')?.addEventListener("click", () => { if (account) { bootstrap.Dropdown.getInstance(account)?.hide(); } });
+})();
 if (window.jQuery && jQuery.fn.select2) {
   document.querySelectorAll("select[data-search-url]").forEach(element => {
     jQuery(element).select2({ width: "100%", language: "es", minimumInputLength: 2, ajax: { url: element.dataset.searchUrl, dataType: "json", delay: 300, data: params => ({ term: params.term }), processResults: data => data } });
@@ -58,14 +70,14 @@ window.App = window.App || {};
     positionPending = false;
     const header = document.querySelector(".app-header");
     let bottom = Math.max(0, header?.getBoundingClientRect().bottom || 0);
-    document.querySelectorAll(".app-header .dropdown-menu.show").forEach(menu => { bottom = Math.max(bottom, menu.getBoundingClientRect().bottom); });
+    document.querySelectorAll(".app-header .dropdown-menu.show, .app-header #main-nav.show, .app-header #main-nav.collapsing").forEach(menu => { bottom = Math.max(bottom, menu.getBoundingClientRect().bottom); });
     stack.style.setProperty("--toast-top", `${Math.ceil(bottom + 12)}px`);
   };
   const queuePosition = () => { if (!positionPending) { positionPending = true; requestAnimationFrame(position); } };
   window.addEventListener("resize", queuePosition);
   window.addEventListener("scroll", queuePosition, { passive: true });
   ["shown.bs.dropdown", "hidden.bs.dropdown", "shown.bs.collapse", "hidden.bs.collapse"].forEach(name => document.addEventListener(name, queuePosition));
-  if (window.ResizeObserver) { const header = document.querySelector(".app-header"); if (header) { new ResizeObserver(queuePosition).observe(header); } }
+  if (window.ResizeObserver) { const observer = new ResizeObserver(queuePosition); document.querySelectorAll(".app-header, #main-nav").forEach(element => observer.observe(element)); }
   position();
   function wire(toast) {
     let timer;
