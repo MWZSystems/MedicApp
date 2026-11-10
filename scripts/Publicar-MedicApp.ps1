@@ -80,7 +80,8 @@ try {
         $taskIisSite = [string]$taskProfile.DeployIisAppPath
         $taskEndpoint = [string]$taskProfile.MSDeployServiceURL
         $taskUserName = [string]$taskProfile.UserName
-        Add-Type -AssemblyName System.Security.Cryptography.ProtectedData
+        # PowerShell 7 la incluye en ProtectedData; Windows PowerShell 5.1 en System.Security.
+        try { Add-Type -AssemblyName System.Security.Cryptography.ProtectedData } catch { Add-Type -AssemblyName System.Security }
         $taskEncrypted = ([xml](Get-Content -LiteralPath ($ProfilePath + '.user') -Raw)).Project.PropertyGroup.EncryptedPassword
         $taskPasswordBytes = [Security.Cryptography.ProtectedData]::Unprotect([Convert]::FromBase64String($taskEncrypted), $null, [Security.Cryptography.DataProtectionScope]::CurrentUser)
         $taskPassword = [Text.Encoding]::Unicode.GetString($taskPasswordBytes).TrimEnd([char]0)
