@@ -12,4 +12,8 @@
 - Conexión del sitio, 10 de noviembre de 2026: por instrucción del usuario, Claude separó la conexión del sitio (`ConnectionStrings:WorkforceSite`) de la de despliegue, con Codex detenido. Cuando exista la conexión del sitio, el sitio nunca debe recibir la de despliegue; migraciones, catálogo y datos DEMO siguen con la de despliegue desde este equipo. El usuario SQL de cada sitio se crea en el panel de SmarterASP y recibe sus roles con `database/seguridad/RolesPorAplicacion.sql` de Trainify (`USUARIOS_SQL_POR_APLICACION.md`).
 
 ## Rama de desarrollo — Releases/v1.0.0
-Instrucción del usuario, 2026-11-10: todas las aplicaciones siguen en desarrollo y todavía no se libera ninguna versión, así que todo el trabajo va en la rama `Releases/v1.0.0`, con la versión 1.0.0. No usar `main` ni otras ramas `Releases/*` para desarrollo, no crear ramas ni tags de otras versiones y no borrar las existentes sin que el usuario lo pida. Cuando se libere una versión, el usuario lo indicará.
+Instrucción del usuario, 2026-11-10: `main` es la rama principal. Todas las aplicaciones siguen en desarrollo en la versión 1.0.0 y todavía no se libera ninguna, así que:
+- Cada cambio se hace primero en `Releases/v1.0.0`: commit y push.
+- Después se lleva el mismo commit a `main` y se hace push. Solo avance directo (`git push origin Releases/v1.0.0:main`), sin forzar; si no es avance directo, detenerse y avisar.
+- Cuando el usuario indique que la versión salió a producción, las versiones nuevas tendrán su propia rama `Releases/vX.Y.Z`.
+- No crear ramas ni tags de otras versiones ni borrar los existentes sin que el usuario lo pida.
