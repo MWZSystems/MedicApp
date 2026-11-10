@@ -1,5 +1,12 @@
 # Changelog
 
+## [Desarrollo 1.0.0] - 2026-11-10
+
+- El publicador envía al sitio `ConnectionStrings:WorkforceSite` cuando existe en los secretos locales. `ConnectionStrings:Workforce` queda como conexión de despliegue y solo se usa desde este equipo.
+- Rechaza una conexión del sitio que apunte a otra base o que use el mismo usuario que el despliegue. Mientras no exista, avisa y sigue con la de despliegue, como hasta ahora.
+- Nuevo `scripts/Configurar-ConexionSitio.ps1`: guarda la conexión del sitio en Secret Manager después de comprobar que el usuario no es dueño de la base y que ya tiene roles `app_`.
+- Lo hizo Claude por instrucción del usuario, con Codex detenido. Sin migraciones ni cambios de datos. Plan completo en `USUARIOS_SQL_POR_APLICACION.md` del repositorio Trainify.
+
 ## [Desarrollo 1.0.0] - 2026-11-04
 
 - Paginación EF en servidor para los 12 listados, con búsqueda, filtros GET, tamaños 25/50/100, total filtrado, orden estable y conservación de página al guardar acciones de fila.

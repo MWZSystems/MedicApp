@@ -8,3 +8,5 @@
 - Ejecutar compilación y pruebas pertinentes antes de publicar. Documentar con claridad lo que está implementado, verificado y pendiente.
 - No modificar ni publicar WFMCore o Trainify como efecto implícito de cambios de MedicApp. El contrato laboral está preparado; su integración efectiva requiere cambios coordinados y probados en WFMCore.
 - Publicar no autoriza por sí solo restauraciones, borrados, restablecimientos de cuentas ni migraciones destructivas de la base compartida.
+
+- Conexión del sitio, 10 de noviembre de 2026: por instrucción del usuario, Claude separó la conexión del sitio (`ConnectionStrings:WorkforceSite`) de la de despliegue, con Codex detenido. Cuando exista la conexión del sitio, el sitio nunca debe recibir la de despliegue; migraciones, catálogo y datos DEMO siguen con la de despliegue desde este equipo. El usuario SQL de cada sitio se crea en el panel de SmarterASP y recibe sus roles con `database/seguridad/RolesPorAplicacion.sql` de Trainify (`USUARIOS_SQL_POR_APLICACION.md`).

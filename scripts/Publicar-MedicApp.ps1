@@ -23,6 +23,19 @@ $taskConnectionBuilder.set_ConnectionString($taskConnection)
 $taskSqlServer = if ($taskConnectionBuilder.ContainsKey('Server')) { $taskConnectionBuilder['Server'] } else { $taskConnectionBuilder['Data Source'] }
 $taskSqlDatabase = if ($taskConnectionBuilder.ContainsKey('Database')) { $taskConnectionBuilder['Database'] } else { $taskConnectionBuilder['Initial Catalog'] }
 if ($taskSqlServer -ne 'sql1002.site4now.net' -or $taskSqlDatabase -ne 'db_acaa35_trainify') { throw 'La conexión no corresponde a la base común autorizada.' }
+$taskDeploySql = [System.Data.SqlClient.SqlConnectionStringBuilder]::new($taskConnection)
+# Conexion del sitio (USUARIOS_SQL_POR_APLICACION.md, en Trainify): ConnectionStrings:Workforce es la de despliegue y solo se usa
+# desde este equipo. El sitio recibe ConnectionStrings:WorkforceSite, con un usuario SQL propio y de permisos minimos.
+$taskSiteConnection = $taskSecrets.'ConnectionStrings:WorkforceSite'; if (!$taskSiteConnection -and $taskSecrets) { $taskSiteConnection = $taskSecrets.ConnectionStrings.WorkforceSite }
+if ($taskSiteConnection) {
+    $taskSiteSql = [System.Data.SqlClient.SqlConnectionStringBuilder]::new($taskSiteConnection)
+    if ($taskSiteSql.DataSource -ne $taskSqlServer -or $taskSiteSql.InitialCatalog -ne $taskSqlDatabase) { throw 'La conexion del sitio apunta a otra base.' }
+    if ($taskSiteSql.UserID -eq $taskDeploySql.UserID) { throw 'La conexion del sitio debe usar un usuario distinto del de despliegue.' }
+    Write-Output 'CONEXION_SITIO_SEPARADA'
+} else {
+    $taskSiteConnection = $taskConnection
+    Write-Warning 'El sitio seguira usando el usuario de despliegue. Configura su usuario con scripts\Configurar-ConexionSitio.ps1.'
+}
 
 $taskStage = Join-Path $env:LOCALAPPDATA ('MedicApp\Publish\' + [Guid]::NewGuid().ToString('N'))
 $taskPrivateFile = Join-Path $taskStage 'appsettings.Production.json'
@@ -43,7 +56,7 @@ try {
         New-Item -ItemType Directory -Path $taskCalendarPath -Force | Out-Null
         @{Medical=@{BookingHorizonDays=7;Open24Hours=$true;OpeningTime='08:00';ClosingTime='18:00';DefaultSlotMinutes=30;DemoBookingEnabled=$true}} | ConvertTo-Json -Depth 4 | Set-Content -LiteralPath (Join-Path $taskCalendarPath 'medical.json') -Encoding UTF8
     }
-    $taskProduction = @{ ConnectionStrings = @{ Workforce = $taskConnection }; AllowedHosts = $SiteUrl.Host; Medical = @{ DataDirectory = 'App_Data' } }
+    $taskProduction = @{ ConnectionStrings = @{ Workforce = $taskSiteConnection }; AllowedHosts = $SiteUrl.Host; Medical = @{ DataDirectory = 'App_Data' } }
     $taskProduction | ConvertTo-Json -Depth 5 | Set-Content -LiteralPath $taskPrivateFile -Encoding UTF8
     if ($PrepareOnly) {
         Write-Output ('PAQUETE_PREPARADO: ' + $taskStage)
@@ -82,7 +95,7 @@ try {
     $taskDestination = "-dest:iisApp='$taskIisSite',computerName='$taskEndpoint',userName='$taskUserName',password='$taskPassword',authType=Basic"
     $taskArguments = @('-verb:sync', "-source:iisApp='$taskStage'", $taskDestination, '-enableRule:DoNotDeleteRule', '-enableRule:AppOffline', '-retryAttempts:2', '-retryInterval:3000')
     & $taskTool @taskArguments 2>&1 | ForEach-Object {
-        $taskLine = $_.ToString().Replace($taskPassword, '[REDACTED]').Replace($taskConnection, '[REDACTED]')
+        $taskLine = $_.ToString().Replace($taskPassword, '[REDACTED]').Replace($taskConnection, '[REDACTED]').Replace($taskSiteConnection, '[REDACTED]')
         if ($taskLine -notmatch '^Info: Adding (file|directory)') { Write-Output $taskLine }
     }
     if ($LASTEXITCODE -ne 0) { throw 'Web Deploy no terminó correctamente.' }
@@ -97,5 +110,5 @@ try {
 finally {
     if (Test-Path -LiteralPath $taskPrivateFile) { Remove-Item -LiteralPath $taskPrivateFile -Force }
     if ($taskPasswordBytes) { [Array]::Clear($taskPasswordBytes, 0, $taskPasswordBytes.Length) }
-    $taskPassword = $null; $taskConnection = $null; $taskSecrets = $null; $taskProduction = $null; $taskDestination = $null; $taskArguments = $null
+    $taskPassword = $null; $taskConnection = $null; $taskSiteConnection = $null; $taskDeploySql = $null; $taskSecrets = $null; $taskProduction = $null; $taskDestination = $null; $taskArguments = $null
 }

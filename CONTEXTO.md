@@ -44,3 +44,10 @@ Las acciones de fila vuelven por RedirectBack al Referer del mismo sitio y ruta 
 Pruebas de parámetros, límites y dos prefijos independientes; LocalDB verifica búsqueda con total correcto y SQL COUNT/OFFSET/FETCH; páginas renderizadas, filtros, retorno de movimientos y rechazo de Referer externo. La revisión visual utiliza exclusivamente datos sintéticos en LocalDB. No requiere migración ni carga de nuevos datos de producción.
 
 Validación local final: compilación Release con advertencias como errores (0 advertencias/0 errores), 153 pruebas aprobadas sin omisiones, JavaScript válido y revisión de página 2, filtro y búsqueda en navegador con datos sintéticos. xUnit se ejecutó con dotnet sobre MedicApp.Tests.dll porque la política de Windows bloqueó el apphost; no se modificaron protecciones del equipo. Paging coincide exactamente con el archivo de referencia y no hay cambios en modelos de vistas, entidades ni migraciones.
+
+## Conexión del sitio 2026-11-10
+
+- El publicador envía al sitio `ConnectionStrings:WorkforceSite` cuando existe en los secretos locales. `ConnectionStrings:Workforce` queda como conexión de despliegue y solo se usa desde este equipo.
+- Rechaza una conexión del sitio que apunte a otra base o que use el mismo usuario que el despliegue. Mientras no exista, avisa y sigue con la de despliegue, como hasta ahora.
+- Nuevo `scripts/Configurar-ConexionSitio.ps1`: guarda la conexión del sitio en Secret Manager después de comprobar que el usuario no es dueño de la base y que ya tiene roles `app_`.
+- Lo hizo Claude por instrucción del usuario, con Codex detenido. Sin migraciones ni cambios de datos. Plan completo en `USUARIOS_SQL_POR_APLICACION.md` del repositorio Trainify.
