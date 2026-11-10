@@ -12,7 +12,7 @@ if (Test-Path -LiteralPath $taskSecretsPath) {
     if ($taskDeploy) { $taskDeployUser = [System.Data.SqlClient.SqlConnectionStringBuilder]::new($taskDeploy).UserID }
     $taskSecrets = $null; $taskDeploy = $null
 }
-$taskUser = Read-Host 'Usuario SQL del sitio de MedicApp (por ejemplo medic_app)'
+$taskUser = Read-Host 'Usuario SQL del sitio de MedicApp (por ejemplo complementos_app)'
 if ([string]::IsNullOrWhiteSpace($taskUser)) { throw 'Es necesario un usuario.' }
 if ($taskUser.Trim() -in @('db_acaa35_trainify_admin', $taskDeployUser)) { throw 'El sitio debe usar un usuario distinto del de despliegue.' }
 $taskPassword = Read-Host 'Contrasena de ese usuario' -AsSecureString
