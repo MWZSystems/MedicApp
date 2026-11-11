@@ -100,6 +100,18 @@ try {
         if ($taskLine -notmatch '^Info: Adding (file|directory)') { Write-Output $taskLine }
     }
     if ($LASTEXITCODE -ne 0) { throw 'Web Deploy no terminó correctamente.' }
+    # La sincronización no borra archivos sobrantes. Lo retirado del proyecto se quita aquí, por ruta fija y solo si el sitio aún lo sirve.
+    $taskRetired = @(@{ Probe = '/lib/insove/style.css'; Path = 'wwwroot/lib/insove' })
+    foreach ($taskItem in $taskRetired) {
+        $taskStillServed = $false
+        try { $taskStillServed = (Invoke-WebRequest ([uri]::new($SiteUrl, $taskItem.Probe)) -Method Head -UseBasicParsing -TimeoutSec 30).StatusCode -eq 200 } catch { $taskStillServed = $false }
+        if (!$taskStillServed) { continue }
+        $taskDelete = @('-verb:delete', "-dest:contentPath='$taskIisSite/$($taskItem.Path)',computerName='$taskEndpoint',userName='$taskUserName',password='$taskPassword',authType=Basic", '-retryAttempts:2', '-retryInterval:3000')
+        & $taskTool @taskDelete 2>&1 | ForEach-Object { Write-Output $_.ToString().Replace($taskPassword, '[REDACTED]') }
+        if ($LASTEXITCODE -ne 0) { throw ('No se pudo retirar del sitio: ' + $taskItem.Path) }
+        Write-Output ('RETIRADO_DEL_SITIO: ' + $taskItem.Path)
+        $taskDelete = $null
+    }
     $taskHealth = Invoke-WebRequest ([uri]::new($SiteUrl, '/health')) -UseBasicParsing -TimeoutSec 40
     if ($taskHealth.StatusCode -ne 200 -or $taskHealth.Content.Trim() -ne 'Healthy') { throw 'El sitio no confirmó conexión saludable a la base de datos.' }
     $taskLogin = Invoke-WebRequest ([uri]::new($SiteUrl, '/Account/Login')) -UseBasicParsing -TimeoutSec 30
