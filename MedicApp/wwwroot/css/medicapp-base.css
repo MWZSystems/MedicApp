@@ -1,0 +1,26 @@
+/* Base visual propia de MedicApp. Escrita para esta aplicación; solo se apoya en Bootstrap (MIT).
+   Los colores y la tipografía se definen en medicapp.css mediante las variables de :root. */
+:root{--light-color:#fff;--primary-soft:#e7f3f4;--focus-ring:#117d8b33}
+*,*::before,*::after{box-sizing:border-box}
+body{margin:0;font-family:var(--body-font)}
+a{color:var(--dark-color);text-decoration:none;transition:color .2s ease-out}
+a:hover{color:var(--primary-color)}
+p{color:var(--gray-color)}
+b,strong{font-weight:700}
+h1,h2,h3,h4,h5{font-family:var(--heading-font);font-weight:500;line-height:1.15}
+.text-dark{color:var(--dark-color)!important}
+.btn.btn-primary{background-color:var(--primary-color);border:0;color:#fff}
+.btn.btn-primary:hover,.btn.btn-primary:focus-visible{background-color:var(--dark-color);color:#fff}
+.btn.btn-outline-primary{background:transparent;border:2px solid var(--primary-color);color:var(--dark-color);box-shadow:none}
+.btn.btn-outline-primary:hover,.btn.btn-outline-primary:focus-visible{background:var(--primary-soft);border-color:var(--dark-color);color:var(--dark-color)}
+.form-control:focus,.form-select:focus{border-color:var(--primary-color);box-shadow:0 0 0 .2rem var(--focus-ring)}
+.input-group .input-group-text{background:var(--primary-soft);border-color:#bed1d6;color:var(--dark-color)}
+.navbar-nav .nav-item{height:max-content}
+.navbar-nav .nav-link{line-height:1.2}
+.navbar-nav .nav-link:hover,.navbar-nav .nav-link.active{color:var(--primary-color)}
+.navbar-nav .dropdown-item:hover,.navbar-nav .dropdown-item:focus,.navbar-nav .dropdown-item.active{color:var(--primary-color);background-color:transparent}
+.navbar .navbar-toggler:focus{box-shadow:0 0 0 .2rem var(--focus-ring)}
+.page-link{color:var(--dark-color)}
+.page-link:hover{color:var(--dark-color);background-color:var(--primary-soft);border-color:#d8e6e9}
+.page-link:focus{color:var(--dark-color);background-color:var(--primary-soft);box-shadow:0 0 0 .2rem var(--focus-ring)}
+.page-item.active .page-link{color:#fff;background-color:var(--dark-color);border-color:var(--dark-color)}

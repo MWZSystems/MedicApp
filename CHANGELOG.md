@@ -1,5 +1,11 @@
 # Changelog
 
+## [Desarrollo 1.0.0] - 2026-11-11
+
+- Se retira el CSS del template comercial Insove (`wwwroot/lib/insove`). La base visual ahora es propia: `wwwroot/css/medicapp-base.css`, escrita para MedicApp sobre Bootstrap (MIT).
+- Sin cambios de pantallas, datos ni migraciones; se conservan colores, tipografía y componentes. `THIRD-PARTY-NOTICES.md`, `README.md` y la documentación reflejan que la interfaz ya no depende de licencias comerciales.
+- El archivo retirado sigue en el historial de Git anterior a esta fecha.
+
 ## [Desarrollo 1.0.0] - 2026-11-10
 
 - El publicador envía al sitio `ConnectionStrings:WorkforceSite` cuando existe en los secretos locales. `ConnectionStrings:Workforce` queda como conexión de despliegue y solo se usa desde este equipo.

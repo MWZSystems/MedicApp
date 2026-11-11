@@ -5,9 +5,9 @@
 - Serilog.AspNetCore 10.0.0 y Serilog.Sinks.File 7.0.0: Apache-2.0.
 - Bootstrap, jQuery, jQuery Validation, Unobtrusive, Select2, DataTables y SweetAlert2: MIT. Copias locales procedentes del proyecto WFMCore; sus licencias se preservan junto a los recursos en wwwroot/lib.
 - xUnit v3 y runner: Apache-2.0; Microsoft.NET.Test.Sdk y ASP.NET Core MVC Testing: MIT.
-- Insove Medical Healthcare Pro, TemplatesJungle: template comercial proporcionado por el usuario. Se usa su CSS como base visual y se adapta la navegación a Razor. La vigencia y alcance de la licencia deben cubrir la instalación del cliente. No se distribuye el archivo License Key.txt ni ninguna clave comercial. Este aviso no sustituye la licencia del proveedor.
+- Diseño visual: hojas de estilo propias (`wwwroot/css/medicapp-base.css`, `medicapp.css` y `calendar.css`). El 11 de noviembre de 2026 se retiró del código y del paquete publicado el CSS del template comercial Insove (TemplatesJungle); la aplicación ya no depende de ninguna licencia comercial de interfaz. El archivo sigue en el historial de Git anterior a esa fecha.
 
 No se cargan recursos desde CDN, Google Fonts ni servicios de terceros durante la operación de la interfaz.
 
-- FullCalendar Standard 6.1.19: MIT, archivos oficiales locales de los paquetes npm fullcalendar y @fullcalendar/core. Licencia conservada en wwwroot/lib/fullcalendar/LICENSE.md. Referencia visual: calendario de AppStack 3.3.1 bootstrap5 proporcionado por el usuario; no se copia ni publica su bundle comercial. Documentación/licencia: https://fullcalendar.io/license.
+- FullCalendar Standard 6.1.19: MIT, archivos oficiales locales de los paquetes npm fullcalendar y @fullcalendar/core. Licencia conservada en wwwroot/lib/fullcalendar/LICENSE.md. La configuración y los estilos del calendario son propios; no se incluye código, CSS ni recursos de templates comerciales. Documentación/licencia: https://fullcalendar.io/license.
 - Iconos de interfaz: sprite SVG propio, sin fuentes externas ni dependencia de servicios remotos.

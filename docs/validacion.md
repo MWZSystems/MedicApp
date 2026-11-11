@@ -9,7 +9,7 @@ Fecha: 30 de octubre de 2026. Desarrollo y pruebas locales, sin ejecución de sc
 - Modelo EF: no hay cambios pendientes respecto a la migración.
 - NuGet: la auditoría de dependencias directas y transitivas no reportó paquetes vulnerables en las fuentes consultadas.
 - Navegador: pantalla de acceso comprobada con HTTPS local y el certificado de desarrollo existente. Las páginas autenticadas se renderizaron y verificaron mediante WebApplicationFactory; no se realizó una sesión de navegador completa con usuarios reales.
-- Recursos: CSS Insove y librerías locales; páginas HTTP verificadas sin CDN ni Google Fonts. No se incluye el archivo con clave de licencia del template.
+- Recursos: CSS propio (desde el 11 de noviembre de 2026 sin el template Insove) y librerías locales; páginas HTTP verificadas sin CDN ni Google Fonts. No se incluye el archivo con clave de licencia del template.
 
 No equivalen a verificaciones realizadas: calidad Sonar, revisión por otra persona, pruebas de carga, escaneo externo, recuperación de respaldo, pruebas en QA del cliente o publicación. Deben completarse antes de declarar esta versión lista para producción según la definición de terminado del estándar.
 

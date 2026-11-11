@@ -13,3 +13,5 @@ Cada doctor opera sus citas e incapacidades; la administración técnica no obti
 Las ventanas son fechas/horas explícitas; no se replican cargas Excel/SSIS ni dependencias de dominio Windows del sistema antiguo. La reserva tiene clave de idempotencia y una transacción serializable con bloqueo corto compartido de aplicación, para evitar dobles reservas concurrentes. Debe medirse su capacidad antes de escalar a volúmenes altos.
 
 Insove se adapta a Razor y Bootstrap con su CSS original local y una capa propia de aplicación. Se preserva la procedencia del template proporcionado por el usuario. No se incluyen sus claves de licencia ni recursos remotos. Los scripts opcionales, blogs, precios y marketing no pertenecen a la aplicación operativa.
+
+Actualización, 11 de noviembre de 2026: por instrucción del usuario se retiró el CSS de Insove para que la aplicación pueda comercializarse sin depender de licencias de terceros. La base visual es propia (`wwwroot/css/medicapp-base.css`) sobre Bootstrap.
