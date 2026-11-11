@@ -4,6 +4,7 @@
 
 - Se retira el CSS del template comercial Insove (`wwwroot/lib/insove`). La base visual ahora es propia: `wwwroot/css/medicapp-base.css`, escrita para MedicApp sobre Bootstrap (MIT).
 - Sin cambios de pantallas, datos ni migraciones; se conservan colores, tipografía y componentes. `THIRD-PARTY-NOTICES.md`, `README.md` y la documentación reflejan que la interfaz ya no depende de licencias comerciales.
+- `LICENSE` deja de ser MIT: derechos reservados a nombre de MWZSystems, por decisión del usuario, para poder comercializar la aplicación. Los componentes de terceros conservan sus licencias (`THIRD-PARTY-NOTICES.md`).
 - El archivo retirado sigue en el historial de Git anterior a esta fecha.
 
 ## [Desarrollo 1.0.0] - 2026-11-10
