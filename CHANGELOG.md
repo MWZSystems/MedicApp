@@ -1,5 +1,13 @@
 # Changelog
 
+## [Desarrollo 1.0.0] - 2026-11-11 (interfaz común)
+
+- MedicApp adopta `MWZSystem.Ui` 1.2.0, la base de interfaz común de las aplicaciones de MWZSystems, con navegación superior: el menú con sus grupos, el menú de la cuenta, los avisos emergentes, la barra de carga y la ventana de confirmación son del paquete. Las opciones dependen de las mismas políticas de acceso.
+- Letra Nunito Sans con base de 18 px y mínimo de 16 px (había textos de 9 a 15 px). Se conserva el color verde azulado.
+- Los avisos conservan sus cuatro tipos y sus textos traducidos; `App.toast` y `Feedback` siguen funcionando igual. La confirmación ya no usa SweetAlert2.
+- Se retiran SweetAlert2 y las copias locales de Bootstrap y jQuery. Select2, DataTables y FullCalendar se conservan.
+- Sin cambios de datos, permisos ni migraciones.
+
 ## [Desarrollo 1.0.0] - 2026-11-11
 
 - Se retira el CSS del template comercial Insove (`wwwroot/lib/insove`). La base visual ahora es propia: `wwwroot/css/medicapp-base.css`, escrita para MedicApp sobre Bootstrap (MIT).

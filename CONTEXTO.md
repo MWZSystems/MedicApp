@@ -51,3 +51,14 @@ Validación local final: compilación Release con advertencias como errores (0 a
 - Rechaza una conexión del sitio que apunte a otra base o que use el mismo usuario que el despliegue. Mientras no exista, avisa y sigue con la de despliegue, como hasta ahora.
 - Nuevo `scripts/Configurar-ConexionSitio.ps1`: guarda la conexión del sitio en Secret Manager después de comprobar que el usuario no es dueño de la base y que ya tiene roles `app_`.
 - Lo hizo Claude por instrucción del usuario, con Codex detenido. Sin migraciones ni cambios de datos. Plan completo en `USUARIOS_SQL_POR_APLICACION.md` del repositorio Trainify.
+
+
+## Interfaz común MWZSystem.Ui — 2026-11-11
+
+MedicApp usa el paquete `MWZSystem.Ui` 1.2.0 (carpeta `packages`, versión central en `Directory.Packages.props`). `_Layout.cshtml` decide qué opciones ve la cuenta con las mismas políticas (`ClinicalRecords`, `Inventory`, `Doctor`, `Doctors`, `Access`) y delega el marcado en la estructura común con navegación superior. Se retiraron `_MainNavigation`, `_AccountMenu` y `_Feedback`.
+
+- Los textos de la estructura (avisos, confirmación, etiquetas) se pasan traducidos con `MwzTexts` desde `UiText`; para eso el paquete subió a 1.2.0.
+- `medicapp.js` lee sus textos de `#medic-labels` (antes del `<body>`), conserva `App.toast` como puente y confirma con `mwz.confirmar`.
+- Los iconos del menú son Bootstrap Icons; dentro de las pantallas sigue `medic-icon`.
+- Verificación: 153 pruebas correctas (se ajustaron las que comprobaban el marcado anterior de avisos y del menú). En local se midió la página de acceso a 1280 px y 375 px: 18 px, Nunito Sans, sin desbordes, textos traducidos.
+- No verificado: las pantallas con sesión a la vista. La base DEMO local no tiene el esquema de MedicApp y no se pudo iniciar sesión ahí; tampoco se pudieron tomar capturas.

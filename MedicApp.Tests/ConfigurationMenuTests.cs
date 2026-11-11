@@ -59,7 +59,8 @@ public partial class ConfigurationMenuTests(SqlFixture fixture) : IAsyncDisposab
         await using var factory = Factory(); using var client = Client(factory); await LoginAsync(client);
         var page = await client.GetStringAsync("/Configuration");
         foreach (var id in new[] { "general", "appointments", "documents", "clinical", "inventory", "administration", "demo" }) { Assert.Contains("id=\"" + id + "\"", page); }
-        Assert.Contains("id=\"configuration-menu\"", page);
+        // El grupo Configuración del menú común lleva a cada apartado.
+        Assert.Contains("href=\"/Configuration#general\"", page);
         using var response = await client.PostAsync("/Configuration", new FormUrlEncodedContent(Form(page))); Assert.Equal(HttpStatusCode.Redirect, response.StatusCode);
         var saved = await client.GetStringAsync("/Configuration"); Assert.Contains("Cl", saved); Assert.Contains("&lt;ejemplo&gt;", saved); Assert.DoesNotContain("<ejemplo>", saved);
         using var json = JsonDocument.Parse(await File.ReadAllBytesAsync(FileName, Ct)); Assert.Equal("UTC", json.RootElement.GetProperty("Medical").GetProperty("TimeZoneId").GetString()); Assert.Equal(8, json.RootElement.GetProperty("Documents").GetProperty("MaxDocumentsPerPatient").GetInt32());
@@ -116,7 +117,7 @@ public partial class ConfigurationMenuTests(SqlFixture fixture) : IAsyncDisposab
     [Fact]
     public async Task EmployeeCannotSeeMenuOrSaveAndAdminRequiresAntiforgery()
     {
-        await using var factory = Factory(); using var employee = Client(factory); await LoginAsync(employee, "employee"); var home = await employee.GetStringAsync("/"); Assert.DoesNotContain("id=\"configuration-menu\"", home);
+        await using var factory = Factory(); using var employee = Client(factory); await LoginAsync(employee, "employee"); var home = await employee.GetStringAsync("/"); Assert.DoesNotContain("href=\"/Configuration#general\"", home);
         using var denied = await employee.GetAsync("/Configuration"); Assert.Equal(HttpStatusCode.Redirect, denied.StatusCode); Assert.Contains("Denied", denied.Headers.Location?.ToString());
         using var admin = Client(factory); await LoginAsync(admin); var form = Form(await admin.GetStringAsync("/Configuration"));
         using var forbidden = await employee.PostAsync("/Configuration", new FormUrlEncodedContent(form)); Assert.Equal(HttpStatusCode.Redirect, forbidden.StatusCode); Assert.Contains("Denied", forbidden.Headers.Location?.ToString());

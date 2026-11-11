@@ -1,25 +1,148 @@
+@using Microsoft.AspNetCore.Authorization
 @using Microsoft.Extensions.Options
 @inject IOptions<MedicalOptions> Settings
-<!DOCTYPE html>
-<html lang="es-MX"><head><meta charset="utf-8"/><meta name="viewport" content="width=device-width, initial-scale=1"/><title>@ViewData["Title"] · @Settings.Value.DisplayName</title>
-<link rel="icon" href="~/branding/medicapp.svg" type="image/svg+xml"/>
-<link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css"/>
-<link rel="stylesheet" href="~/css/medicapp-base.css" asp-append-version="true"/>
-<link rel="stylesheet" href="~/lib/select2/select2.min.css"/>
-<link rel="stylesheet" href="~/lib/datatables/dataTables.bootstrap5.min.css"/>
-<link rel="stylesheet" href="~/css/medicapp.css" asp-append-version="true"/>
-@await RenderSectionAsync("Styles", required: false)
-</head><body data-invalid-form="@T["FeedbackInvalidForm"]" data-search-page="@T["SearchPage"]" data-no-matches="@T["NoMatches"]" data-no-records="@T["NoRecords"]" data-columns="@T["Columns"]" data-filter-column="@T["FilterColumn"]" data-clear-filters="@T["ClearFilters"]" data-confirm="@T["Confirm"]" data-cancel="@T["Cancel"]">
-<header class="app-header"><div class="container-fluid app-width header-shell">
-    <a class="brand" asp-controller="Home" asp-action="Index"><img src="~/branding/medicapp.svg" alt="" width="36" height="36"/><span class="brand-copy"><span class="brand-name">@Settings.Value.DisplayName</span><small>@T["MedicalService"]</small></span></a>
-    @if(User.Identity?.IsAuthenticated == true){<partial name="_MainNavigation"/><partial name="_AccountMenu"/>}
-</div></header>
-<main class="container-fluid app-width py-4" id="main-content">
+@inject IAuthorizationService Authorization
+@*
+    MedicApp usa la estructura común de MWZSystem.Ui con navegación superior. Aquí solo se decide qué opciones ve la
+    cuenta, con las mismas políticas de antes; el marcado del menú, los avisos y la carga son del paquete.
+*@
+@{
+    var signed = User.Identity?.IsAuthenticated == true;
+    var current = ViewContext.RouteData.Values["controller"]?.ToString();
+    var menu = new List<MwzMenuItem>();
+    if (signed)
+    {
+        var clinical = (await Authorization.AuthorizeAsync(User, "ClinicalRecords")).Succeeded;
+        var inventory = (await Authorization.AuthorizeAsync(User, "Inventory")).Succeeded;
+        var doctor = (await Authorization.AuthorizeAsync(User, "Doctor")).Succeeded;
+        var doctors = (await Authorization.AuthorizeAsync(User, "Doctors")).Succeeded;
+        var access = (await Authorization.AuthorizeAsync(User, "Access")).Succeeded;
+        string Go(string action, string controller, string? fragment = null) => Url.Action(action, controller, null, null, null, fragment)!;
 
-@RenderBody()
-</main><footer class="container-fluid app-width app-footer"><span>@Settings.Value.DisplayName</span><span><medic-icon name="clock"/>@T["TimeZone"]: @Settings.Value.TimeZoneId</span></footer>
-<div class="app-version-bar"><span>@T["Version"] <strong>v@(typeof(Program).Assembly.GetName().Version?.ToString(3))</strong></span></div>
-<partial name="_Feedback"/>
-<script src="~/lib/jquery/dist/jquery.min.js"></script><script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script><script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script><script src="~/lib/jquery-validation-unobtrusive/dist/jquery.validate.unobtrusive.min.js"></script><script src="~/lib/select2/select2.min.js"></script><script src="~/lib/select2/es.js"></script><script src="~/lib/datatables/dataTables.min.js"></script><script src="~/lib/datatables/dataTables.bootstrap5.min.js"></script><script src="~/lib/sweetalert2/sweetalert2.all.min.js"></script><script src="~/js/medicapp.js" asp-append-version="true"></script>
-@await RenderSectionAsync("Scripts", required: false)
-</body></html>
+        menu.Add(new(T["Home"], Go("Index", "Home"), "house", current == "Home"));
+
+        var care = new List<MwzMenuItem> { MwzMenuItem.Heading(T["Appointments"]), new(T["AppointmentCalendarMenu"], Go("Index", "Appointments"), "calendar3") };
+        if (doctor) { care.Add(new(T["Agenda"], Go("Index", "Agenda"), "clock")); }
+        care.Add(MwzMenuItem.Heading(T["Leaves"]));
+        care.Add(new(T["LeaveRegistry"], Go("Index", "Leaves"), "clipboard-check"));
+        care.Add(new(T["LeaveCalendar"], Go("Calendar", "Leaves"), "calendar3"));
+        care.Add(new(T["PatientFile"], Go("Record", "LeaveDocuments"), "folder2"));
+        menu.Add(new(T["MedicalCareMenu"], "", "heart-pulse", current is "Appointments" or "Leaves" or "LeaveDocuments" or "Agenda") { Children = care });
+
+        if (clinical || inventory)
+        {
+            var resources = new List<MwzMenuItem>();
+            if (clinical) { resources.Add(new(T["ClinicalRecords"], Go("Index", "ClinicalRecords"), "folder2")); }
+            if (inventory) { resources.Add(new(T["Inventory"], Go("Index", "Inventory"), "box-seam")); }
+            menu.Add(new(T["MedicalResourcesMenu"], "", "folder2", current is "ClinicalRecords" or "Inventory") { Children = resources });
+        }
+
+        if (doctors || access)
+        {
+            var administration = new List<MwzMenuItem>();
+            if (doctors) { administration.Add(new(T["Doctors"], Go("Doctors", "Admin"), "clipboard2-pulse")); }
+            if (access)
+            {
+                administration.Add(new(T["Access"], Go("Access", "Admin"), "shield-lock"));
+                administration.Add(new(T["Audit"], Go("Audit", "Admin"), "journal-text"));
+            }
+            menu.Add(new(T["ConfigurationAdministration"], "", "shield-lock", current == "Admin") { Children = administration });
+        }
+
+        if (access)
+        {
+            menu.Add(new(T["Configuration"], "", "gear", current == "Configuration")
+            {
+                Children =
+                [
+                    new(T["AllConfiguration"], Go("Index", "Configuration"), "gear"),
+                    new(T["ConfigurationGeneral"], Go("Index", "Configuration", "general"), "gear") { SeparatorBefore = true },
+                    new(T["ConfigurationAppointments"], Go("Index", "Configuration", "appointments"), "calendar3"),
+                    new(T["ConfigurationDocuments"], Go("Index", "Configuration", "documents"), "paperclip"),
+                    new(T["ClinicalRecords"], Go("Index", "Configuration", "clinical"), "folder2"),
+                    new(T["Inventory"], Go("Index", "Configuration", "inventory"), "box-seam"),
+                    new(T["ConfigurationAdministration"], Go("Index", "Configuration", "administration"), "shield-lock"),
+                    new(T["DemoData"], Go("Index", "Configuration", "demo"), "info-circle")
+                ]
+            });
+        }
+    }
+
+    // Avisos de la página. El texto guardado es una clave de UiText; se traduce aquí.
+    var messages = Feedback.Take(TempData);
+    if (!ViewData.ModelState.IsValid)
+    {
+        var general = ViewData.ModelState.Where(x => x.Key == "").SelectMany(x => x.Value!.Errors).Select(x => x.ErrorMessage).Where(x => !string.IsNullOrWhiteSpace(x)).Distinct().ToArray();
+        foreach (var message in general.Length > 0 ? general : new[] { T["FeedbackInvalidForm"].Value })
+        {
+            var item = new FeedbackMessage(FeedbackKind.Error, message);
+            if (!messages.Contains(item)) { messages.Add(item); }
+        }
+    }
+
+    ViewData[MwzShell.ViewDataKey] = new MwzShell
+    {
+        AppName = Settings.Value.DisplayName,
+        Theme = "medicapp",
+        Lang = "es-MX",
+        HomeUrl = Url.Action("Index", "Home")!,
+        Navigation = MwzNavigation.Top,
+        Menu = menu,
+        UserName = signed ? User.Identity!.Name : null,
+        UserDescription = T["MySession"],
+        UserMenu = signed
+            ? [new(T["HelpManual"], Url.Action("Index", "Help")!, "file-earmark-text"), new(T["ChangePassword"], Url.Action("ChangePassword", "Account")!, "key")]
+            : [],
+        LogoutUrl = signed ? Url.Action("Logout", "Account") : null,
+        LogoutText = T["Logout"],
+        LoginUrl = Url.Action("Login", "Account"),
+        Footer = $"{Settings.Value.DisplayName} · {T["TimeZone"]}: {Settings.Value.TimeZoneId}",
+        Notices = messages.OrderBy(x => x.Kind == FeedbackKind.Error ? 0 : 1).Select(x => new MwzNotice(x.Kind switch
+        {
+            FeedbackKind.Success => MwzNoticeKind.Success,
+            FeedbackKind.Info => MwzNoticeKind.Info,
+            FeedbackKind.Warning => MwzNoticeKind.Warning,
+            _ => MwzNoticeKind.Error
+        }, T[x.Text])).ToList(),
+        Texts = new MwzTexts
+        {
+            Menu = T["NavigationMenu"], MainMenu = T["MainNavigation"], Account = T["AccountMenu"],
+            Success = T["FeedbackSuccess"], Info = T["FeedbackInfo"], Warning = T["FeedbackWarning"], Error = T["FeedbackError"],
+            CloseNotice = T["FeedbackClose"], Cancel = T["Cancel"], Accept = T["Confirm"]
+        },
+        // Select2 4.1.0 y DataTables propios, con su integración en medicapp.js.
+        LoadSelect2 = false,
+        LoadDataTables = false
+    };
+    Layout = MwzShell.Layout;
+}
+@section Head {
+    <link rel="icon" href="~/branding/medicapp.svg" type="image/svg+xml" />
+    <link rel="stylesheet" href="~/css/medicapp-base.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/lib/select2/select2.min.css" />
+    <link rel="stylesheet" href="~/lib/datatables/dataTables.bootstrap5.min.css" />
+    <link rel="stylesheet" href="~/css/medicapp.css" asp-append-version="true" />
+    @await RenderSectionAsync("Styles", required: false)
+}
+@section Brand {
+    <img src="~/branding/medicapp.svg" alt="" width="36" height="36" />
+    <span class="brand-copy"><span class="brand-name">@Settings.Value.DisplayName</span><small>@T["MedicalService"]</small></span>
+}
+@section BeforeMain {
+    @* medicapp.js lee de aquí los textos traducidos. *@
+    <div hidden id="medic-labels" data-invalid-form="@T["FeedbackInvalidForm"]" data-search-page="@T["SearchPage"]" data-no-matches="@T["NoMatches"]" data-no-records="@T["NoRecords"]" data-columns="@T["Columns"]" data-filter-column="@T["FilterColumn"]" data-clear-filters="@T["ClearFilters"]" data-confirm="@T["Confirm"]" data-cancel="@T["Cancel"]"></div>
+}
+<div class="container-fluid app-width">
+    @RenderBody()
+</div>
+@section AfterMain {
+    <div class="app-version-bar"><span>@T["Version"] <strong>v@(typeof(Program).Assembly.GetName().Version?.ToString(3))</strong></span></div>
+}
+@section Scripts {
+    <script src="~/lib/select2/select2.min.js"></script>
+    <script src="~/lib/select2/es.js"></script>
+    <script src="~/lib/datatables/dataTables.min.js"></script>
+    <script src="~/lib/datatables/dataTables.bootstrap5.min.js"></script>
+    <script src="~/js/medicapp.js" asp-append-version="true"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+}
