@@ -1,5 +1,9 @@
 name: MedicApp CI
-on: [push, pull_request]
+on:
+  # Solo manual por decisión del usuario (2026-11-11): GitHub bloquea el ejecutor por facturación y cada push
+  # generaba un aviso de fallo. Ejecutar las pruebas en local antes de publicar.
+  # Para reactivar, restaurar: on: [push, pull_request]
+  workflow_dispatch:
 jobs:
   verify:
     runs-on: windows-latest
