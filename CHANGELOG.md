@@ -1,5 +1,9 @@
 # Changelog
 
+## [Desarrollo 1.0.0] - 2026-11-12 (segunda revisión)
+
+- Se borró la vista `Home/Privacy`, que venía de la plantilla y ninguna ruta abría.
+
 ## [Desarrollo 1.0.0] - 2026-11-11 (tablero de Inicio)
 
 - Inicio muestra un tablero según la persona: sus citas pendientes e incapacidades vigentes; para el médico, sus citas de hoy y de la semana por estado; para quien administra el servicio, las citas del mes por estado y por semana, incapacidades vigentes y médicos disponibles; y, con acceso a inventario, los artículos bajo el mínimo.
