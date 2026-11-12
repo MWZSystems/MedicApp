@@ -70,3 +70,5 @@ Subproyecto 2 (tableros y reportes); diseño y plan en el repositorio Trainify, 
 Verificación: `dotnet build MedicApp.slnx` sin errores; 157 pruebas (`DashboardTests`: empleado, médico contra otro médico, perfil de administración, inventario y pantalla por HTTP). No verificado: la pantalla en un navegador, porque la DEMO local no tiene las tablas del esquema `medic` y la aplicación no arranca ahí; tampoco una sesión real en el sitio publicado. No se agregaron descargas a Excel por privacidad clínica (decisión del usuario).
 
 Cierre: fuente `1206aae` en `Releases/v1.0.0` y `main`, publicada en site9 con `scripts/Publicar-MedicApp.ps1 -ProfilePath` (`MEDICAPP_PUBLICADO_Y_VERIFICADO`, sin migraciones). Comprobado de forma anónima: `/` redirige al acceso, `/Account/Login` y `/health` responden 200.
+
+Segunda revisión — 2026-11-12. Subproyecto 4, hallazgos acotados: se borró la vista `Home/Privacy` de la plantilla, que ninguna ruta abría. Verificación: compilación sin advertencias y 157 pruebas con LocalDB. Fuente `58c1df6` en `Releases/v1.0.0` y `main`, publicada solo en site9 (`MEDICAPP_PUBLICADO_Y_VERIFICADO`).
