@@ -1,5 +1,9 @@
 # Changelog
 
+## [Desarrollo 1.0.0] - 2026-11-12 (menú en teléfono)
+
+- Con el menú abierto en el teléfono ya se puede desplazar la lista cuando un grupo abierto la hace más alta que la pantalla; antes las últimas opciones quedaban inalcanzables hasta cerrarlo. La corrección llega con `MWZSystem.Ui` 1.4.1.
+
 ## [Desarrollo 1.0.0] - 2026-11-12 (segunda revisión)
 
 - Se borró la vista `Home/Privacy`, que venía de la plantilla y ninguna ruta abría.
