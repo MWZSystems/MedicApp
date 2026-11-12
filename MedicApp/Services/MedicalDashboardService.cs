@@ -31,7 +31,7 @@ public sealed class MedicalDashboardService(MedicDbContext db, MedicalAccess acc
     private static DateTime Utc(MedicalClock clock, DateTime local)
     {
         local = DateTime.SpecifyKind(local, DateTimeKind.Unspecified);
-        while (clock.Zone.IsInvalidTime(local)) local = local.AddHours(1);
+        while (clock.Zone.IsInvalidTime(local)) { local = local.AddHours(1); }
         return TimeZoneInfo.ConvertTimeToUtc(local, clock.Zone);
     }
 

@@ -13,7 +13,7 @@ public class DashboardTests(SqlFixture fixture)
 {
     private sealed class Accessor(string user, int person) : IHttpContextAccessor
     {
-        public HttpContext? HttpContext { get; set; } = new DefaultHttpContext { User = new ClaimsPrincipal(new ClaimsIdentity([new(ClaimTypes.NameIdentifier, user), new("personId", person.ToString())], "Test")) };
+        public HttpContext? HttpContext { get; set; } = new DefaultHttpContext { User = new ClaimsPrincipal(new ClaimsIdentity([new(ClaimTypes.NameIdentifier, user), new("personId", person.ToString(System.Globalization.CultureInfo.InvariantCulture))], "Test")) };
     }
     private static readonly MedicalClock Clock = new(Options.Create(new MedicalOptions()), TimeProvider.System);
     private static Task<MedicalDashboard> Build(MedicApp.Data.MedicDbContext db, string user, int person) =>
@@ -73,7 +73,7 @@ public class DashboardTests(SqlFixture fixture)
     public async Task Inventario_bajo_minimo_cuenta_solo_articulos_disponibles()
     {
         await using var db = fixture.Medical();
-        var before = int.Parse((await Build(db, "doctor", fixture.DoctorPersonId)).LowStock!.Value);
+        var before = int.Parse((await Build(db, "doctor", fixture.DoctorPersonId)).LowStock!.Value, System.Globalization.CultureInfo.InvariantCulture);
         var low = new StockItem { Code = "T-BAJO", Name = "Bajo mínimo", Unit = "pza", MinimumStock = 5, CurrentStock = 1, UpdatedById = "doctor" };
         var hidden = new StockItem { Code = "T-OCULTO", Name = "No disponible", Unit = "pza", MinimumStock = 5, CurrentStock = 1, Available = false, UpdatedById = "doctor" };
         var enough = new StockItem { Code = "T-BIEN", Name = "Suficiente", Unit = "pza", MinimumStock = 5, CurrentStock = 5, UpdatedById = "doctor" };
@@ -81,7 +81,7 @@ public class DashboardTests(SqlFixture fixture)
         try
         {
             var stat = (await Build(db, "doctor", fixture.DoctorPersonId)).LowStock!;
-            Assert.Equal(before + 1, int.Parse(stat.Value));
+            Assert.Equal(before + 1, int.Parse(stat.Value, System.Globalization.CultureInfo.InvariantCulture));
             Assert.Equal(MWZSystem.Ui.MwzTone.Aviso, stat.Tone);
         }
         finally { db.StockItems.RemoveRange(low, hidden, enough); await db.SaveChangesAsync(); }

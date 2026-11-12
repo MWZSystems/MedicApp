@@ -10,7 +10,7 @@ public class HomeController(MedicalDashboardService dashboard, IStringLocalizer<
     {
         // Si el tablero falla, Inicio se muestra sin él.
         try { return View(await dashboard.BuildAsync(key => text[key], ct)); }
-        catch (Exception error) when (error is not OperationCanceledException and not MedicalRuleException) { log.LogError(error, "No fue posible calcular el tablero de Inicio."); return View((MedicalDashboard?)null); }
+        catch (Exception error) when (error is not OperationCanceledException and not MedicalRuleException) { log.DashboardFailed(error); return View((MedicalDashboard?)null); }
     }
     [AllowAnonymous] public IActionResult Error() { Response.StatusCode = 500; this.Error("UnexpectedError"); return View(); }
 }
