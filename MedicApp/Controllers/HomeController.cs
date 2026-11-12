@@ -1,21 +1,16 @@
-using MedicApp.Data;
-using MedicApp.Models.Entities;
 using MedicApp.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Localization;
 namespace MedicApp.Controllers;
 
-public class HomeController(MedicDbContext db, MedicalAccess access, MedicalClock clock) : Controller
+public class HomeController(MedicalDashboardService dashboard, IStringLocalizer<UiText> text, ILogger<HomeController> log) : Controller
 {
     public async Task<IActionResult> Index(CancellationToken ct)
     {
-        var person = access.PersonId;
-        var doctor = await access.DoctorIdAsync(ct);
-        ViewBag.Appointments = await db.Appointments.AsNoTracking().CountAsync(x => x.Available && (x.PersonId == person || x.DoctorId == doctor) && x.Status == AppointmentStatus.Scheduled && x.EndsAt > clock.UtcNow, ct);
-        ViewBag.Leaves = await db.Leaves.AsNoTracking().CountAsync(x => x.Available && (x.PersonId == person || x.DoctorId == doctor) && x.Status == LeaveStatus.Approved && x.EndsAt > clock.UtcNow, ct);
-        ViewBag.IsDoctor = doctor != null;
-        return View();
+        // Si el tablero falla, Inicio se muestra sin él.
+        try { return View(await dashboard.BuildAsync(key => text[key], ct)); }
+        catch (Exception error) when (error is not OperationCanceledException and not MedicalRuleException) { log.LogError(error, "No fue posible calcular el tablero de Inicio."); return View((MedicalDashboard?)null); }
     }
     [AllowAnonymous] public IActionResult Error() { Response.StatusCode = 500; this.Error("UnexpectedError"); return View(); }
 }

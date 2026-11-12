@@ -887,4 +887,18 @@
   <data name="ListEntityFilter" xml:space="preserve"><value>Entidad</value></data>
   <data name="ListOperationFilter" xml:space="preserve"><value>Operación</value></data>
   <data name="ListSoonExpiry" xml:space="preserve"><value>Próximos a caducar</value></data>
+  <data name="DashToday" xml:space="preserve"><value>Citas de hoy</value></data>
+  <data name="DashWeek" xml:space="preserve"><value>Citas de esta semana</value></data>
+  <data name="DashMyWeek" xml:space="preserve"><value>Tus citas de la semana por estado</value></data>
+  <data name="DashMonth" xml:space="preserve"><value>Citas del mes</value></data>
+  <data name="DashDoctors" xml:space="preserve"><value>Médicos disponibles</value></data>
+  <data name="DashClinicMonth" xml:space="preserve"><value>Citas del mes por estado</value></data>
+  <data name="DashClinicWeeks" xml:space="preserve"><value>Citas por semana</value></data>
+  <data name="DashWeekOf" xml:space="preserve"><value>Semana del {0:dd/MM}</value></data>
+  <data name="DashLowStock" xml:space="preserve"><value>Artículos bajo el mínimo</value></data>
+  <data name="DashNoAppointments" xml:space="preserve"><value>No hay citas en el periodo.</value></data>
+  <data name="DashMineTitle" xml:space="preserve"><value>Lo tuyo</value></data>
+  <data name="DashDoctorTitle" xml:space="preserve"><value>Tu consulta</value></data>
+  <data name="DashClinicTitle" xml:space="preserve"><value>El servicio médico</value></data>
+  <data name="DashClinicNote" xml:space="preserve"><value>Solo totales por estado y fecha; no incluyen datos clínicos.</value></data>
 </root>

@@ -54,6 +54,7 @@ builder.Services.AddDataProtection().PersistKeysToFileSystem(new DirectoryInfo(P
 builder.Services.AddScoped<IdentityService>();
 builder.Services.AddScoped<MedicalAccess>();
 builder.Services.AddScoped<MedicalService>();
+builder.Services.AddScoped<MedicalDashboardService>();
 builder.Services.AddScoped<ListReader>();
 builder.Services.AddScoped<CalendarReader>();
 builder.Services.AddScoped<LeaveCalendarReader>();

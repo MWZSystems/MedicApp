@@ -62,3 +62,9 @@ MedicApp usa el paquete `MWZSystem.Ui` 1.2.0 (carpeta `packages`, versión centr
 - Los iconos del menú son Bootstrap Icons; dentro de las pantallas sigue `medic-icon`.
 - Verificación: 153 pruebas correctas (se ajustaron las que comprobaban el marcado anterior de avisos y del menú). En local se midió la página de acceso a 1280 px y 375 px: 18 px, Nunito Sans, sin desbordes, textos traducidos.
 - No verificado: las pantallas con sesión a la vista. La base DEMO local no tiene el esquema de MedicApp y no se pudo iniciar sesión ahí; tampoco se pudieron tomar capturas.
+
+## Tablero de Inicio — 2026-11-11
+
+Subproyecto 2 (tableros y reportes); diseño y plan en el repositorio Trainify, `docs/superpowers`. `MedicalDashboardService` calcula solo conteos por estado y fecha en SQL: lo propio (misma definición que tenía Inicio), la consulta del médico (hoy y semana), la clínica para perfiles `ManageAccess` o `ManageDoctors` (mes por estado, seis semanas, incapacidades vigentes, médicos disponibles) y artículos bajo el mínimo para quien usa inventario. No consulta expedientes, visitas ni documentos. Si falla, Inicio se muestra sin tablero y se registra el error. Textos nuevos en `UiText.resx` (claves `Dash*`); la aplicación solo sirve `es-MX`, no hay recurso en inglés. Se consume `MWZSystem.Ui` 1.4.0. Sin migraciones.
+
+Verificación: `dotnet build MedicApp.slnx` sin errores; 157 pruebas (`DashboardTests`: empleado, médico contra otro médico, perfil de administración, inventario y pantalla por HTTP). No verificado: la pantalla en un navegador, porque la DEMO local no tiene las tablas del esquema `medic` y la aplicación no arranca ahí; tampoco una sesión real en el sitio publicado. No se agregaron descargas a Excel por privacidad clínica (decisión del usuario).

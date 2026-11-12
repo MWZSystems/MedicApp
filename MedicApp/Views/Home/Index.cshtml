@@ -1,4 +1,28 @@
+@model MedicalDashboard?
 @{ ViewData["Title"] = T["Home"]; }
 <section class="hero"><div class="hero-emblem"><medic-icon name="stethoscope"/></div><span class="eyebrow">@T["MedicalService"]</span><h1>@T["Welcome"]</h1><p>@T["WelcomeDetail"]</p><a class="btn btn-primary" asp-controller="Appointments" asp-action="Book"><medic-icon name="calendar"/>@T["Book"]</a></section>
-<div class="stats"><section class="panel"><span class="stat-label"><span class="stat-emblem"><medic-icon name="calendar"/></span>@T["PendingAppointments"]</span><div class="stat-number">@ViewBag.Appointments</div></section><section class="panel"><span class="stat-label"><span class="stat-emblem"><medic-icon name="file-check"/></span>@T["ActiveLeaves"]</span><div class="stat-number">@ViewBag.Leaves</div></section></div>
+@if (Model != null)
+{
+    <section aria-labelledby="dash-mine"><h2 id="dash-mine" class="h5">@T["DashMineTitle"]</h2>
+        <div class="mwz-tablero">@foreach (var stat in Model.Mine) { <partial name="MwzUi/_Indicador" model="stat"/> }</div>
+    </section>
+    @if (Model.Doctor.Count > 0 || Model.LowStock != null)
+    {
+        <section aria-labelledby="dash-doctor"><h2 id="dash-doctor" class="h5">@T["DashDoctorTitle"]</h2>
+            <div class="mwz-tablero">@foreach (var stat in Model.Doctor) { <partial name="MwzUi/_Indicador" model="stat"/> }@if (Model.LowStock != null) { <partial name="MwzUi/_Indicador" model="Model.LowStock"/> }</div>
+            @if (Model.DoctorWeek != null) { <div class="mwz-tablero"><div class="mwz-ancho-2"><partial name="MwzUi/_Barras" model="Model.DoctorWeek"/></div></div> }
+        </section>
+    }
+    @if (Model.Clinic.Count > 0)
+    {
+        <section aria-labelledby="dash-clinic"><h2 id="dash-clinic" class="h5">@T["DashClinicTitle"]</h2>
+            <div class="mwz-tablero">@foreach (var stat in Model.Clinic) { <partial name="MwzUi/_Indicador" model="stat"/> }</div>
+            <div class="mwz-tablero">
+                @if (Model.ClinicMonth != null) { <div class="mwz-ancho-2"><partial name="MwzUi/_Barras" model="Model.ClinicMonth"/></div> }
+                @if (Model.ClinicWeeks != null) { <div class="mwz-ancho-2"><partial name="MwzUi/_Serie" model="Model.ClinicWeeks"/></div> }
+            </div>
+            <p class="text-muted">@T["DashClinicNote"]</p>
+        </section>
+    }
+}
 <p class="text-muted"><medic-icon name="shield"/>@T["ClinicalPrivacy"]</p>

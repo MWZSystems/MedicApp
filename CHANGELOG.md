@@ -1,5 +1,11 @@
 # Changelog
 
+## [Desarrollo 1.0.0] - 2026-11-11 (tablero de Inicio)
+
+- Inicio muestra un tablero según la persona: sus citas pendientes e incapacidades vigentes; para el médico, sus citas de hoy y de la semana por estado; para quien administra el servicio, las citas del mes por estado y por semana, incapacidades vigentes y médicos disponibles; y, con acceso a inventario, los artículos bajo el mínimo.
+- Son solo conteos por estado y fecha. El tablero no consulta expedientes ni visitas clínicas, así que no muestra diagnósticos ni motivos de consulta.
+- `MWZSystem.Ui` 1.4.0.
+
 ## [Desarrollo 1.0.0] - 2026-11-11 (interfaz común)
 
 - MedicApp adopta `MWZSystem.Ui` 1.2.0, la base de interfaz común de las aplicaciones de MWZSystems, con navegación superior: el menú con sus grupos, el menú de la cuenta, los avisos emergentes, la barra de carga y la ventana de confirmación son del paquete. Las opciones dependen de las mismas políticas de acceso.
