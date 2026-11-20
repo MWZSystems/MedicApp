@@ -1,4 +1,5 @@
 @model ConfigurationForm
+@{ MwzShell.Use(Context, MwzLibraries.Validation | MwzLibraries.Select2); }
 @{ViewData["Title"] = T["Configuration"]; var zones=(string[])ViewBag.TimeZones;}
 <div class="page-heading"><div><h1><medic-icon name="settings"/>@T["ApplicationConfiguration"]</h1><p>@T["AllConfigurationHelp"]</p></div></div>
 <div class="configuration-content">

@@ -1,4 +1,5 @@
 @model ListPage<Appointment>
+@{ MwzShell.Use(Context, MwzLibraries.Select2); }
 @{ ViewData["Title"] = T["Appointments"]; }
 <div class="page-heading"><h1>@T["Appointments"]</h1><a class="btn btn-primary" asp-action="Book">+ @T["Book"]</a></div><section class="panel"><partial name="_Range" model="Model"/><partial name="_ListSearch" model="@(new SearchBox(T["ListPeopleSearch"].Value, ""))"/><partial name="_ListFilters"/><div class="table-responsive"><table class="table"><thead><tr><th><medic-icon name="user"/>@T["Employee"]</th><th>@T["Doctor"]</th><th><medic-icon name="calendar"/>@T["Start"]</th><th><medic-icon name="calendar"/>@T["End"]</th><th><medic-icon name="info"/>@T["Status"]</th><th>@T["Actions"]</th></tr></thead><tbody>@if(Model.Items.Count==0){<tr><td colspan="6">@T["ListNoMatches"]</td></tr>}
 @foreach(var row in Model.Items){<tr><td>@Model.People.GetValueOrDefault(row.PersonId)</td><td>@Model.Doctors.GetValueOrDefault(row.DoctorId)</td><td>@Clock.Local(row.StartsAt).ToString("dd/MM/yyyy HH:mm")</td><td>@Clock.Local(row.EndsAt).ToString("HH:mm")</td><td><span class="badge status-@row.Status">@T[row.Status.ToString()]</span></td><td>

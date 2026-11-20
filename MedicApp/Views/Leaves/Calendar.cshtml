@@ -1,4 +1,5 @@
 @model LeaveCalendarPage
+@{ MwzShell.Use(Context, MwzLibraries.Select2); }
 @{ViewData["Title"] = T["LeaveCalendar"];}
 @section Styles {<link rel="stylesheet" href="~/css/calendar.css" asp-append-version="true"/>}
 <div class="page-heading"><div><h1><medic-icon name="calendar"/>@T["LeaveCalendar"]</h1><p class="text-muted">@T["LeaveCalendarHelp"]</p></div></div>

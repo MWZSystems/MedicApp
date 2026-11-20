@@ -1,6 +1,7 @@
 @using Microsoft.AspNetCore.Authorization
 @inject IAuthorizationService Authorization
 @model ClinicalRecordPage
+@{ MwzShell.Use(Context, MwzLibraries.Validation | MwzLibraries.Select2); }
 @{ViewData["Title"]=T["ClinicalRecords"];}
 <div class="page-heading"><div><h1><medic-icon name="folder"/>@T["ClinicalRecords"]</h1><p>@T["ClinicalRecordsHelp"]</p></div></div>
 <section class="panel"><form method="get" class="row g-3 align-items-end"><div class="col-md-9"><label for="clinical-person" class="form-label"><medic-icon name="search"/>@T["SearchLeavePerson"]</label><select id="clinical-person" name="personId" class="form-select" data-search-url="@Url.Action("People")" required><option value="">@T["SearchLeavePersonHint"]</option>@if(Model.Person!=null){<option value="@Model.Person.Id" selected>@Model.Person.Label</option>}</select></div><div class="col-md-3"><button class="btn btn-primary w-100"><medic-icon name="folder"/>@T["ShowClinicalRecord"]</button></div></form></section>

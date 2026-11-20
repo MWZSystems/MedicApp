@@ -105,6 +105,25 @@ public partial class HttpTests(SqlFixture fixture)
     }
 
     [Fact]
+    public async Task Pages_LoadOnlyTheLibrariesTheyUse()
+    {
+        await using var factory = Factory(); using var client = Client(factory);
+        var login = await client.GetStringAsync("/Account/Login");
+        Assert.Contains("jquery.validate.min.js", login);
+        Assert.DoesNotContain("select2", login);
+        await LoginAsync(client, "doctor");
+        var home = await client.GetStringAsync("/");
+        Assert.DoesNotContain("jquery.validate", home);
+        Assert.DoesNotContain("select2", home);
+        var list = await client.GetStringAsync("/Appointments/List");
+        Assert.Contains("/lib/select2/select2.min.js", list);
+        Assert.DoesNotContain("jquery.validate", list);
+        var create = await client.GetStringAsync("/Leaves/Create");
+        Assert.Contains("/lib/select2/select2.min.js", create);
+        Assert.Contains("jquery.validate.min.js", create);
+    }
+
+    [Fact]
     public async Task Labor_AuthorizedReader_ReceivesOnlyLaborContract()
     {
         await using var factory = Factory();

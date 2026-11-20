@@ -1,5 +1,10 @@
 # Changelog
 
+## [Desarrollo 1.0.0] - 2026-11-20 (MWZSystem.Ui 1.5.0)
+
+- `MWZSystem.Ui` 1.5.0 con `Libraries = MwzLibraries.None`: cada vista pide lo que usa. jQuery Validation solo en las 10 vistas con formularios validados y Select2 solo en las 10 con listas desplegables.
+- Inicio y Auditoría bajan 10 archivos en lugar de 16 (95 KB comprimidos en lugar de 123); un listado con filtros, 13 (114 KB); Registrar incapacidad conserva los 16 porque usa las dos librerías.
+
 ## [Desarrollo 1.0.0] - 2026-11-20 (Modern Web Guidance)
 
 - Archivos estáticos con `MapStaticAssets`: se sirven comprimidos (Brotli/gzip) y con caché revalidable; el HTML y los datos siguen con `no-store`. Antes CSS, JS y fuentes se descargaban completos en cada página.

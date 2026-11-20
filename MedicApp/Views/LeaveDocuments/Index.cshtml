@@ -1,4 +1,5 @@
 @model EvidencePage
+@{ MwzShell.Use(Context, MwzLibraries.Validation); }
 @{ViewData["Title"]=T["LeaveEvidence"];}
 <div class="page-heading"><div><h1><medic-icon name="document"/>@T["LeaveEvidence"]</h1><p>@Model.Person</p></div></div>
 @if(PersonalSampleDataService.IsSample(Model.Leave.Reference)){<p class="alert alert-info" role="status">@T["VisualSampleNotice"]</p>}

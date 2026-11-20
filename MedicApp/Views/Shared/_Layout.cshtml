@@ -80,7 +80,7 @@
         }
     }
 
-    ViewData[MwzShell.ViewDataKey] = new MwzShell
+    var shell = new MwzShell
     {
         AppName = Settings.Value.DisplayName,
         Theme = "medicapp",
@@ -110,16 +110,20 @@
             Success = T["FeedbackSuccess"], Info = T["FeedbackInfo"], Warning = T["FeedbackWarning"], Error = T["FeedbackError"],
             CloseNotice = T["FeedbackClose"], Cancel = T["Cancel"], Accept = T["Confirm"]
         },
-        // Select2 4.1.0 propio, con su integración en medicapp.js. Los listados se paginan en el servidor, sin DataTables.
+        // Cada vista pide con MwzShell.Use lo que usa: Validation en sus formularios y Select2 donde hay listas.
+        // Select2 4.1.0 es la copia propia, con su integración en medicapp.js. Los listados se paginan en el servidor, sin DataTables.
+        Libraries = MwzLibraries.None,
         LoadSelect2 = false,
         LoadDataTables = false
     };
+    ViewData[MwzShell.ViewDataKey] = shell;
+    var select2 = shell.Uses(Context, MwzLibraries.Select2);
     Layout = MwzShell.Layout;
 }
 @section Head {
     <link rel="icon" href="~/branding/medicapp.svg" type="image/svg+xml" />
     <link rel="stylesheet" href="~/css/medicapp-base.css" asp-append-version="true" />
-    <link rel="stylesheet" href="~/lib/select2/select2.min.css" />
+    @if (select2) { <link rel="stylesheet" href="~/lib/select2/select2.min.css" /> }
     <link rel="stylesheet" href="~/css/medicapp.css" asp-append-version="true" />
     @await RenderSectionAsync("Styles", required: false)
 }
@@ -138,8 +142,11 @@
     <div class="app-version-bar"><span>@T["Version"] <strong>v@(typeof(Program).Assembly.GetName().Version?.ToString(3))</strong></span></div>
 }
 @section Scripts {
-    <script src="~/lib/select2/select2.min.js"></script>
-    <script src="~/lib/select2/es.js"></script>
+    @if (select2)
+    {
+        <script src="~/lib/select2/select2.min.js"></script>
+        <script src="~/lib/select2/es.js"></script>
+    }
     <script src="~/js/medicapp.js" asp-append-version="true"></script>
     @await RenderSectionAsync("Scripts", required: false)
 }

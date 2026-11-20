@@ -84,3 +84,15 @@ Revisión contra la guía de Chrome (developer.chrome.com/docs/modern-web-guidan
 - Prueba `Login_StaticAssetsAreCacheableAndRulesAreSpanish`.
 
 Pendientes propuestos, sin aplicar: Select2 solo en las páginas que lo usan; CSP sin `'unsafe-inline'` (probar antes en modo reporte), `Permissions-Policy`, `Cross-Origin-Opener-Policy`, quitar `X-Powered-By` y HSTS de un año; `<dialog>` en los detalles de citas e incapacidades; `<meta name="color-scheme">` en MWZSystem.Ui (paquete compartido).
+
+## Librerías por página — MWZSystem.Ui 1.5.0, 2026-11-20
+
+`_Layout` usa `Libraries = MwzLibraries.None` y sigue con `LoadSelect2 = false` (copia propia 4.1.0) y `LoadDataTables = false`. La copia propia de Select2 se carga solo si `shell.Uses(Context, MwzLibraries.Select2)`. Cada vista pide lo suyo en su segunda línea con `MwzShell.Use(Context, ...)`:
+
+- Validation: Account/Login, Account/ChangePassword, Agenda/Index, ClinicalRecords/Create, Inventory/Create, LeaveDocuments/Index.
+- Select2: Admin/Access, Admin/Doctors, Appointments/List, Leaves/Calendar, Leaves/Index, LeaveDocuments/Record.
+- Las dos: ClinicalRecords/Index, Configuration/Index, Inventory/Item, Leaves/Create.
+
+Una vista nueva con `asp-for` validado o con un `<select>` sin `data-select2="off"` debe pedir su librería; sin ella el formulario sigue validándose en el servidor y el `<select>` queda nativo. Prueba `Pages_LoadOnlyTheLibrariesTheyUse`.
+
+Medido con las páginas renderizadas en pruebas y los tamaños del paquete publicado (comprimidos con Brotli): Inicio y Auditoría pasan de 16 archivos y 123 KB a 10 y 95 KB; Login de 17 y 123 KB a 14 y 105 KB; listados con filtros a 13 y 114 KB; Registrar incapacidad se queda en 16 y 123 KB. En el servidor de pruebas (`WebApplicationFactory`, ambiente Testing) los archivos `_content` de los paquetes responden 500 porque no están en disco; en el paquete publicado sí están y se sirven comprimidos.

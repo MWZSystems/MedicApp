@@ -1,4 +1,5 @@
 @model LoginForm
+@{ MwzShell.Use(Context, MwzLibraries.Validation); }
 @{ ViewData["Title"] = T["Login"]; }
 <section class="panel login-panel"><div class="access-emblem"><medic-icon name="shield"/></div><span class="eyebrow">@T["MedicalService"]</span><h1>@T["Login"]</h1>
 <form method="post"><div asp-validation-summary="ModelOnly" role="alert"></div><input type="hidden" asp-for="ReturnUrl"/>

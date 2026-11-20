@@ -1,4 +1,5 @@
 @model ClinicalVisitForm
+@{ MwzShell.Use(Context, MwzLibraries.Validation); }
 @{ViewData["Title"]=T["AddClinicalVisit"];var person=(LeaveCalendarPerson)ViewBag.Person;}
 <h1><medic-icon name="stethoscope"/>@T["AddClinicalVisit"]</h1><p>@person.Label</p><p class="alert alert-info">@T["ClinicalOptionalHelp"]</p>
 <form method="post" class="panel"><div asp-validation-summary="All" class="text-danger"></div><input asp-for="PersonId" type="hidden"/><input asp-for="RequestKey" type="hidden"/>
