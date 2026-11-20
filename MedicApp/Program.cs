@@ -86,6 +86,7 @@ builder.Services.AddControllersWithViews(o =>
     o.Filters.Add(new AutoValidateAntiforgeryTokenAttribute());
     o.Filters.Add<AccountSafetyFilter>();
     o.Filters.Add<FeedbackResultFilter>();
+    o.ModelMetadataDetailsProviders.Add(new ValidationMessages());
 }).AddDataAnnotationsLocalization(o => o.DataAnnotationLocalizerProvider = (_, factory) => factory.Create(typeof(MedicApp.UiText)));
 builder.Services.AddExceptionHandler<MedicalExceptionHandler>();
 builder.Services.AddProblemDetails();
@@ -192,15 +193,20 @@ app.Use(async (context, next) =>
     context.Response.Headers.XFrameOptions = "DENY";
     context.Response.Headers["Referrer-Policy"] = "same-origin";
     context.Response.Headers.ContentSecurityPolicy = "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src 'self'; frame-ancestors 'none'; base-uri 'self'; form-action 'self'";
-    context.Response.Headers.CacheControl = "no-store";
+    // Pages and data are never cached; static assets keep the caching and compression set by MapStaticAssets.
+    context.Response.OnStarting(() =>
+    {
+        if (string.IsNullOrEmpty(context.Response.Headers.CacheControl)) { context.Response.Headers.CacheControl = "no-store"; }
+        return Task.CompletedTask;
+    });
     using (Serilog.Context.LogContext.PushProperty("TraceId", context.TraceIdentifier)) { await next(); }
 });
 app.UseRequestLocalization();
-app.UseStaticFiles();
 app.UseRouting();
 app.UseAuthentication();
 app.UseAuthorization();
+app.MapStaticAssets().AllowAnonymous();
 app.MapHealthChecks("/health").AllowAnonymous();
-app.MapControllerRoute("default", "{controller=Home}/{action=Index}/{id?}");
+app.MapControllerRoute("default", "{controller=Home}/{action=Index}/{id?}").WithStaticAssets();
 app.Run();
 public partial class Program;

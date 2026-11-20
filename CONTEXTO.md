@@ -72,3 +72,15 @@ Verificación: `dotnet build MedicApp.slnx` sin errores; 157 pruebas (`Dashboard
 Cierre: fuente `1206aae` en `Releases/v1.0.0` y `main`, publicada en site9 con `scripts/Publicar-MedicApp.ps1 -ProfilePath` (`MEDICAPP_PUBLICADO_Y_VERIFICADO`, sin migraciones). Comprobado de forma anónima: `/` redirige al acceso, `/Account/Login` y `/health` responden 200.
 
 Segunda revisión — 2026-11-12. Subproyecto 4, hallazgos acotados: se borró la vista `Home/Privacy` de la plantilla, que ninguna ruta abría. Verificación: compilación sin advertencias y 157 pruebas con LocalDB. Fuente `58c1df6` en `Releases/v1.0.0` y `main`, publicada solo en site9 (`MEDICAPP_PUBLICADO_Y_VERIFICADO`).
+
+## Modern Web Guidance — 2026-11-20
+
+Revisión contra la guía de Chrome (developer.chrome.com/docs/modern-web-guidance; la CLI `npx modern-web-guidance` no se ejecutó en este equipo). Aplicado por indicación del usuario (propuestas 1 a 4):
+
+- `Program.cs`: `MapStaticAssets().AllowAnonymous()` reemplaza `UseStaticFiles` (la política de respaldo exige sesión, por eso el AllowAnonymous). El middleware pone `no-store` solo si la respuesta no trae su propio Cache-Control, así que páginas, descargas y `/health` siguen sin caché. El paquete incluye 62 archivos .br y 62 .gz.
+- DataTables retirado del layout y de `wwwroot/lib`; Select2 y FullCalendar se conservan.
+- `Services/ValidationMessages.cs` da claves de UiText (`ValidationMaxLength`, `ValidationMinLength`, `ValidationRange`, `ValidationChoose`) a las reglas de largo y rango sin `ErrorMessage`. No asigna nada a otras reglas: asignar null hace que el atributo falle.
+- `medicapp.js`: un aviso por envío inválido.
+- Prueba `Login_StaticAssetsAreCacheableAndRulesAreSpanish`.
+
+Pendientes propuestos, sin aplicar: Select2 solo en las páginas que lo usan; CSP sin `'unsafe-inline'` (probar antes en modo reporte), `Permissions-Policy`, `Cross-Origin-Opener-Policy`, quitar `X-Powered-By` y HSTS de un año; `<dialog>` en los detalles de citas e incapacidades; `<meta name="color-scheme">` en MWZSystem.Ui (paquete compartido).

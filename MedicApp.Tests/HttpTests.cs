@@ -88,6 +88,23 @@ public partial class HttpTests(SqlFixture fixture)
     }
 
     [Fact]
+    public async Task Login_StaticAssetsAreCacheableAndRulesAreSpanish()
+    {
+        await using var factory = Factory(); using var client = Client(factory);
+        using var login = await client.GetAsync("/Account/Login");
+        var html = await login.Content.ReadAsStringAsync();
+        Assert.Contains("no-store", login.Headers.CacheControl?.ToString());
+        Assert.DoesNotContain("datatables", html, StringComparison.OrdinalIgnoreCase);
+        Assert.Contains("Escribe como máximo 256 caracteres.", System.Net.WebUtility.HtmlDecode(html));
+        var css = Regex.Match(html, "href=\"(/css/medicapp[^\"]*\\.css[^\"]*)\"").Groups[1].Value;
+        Assert.NotEmpty(css);
+        using var asset = await client.GetAsync(css);
+        Assert.Equal(HttpStatusCode.OK, asset.StatusCode);
+        Assert.DoesNotContain("no-store", asset.Headers.CacheControl?.ToString() ?? "");
+        Assert.True(asset.Headers.Contains("Content-Security-Policy"));
+    }
+
+    [Fact]
     public async Task Labor_AuthorizedReader_ReceivesOnlyLaborContract()
     {
         await using var factory = Factory();

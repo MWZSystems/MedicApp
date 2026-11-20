@@ -33,6 +33,14 @@ window.App = window.App || {};
   const mostrar = { success: mwz.aviso, info: mwz.info, warning: mwz.advertencia, error: mwz.error };
   window.App.toast = (kind, text) => { if (typeof text === "string" && text.trim()) { (mostrar[kind] || mwz.info)(text.trim()); } };
   // Unobtrusive validation cancels the POST, so report client-side invalid forms here too.
-  document.addEventListener("invalid", () => window.App.toast("error", labels.invalidForm), true);
-  if (window.jQuery) { jQuery("form").on("invalid-form.validate", () => window.App.toast("error", labels.invalidForm)); }
+  // Each invalid field raises its own event; one summary per submit is enough, the field messages say the rest.
+  let reported = false;
+  const reportInvalid = () => {
+    if (reported) { return; }
+    reported = true;
+    setTimeout(() => { reported = false; });
+    window.App.toast("error", labels.invalidForm);
+  };
+  document.addEventListener("invalid", reportInvalid, true);
+  if (window.jQuery) { jQuery("form").on("invalid-form.validate", reportInvalid); }
 })();

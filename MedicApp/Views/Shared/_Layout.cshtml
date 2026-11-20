@@ -110,7 +110,7 @@
             Success = T["FeedbackSuccess"], Info = T["FeedbackInfo"], Warning = T["FeedbackWarning"], Error = T["FeedbackError"],
             CloseNotice = T["FeedbackClose"], Cancel = T["Cancel"], Accept = T["Confirm"]
         },
-        // Select2 4.1.0 y DataTables propios, con su integración en medicapp.js.
+        // Select2 4.1.0 propio, con su integración en medicapp.js. Los listados se paginan en el servidor, sin DataTables.
         LoadSelect2 = false,
         LoadDataTables = false
     };
@@ -120,7 +120,6 @@
     <link rel="icon" href="~/branding/medicapp.svg" type="image/svg+xml" />
     <link rel="stylesheet" href="~/css/medicapp-base.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/lib/select2/select2.min.css" />
-    <link rel="stylesheet" href="~/lib/datatables/dataTables.bootstrap5.min.css" />
     <link rel="stylesheet" href="~/css/medicapp.css" asp-append-version="true" />
     @await RenderSectionAsync("Styles", required: false)
 }
@@ -130,7 +129,7 @@
 }
 @section BeforeMain {
     @* medicapp.js lee de aquí los textos traducidos. *@
-    <div hidden id="medic-labels" data-invalid-form="@T["FeedbackInvalidForm"]" data-search-page="@T["SearchPage"]" data-no-matches="@T["NoMatches"]" data-no-records="@T["NoRecords"]" data-columns="@T["Columns"]" data-filter-column="@T["FilterColumn"]" data-clear-filters="@T["ClearFilters"]" data-confirm="@T["Confirm"]" data-cancel="@T["Cancel"]"></div>
+    <div hidden id="medic-labels" data-invalid-form="@T["FeedbackInvalidForm"]" data-confirm="@T["Confirm"]" data-cancel="@T["Cancel"]"></div>
 }
 <div class="container-fluid app-width">
     @RenderBody()
@@ -141,8 +140,6 @@
 @section Scripts {
     <script src="~/lib/select2/select2.min.js"></script>
     <script src="~/lib/select2/es.js"></script>
-    <script src="~/lib/datatables/dataTables.min.js"></script>
-    <script src="~/lib/datatables/dataTables.bootstrap5.min.js"></script>
     <script src="~/js/medicapp.js" asp-append-version="true"></script>
     @await RenderSectionAsync("Scripts", required: false)
 }

@@ -1,5 +1,12 @@
 # Changelog
 
+## [Desarrollo 1.0.0] - 2026-11-20 (Modern Web Guidance)
+
+- Archivos estáticos con `MapStaticAssets`: se sirven comprimidos (Brotli/gzip) y con caché revalidable; el HTML y los datos siguen con `no-store`. Antes CSS, JS y fuentes se descargaban completos en cada página.
+- Retirado DataTables (145 KB por página): ya no se usaba desde la paginación en el servidor.
+- Las reglas de largo y rango sin mensaje propio muestran textos en español («Escribe como máximo N caracteres.», «Elige una opción.»), también en el login.
+- Un solo aviso de formulario inválido por envío, en lugar de uno por cada campo.
+
 ## [Desarrollo 1.0.0] - 2026-11-12 (menú en teléfono)
 
 - Con el menú abierto en el teléfono ya se puede desplazar la lista cuando un grupo abierto la hace más alta que la pantalla; antes las últimas opciones quedaban inalcanzables hasta cerrarlo. La corrección llega con `MWZSystem.Ui` 1.4.1.

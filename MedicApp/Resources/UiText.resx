@@ -35,6 +35,18 @@
   <data name="Required" xml:space="preserve">
     <value>Este campo es obligatorio.</value>
   </data>
+  <data name="ValidationMaxLength" xml:space="preserve">
+    <value>Escribe como máximo {1} caracteres.</value>
+  </data>
+  <data name="ValidationMinLength" xml:space="preserve">
+    <value>Escribe al menos {1} caracteres.</value>
+  </data>
+  <data name="ValidationRange" xml:space="preserve">
+    <value>Escribe un valor entre {1} y {2}.</value>
+  </data>
+  <data name="ValidationChoose" xml:space="preserve">
+    <value>Elige una opción.</value>
+  </data>
   <data name="PasswordLength" xml:space="preserve">
     <value>Usa al menos 12 caracteres.</value>
   </data>
