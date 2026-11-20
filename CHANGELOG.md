@@ -1,5 +1,13 @@
 # Changelog
 
+## [Desarrollo 1.0.0] - 2026-11-20 (pantalla de carga)
+
+- `MWZSystem.Ui` 1.6.0 (incluye la corrección de 1.5.1): al navegar o guardar sale la barra a los 300 ms y, si la espera pasa de un segundo, un recuadro con el mensaje. Los botones de envío se desactivan, así que no hay doble envío.
+- Los 21 formularios que guardan dicen qué hacen («Guardando la incapacidad…», «Subiendo el documento al expediente clínico…», «Reservando la cita…», «Iniciando sesión…»…), igual que las búsquedas y la apertura de expedientes. Textos en `UiText.resx`.
+- Las descargas (documentos del expediente clínico, documentos de incapacidad, guía de uso) llevan `data-mwz-descarga` y no dejan la página en carga.
+- Los calendarios de citas, incapacidades y datos DEMO, la reserva rápida y el cambio de cita marcan su parte como ocupada con `mwz.ocupado` mientras esperan al servidor.
+- Pruebas: `LoadingScreenTests` (versión servida, mensajes en todo POST, textos en español, descargas, `mwz.ocupado`) y una prueba de páginas renderizadas.
+
 ## [Desarrollo 1.0.0] - 2026-11-20 (MWZSystem.Ui 1.5.0)
 
 - `MWZSystem.Ui` 1.5.0 con `Libraries = MwzLibraries.None`: cada vista pide lo que usa. jQuery Validation solo en las 10 vistas con formularios validados y Select2 solo en las 10 con listas desplegables.

@@ -13,7 +13,8 @@
     const formatDate = value => new Intl.DateTimeFormat("es-MX", { dateStyle: "long", timeZone: "UTC" }).format(new Date(value + "T12:00:00Z"));
     let pending;
     let sequence = 0;
-    new FullCalendar.Calendar(document.getElementById("leave-calendar"), {
+    const calendarElement = document.getElementById("leave-calendar");
+    new FullCalendar.Calendar(calendarElement, {
         locale: "es", timeZone: "UTC", initialDate: labels.initialDate, initialView: "dayGridMonth",
         height: 650, expandRows: true, firstDay: 1, editable: false, displayEventTime: false, dayMaxEvents: 3,
         buttonIcons: false, buttonText: { prev: "‹", next: "›", today: labels.today, month: labels.month, week: labels.week, list: labels.list },
@@ -28,7 +29,7 @@
                 url.searchParams.set("from", range.startStr.slice(0, 10));
                 url.searchParams.set("to", range.endStr.slice(0, 10));
                 let response;
-                try { response = await fetch(url, { credentials: "same-origin", signal: pending.signal, headers: { Accept: "application/json" } }); } catch (error) { if (error.name === "AbortError") { throw error; } throw new Error(labels.error); }
+                try { response = await mwz.ocupado(calendarElement, fetch(url, { credentials: "same-origin", signal: pending.signal, headers: { Accept: "application/json" } })); } catch (error) { if (error.name === "AbortError") { throw error; } throw new Error(labels.error); }
                 if (response.redirected || !response.headers.get("content-type")?.includes("json")) throw new Error(labels.error);
                 const body = await response.json().catch(() => { throw new Error(labels.error); });
                 if (!response.ok) throw new Error(body.title || labels.error);

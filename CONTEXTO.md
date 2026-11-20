@@ -96,3 +96,11 @@ Pendientes propuestos, sin aplicar: Select2 solo en las páginas que lo usan; CS
 Una vista nueva con `asp-for` validado o con un `<select>` sin `data-select2="off"` debe pedir su librería; sin ella el formulario sigue validándose en el servidor y el `<select>` queda nativo. Prueba `Pages_LoadOnlyTheLibrariesTheyUse`.
 
 Medido con las páginas renderizadas en pruebas y los tamaños del paquete publicado (comprimidos con Brotli): Inicio y Auditoría pasan de 16 archivos y 123 KB a 10 y 95 KB; Login de 17 y 123 KB a 14 y 105 KB; listados con filtros a 13 y 114 KB; Registrar incapacidad se queda en 16 y 123 KB. En el servidor de pruebas (`WebApplicationFactory`, ambiente Testing) los archivos `_content` de los paquetes responden 500 porque no están en disco; en el paquete publicado sí están y se sirven comprimidos.
+
+## Pantalla de carga — MWZSystem.Ui 1.6.0, 2026-11-20
+
+- Implementado: paquete 1.6.0; `data-mwz-texto-carga` en los 21 formularios POST y en las búsquedas/aperturas GET (claves `Loading*` de `UiText.resx`); `data-mwz-descarga` en los 3 enlaces de descarga; `mwz.ocupado` en los fetch de `calendar.js`, `leave-calendar.js` y `demo-calendar.js`.
+- Sin `mwz.ocupado`: la carga de horarios de la reserva (ya muestra «Buscando horarios disponibles…» y se cancela al cambiar de día) y las búsquedas de Select2 (tienen su propio «Buscando…»).
+- Verificado: compilación sin advertencias y todas las pruebas, con `LoadingScreenTests` y `HttpTests.Pages_SayWhatTheyAreDoingWhileTheyWait`.
+- Pendiente: probarlo en un navegador. La app local solo arranca contra la base de producción y el servidor de pruebas no sirve `_content/MWZSystem.Ui`; se revisó con las vistas y las páginas renderizadas. No publicado (falta la conexión del sitio).
+

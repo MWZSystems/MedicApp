@@ -6,7 +6,7 @@
     var keys = filters.Select(x => x.Key).Append(name + Paging.PageKey).ToArray();
 }
 @if(filters.Count > 0){
-<form method="get" class="filter-row list-filters">
+<form method="get" class="filter-row list-filters" data-mwz-texto-carga="@T["LoadingSearch"]">
 @foreach(var entry in Context.Request.Query.Where(x => !keys.Contains(x.Key))){foreach(var value in entry.Value){<input type="hidden" name="@entry.Key" value="@value"/>}}
 @foreach(var filter in filters){
     var value = Context.Request.Query[filter.Key].ToString();

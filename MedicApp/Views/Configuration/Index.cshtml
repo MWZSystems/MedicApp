@@ -3,7 +3,7 @@
 @{ViewData["Title"] = T["Configuration"]; var zones=(string[])ViewBag.TimeZones;}
 <div class="page-heading"><div><h1><medic-icon name="settings"/>@T["ApplicationConfiguration"]</h1><p>@T["AllConfigurationHelp"]</p></div></div>
 <div class="configuration-content">
-<form asp-action="Index" method="post" id="application-configuration-form">
+<form asp-action="Index" method="post" id="application-configuration-form" data-mwz-texto-carga="@T["LoadingConfiguration"]">
 <input asp-for="Revision" type="hidden"/><div asp-validation-summary="All" class="text-danger" role="alert"></div>
 <section class="panel configuration-section" id="general"><h2><medic-icon name="settings"/>@T["ConfigurationGeneral"]</h2>
 <div class="row g-3"><div class="col-md-6"><label asp-for="General.DisplayName" class="form-label">@T["ApplicationDisplayName"]</label><input asp-for="General.DisplayName" class="form-control" maxlength="80" required/><span asp-validation-for="General.DisplayName" class="text-danger"></span><p class="form-text">@T["ApplicationNameHelp"]</p></div>
@@ -31,5 +31,5 @@
 <section class="panel configuration-save"><p>@T["ConfigurationPersistenceHelp"]</p><button class="btn btn-primary"><medic-icon name="save"/>@T["SaveAllConfiguration"]</button> <a asp-action="Index" class="btn btn-outline-secondary"><medic-icon name="refresh"/>@T["ReloadConfiguration"]</a></section>
 </form>
 <section class="panel configuration-section" id="administration"><h2><medic-icon name="shield"/>@T["ConfigurationAdministration"]</h2><p>@T["AdministrationConfigurationHelp"]</p></section>
-<section class="panel configuration-section" id="demo"><h2><medic-icon name="info"/>@T["DemoData"]</h2><p>@T["DemoHelp"]</p><a class="btn btn-outline-primary" asp-action="Demo">@T["ViewDemo"]</a><form asp-action="GenerateDemo" method="post" class="mt-3" data-confirm="@T["ConfirmAction"]"><button class="btn btn-outline-secondary"><medic-icon name="plus"/>@T["GenerateDemo"]</button></form></section>
+<section class="panel configuration-section" id="demo"><h2><medic-icon name="info"/>@T["DemoData"]</h2><p>@T["DemoHelp"]</p><a class="btn btn-outline-primary" asp-action="Demo">@T["ViewDemo"]</a><form asp-action="GenerateDemo" method="post" class="mt-3" data-mwz-texto-carga="@T["LoadingDemo"]" data-confirm="@T["ConfirmAction"]"><button class="btn btn-outline-secondary"><medic-icon name="plus"/>@T["GenerateDemo"]</button></form></section>
 </div>

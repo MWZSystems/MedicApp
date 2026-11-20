@@ -2,7 +2,7 @@
 @{ MwzShell.Use(Context, MwzLibraries.Validation); }
 @{ViewData["Title"]=T["AddClinicalVisit"];var person=(LeaveCalendarPerson)ViewBag.Person;}
 <h1><medic-icon name="stethoscope"/>@T["AddClinicalVisit"]</h1><p>@person.Label</p><p class="alert alert-info">@T["ClinicalOptionalHelp"]</p>
-<form method="post" class="panel"><div asp-validation-summary="All" class="text-danger"></div><input asp-for="PersonId" type="hidden"/><input asp-for="RequestKey" type="hidden"/>
+<form method="post" class="panel" data-mwz-texto-carga="@T["LoadingClinicalRecord"]"><div asp-validation-summary="All" class="text-danger"></div><input asp-for="PersonId" type="hidden"/><input asp-for="RequestKey" type="hidden"/>
 <div class="row g-3"><div class="col-md-5"><label asp-for="VisitedAt" class="form-label"><medic-icon name="calendar"/>@T["VisitDate"]</label><input asp-for="VisitedAt" type="datetime-local" asp-format="{0:yyyy-MM-ddTHH:mm}" class="form-control" required/></div></div>
 <h2 class="h4 mt-4"><medic-icon name="heart"/>@T["VitalSigns"]</h2><div class="row g-3">
 <div class="col-md-4"><label asp-for="Weight" class="form-label">@T["Weight"]</label><input asp-for="Weight" type="number" step="0.01" class="form-control"/><span asp-validation-for="Weight" class="text-danger"></span></div>

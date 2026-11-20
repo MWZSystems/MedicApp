@@ -124,6 +124,19 @@ public partial class HttpTests(SqlFixture fixture)
     }
 
     [Fact]
+    public async Task Pages_SayWhatTheyAreDoingWhileTheyWait()
+    {
+        await using var factory = Factory(); using var client = Client(factory);
+        var login = System.Net.WebUtility.HtmlDecode(await client.GetStringAsync("/Account/Login"));
+        Assert.Contains("data-mwz-texto-carga=\"Iniciando sesión…\"", login);
+        await LoginAsync(client, "doctor");
+        var create = System.Net.WebUtility.HtmlDecode(await client.GetStringAsync("/Leaves/Create"));
+        Assert.Contains("data-mwz-texto-carga=\"Guardando la incapacidad…\"", create);
+        var list = System.Net.WebUtility.HtmlDecode(await client.GetStringAsync("/Appointments/List"));
+        Assert.Contains("data-mwz-texto-carga=\"Buscando…\"", list);
+    }
+
+    [Fact]
     public async Task Labor_AuthorizedReader_ReceivesOnlyLaborContract()
     {
         await using var factory = Factory();

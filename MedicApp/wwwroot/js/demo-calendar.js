@@ -11,7 +11,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 const url = new URL(element.dataset.eventsUrl, location.href);
                 url.searchParams.set("from", range.startStr.slice(0, 10));
                 url.searchParams.set("to", range.endStr.slice(0, 10));
-                const response = await fetch(url, { headers: { Accept: "application/json" } });
+                const response = await mwz.ocupado(element, fetch(url, { headers: { Accept: "application/json" } }));
                 if (!response.ok) throw new Error(element.dataset.loadError);
                 success(await response.json());
             } catch (error) { failure(error); }

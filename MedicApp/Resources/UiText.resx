@@ -913,4 +913,25 @@
   <data name="DashDoctorTitle" xml:space="preserve"><value>Tu consulta</value></data>
   <data name="DashClinicTitle" xml:space="preserve"><value>El servicio médico</value></data>
   <data name="DashClinicNote" xml:space="preserve"><value>Solo totales por estado y fecha; no incluyen datos clínicos.</value></data>
+  <data name="LoadingSignIn" xml:space="preserve"><value>Iniciando sesión…</value></data>
+  <data name="LoadingPassword" xml:space="preserve"><value>Cambiando la contraseña…</value></data>
+  <data name="LoadingAccess" xml:space="preserve"><value>Guardando el acceso…</value></data>
+  <data name="LoadingDoctor" xml:space="preserve"><value>Guardando el médico…</value></data>
+  <data name="LoadingAgenda" xml:space="preserve"><value>Guardando el horario de consulta…</value></data>
+  <data name="LoadingAgendaDisable" xml:space="preserve"><value>Desactivando el horario de consulta…</value></data>
+  <data name="LoadingBooking" xml:space="preserve"><value>Reservando la cita…</value></data>
+  <data name="LoadingAppointmentChange" xml:space="preserve"><value>Actualizando la cita…</value></data>
+  <data name="LoadingClinicalRecord" xml:space="preserve"><value>Guardando la nota del expediente clínico…</value></data>
+  <data name="LoadingClinicalUpload" xml:space="preserve"><value>Subiendo el documento al expediente clínico…</value></data>
+  <data name="LoadingClinicalOpen" xml:space="preserve"><value>Abriendo el expediente clínico…</value></data>
+  <data name="LoadingPatientFile" xml:space="preserve"><value>Abriendo el expediente del paciente…</value></data>
+  <data name="LoadingConfiguration" xml:space="preserve"><value>Guardando la configuración…</value></data>
+  <data name="LoadingDemo" xml:space="preserve"><value>Generando los datos DEMO…</value></data>
+  <data name="LoadingStockItem" xml:space="preserve"><value>Guardando el artículo…</value></data>
+  <data name="LoadingStockMove" xml:space="preserve"><value>Registrando el movimiento de inventario…</value></data>
+  <data name="LoadingLeave" xml:space="preserve"><value>Guardando la incapacidad…</value></data>
+  <data name="LoadingLeaveChange" xml:space="preserve"><value>Actualizando la incapacidad…</value></data>
+  <data name="LoadingLeaveUpload" xml:space="preserve"><value>Subiendo el documento de la incapacidad…</value></data>
+  <data name="LoadingLeaveCalendar" xml:space="preserve"><value>Abriendo el calendario de incapacidades…</value></data>
+  <data name="LoadingSearch" xml:space="preserve"><value>Buscando…</value></data>
 </root>

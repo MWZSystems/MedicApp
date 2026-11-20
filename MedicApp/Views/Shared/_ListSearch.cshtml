@@ -7,7 +7,7 @@
     value = value[..Math.Min(value.Length, 100)];
     var others = Context.Request.Query.Where(x => x.Key != key && x.Key != Model.Name + Paging.PageKey).ToList();
 }
-<form method="get" class="d-flex gap-2 list-search" role="search">
+<form method="get" class="d-flex gap-2 list-search" role="search" data-mwz-texto-carga="@T["LoadingSearch"]">
     @foreach (var item in others)
     {
         foreach (var other in item.Value)

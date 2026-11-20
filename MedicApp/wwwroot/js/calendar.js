@@ -52,7 +52,9 @@
   };
   // The calendar carries business-local wall times without a browser timezone conversion.
   // API ranges are business dates; persisted appointments remain UTC on the server.
-  const calendar = new FullCalendar.Calendar(document.getElementById("appointments-calendar"), {
+  const calendarElement = document.getElementById("appointments-calendar");
+  // mwz.ocupado (MWZSystem.Ui 1.6.0) marks the part that is waiting for the server; the slot list has its own status text.
+  const calendar = new FullCalendar.Calendar(calendarElement, {
     locale: "es", timeZone: "UTC", initialDate: labels.initialDate,
     initialView: window.innerWidth < 600 ? "listWeek" : "timeGridWeek",
     headerToolbar: { left: "prev,next today", center: "title", right: "dayGridMonth,timeGridWeek,timeGridDay,listWeek" },
@@ -64,7 +66,7 @@
     events: (info, success, failure) => {
       const url = new URL(labels.eventsUrl, location.origin);
       url.searchParams.set("from", info.startStr.slice(0, 10)); url.searchParams.set("to", info.endStr.slice(0, 10));
-      jsonRequest(url).then(success).catch(error => { signalMessage(error.message, "danger"); failure(error); });
+      mwz.ocupado(calendarElement, jsonRequest(url)).then(success).catch(error => { signalMessage(error.message, "danger"); failure(error); });
     },
     dateClick: info => chooseDay(info.dateStr.slice(0, 10), info.allDay ? null : info.dateStr.slice(11, 16)),
     eventClick: info => {
@@ -86,7 +88,7 @@
     if (booking || loading || !form.reportValidity()) { return; }
     booking = true; updateButton();
     try {
-      const result = await jsonRequest(form.action, { method: "POST", body: new FormData(form) });
+      const result = await mwz.ocupado(form, jsonRequest(form.action, { method: "POST", body: new FormData(form) }));
       signalMessage(result.message, result.kind || "success"); form.elements.RequestKey.value = crypto.randomUUID();
       calendar.refetchEvents(); await loadSlots(dayInput.value);
     } catch (error) { signalMessage(error.message, "danger"); calendar.refetchEvents(); await loadSlots(dayInput.value); }
@@ -115,7 +117,7 @@
   detailForm.addEventListener("submit", async event => {
     event.preventDefault(); if (!detailForm.reportValidity()) { return; }
     const button = detailForm.querySelector("button[type=submit],button:not([type])"); button.disabled = true;
-    try { const result = await jsonRequest(detailForm.action, { method: "POST", body: new FormData(detailForm) }); modal.hide(); signalMessage(result.message, result.kind || "success"); calendar.refetchEvents(); await loadSlots(dayInput.value); }
+    try { const result = await mwz.ocupado(detailForm, jsonRequest(detailForm.action, { method: "POST", body: new FormData(detailForm) })); modal.hide(); signalMessage(result.message, result.kind || "success"); calendar.refetchEvents(); await loadSlots(dayInput.value); }
     catch (error) { signalMessage(error.message, "error"); }
     finally { button.disabled = false; }
   });
