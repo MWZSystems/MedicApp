@@ -104,3 +104,11 @@ Medido con las páginas renderizadas en pruebas y los tamaños del paquete publi
 - Verificado: compilación sin advertencias y todas las pruebas, con `LoadingScreenTests` y `HttpTests.Pages_SayWhatTheyAreDoingWhileTheyWait`.
 - Pendiente: probarlo en un navegador. La app local solo arranca contra la base de producción y el servidor de pruebas no sirve `_content/MWZSystem.Ui`; se revisó con las vistas y las páginas renderizadas. No publicado (falta la conexión del sitio).
 
+## Colores por acción — MWZSystem.Ui 1.7.0, 2026-11-21
+
+- Implementado: `ActionColors = true` en `_Layout.cshtml` y `@addTagHelper *, MWZSystem.Ui` en `_ViewImports.cshtml`. El ayudante decide el color por el texto del botón; `data-mwz-accion` se usa solo si un botón no tiene texto o debe quedar como está (hoy ninguno lo necesita).
+- CSS propio: se quitaron las reglas turquesa de `.btn-primary` (medicapp.css y medicapp-base.css). Se conservan el contorno turquesa de `.btn-outline-primary` para botones neutros y el turquesa de menú y encabezados.
+- JavaScript: ningún script crea botones `.btn`. Los de FullCalendar usan sus propias clases y quedan como estaban.
+- Verificado: compilación sin advertencias, todas las pruebas, `Problems` vacío en 19 pantallas y contraste ≥ 4.5 de los colores propios.
+- Pendiente: revisarlo en un navegador (misma limitación de la app local) y publicar cuando exista la conexión del sitio. No se revisaron con datos la pantalla de un expediente clínico abierto ni la de un artículo de inventario; el ayudante también actúa en ellas.
+

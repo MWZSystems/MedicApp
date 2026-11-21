@@ -9,8 +9,8 @@ p{color:var(--gray-color)}
 b,strong{font-weight:700}
 h1,h2,h3,h4,h5{font-family:var(--heading-font);font-weight:500;line-height:1.15}
 .text-dark{color:var(--dark-color)!important}
-.btn.btn-primary{background-color:var(--primary-color);border:0;color:#fff}
-.btn.btn-primary:hover,.btn.btn-primary:focus-visible{background-color:var(--dark-color);color:#fff}
+/* Los botones sólidos usan los colores por acción de MWZSystem.Ui (azul guardar, rojo eliminar…); el turquesa de la marca
+   queda en el menú, los encabezados y el contorno de los botones que solo llevan a otra pantalla o descargan. */
 .btn.btn-outline-primary{background:transparent;border:2px solid var(--primary-color);color:var(--dark-color);box-shadow:none}
 .btn.btn-outline-primary:hover,.btn.btn-outline-primary:focus-visible{background:var(--primary-soft);border-color:var(--dark-color);color:var(--dark-color)}
 .form-control:focus,.form-select:focus{border-color:var(--primary-color);box-shadow:0 0 0 .2rem var(--focus-ring)}

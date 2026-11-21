@@ -137,6 +137,28 @@ public partial class HttpTests(SqlFixture fixture)
     }
 
     [Fact]
+    public async Task Pages_FollowTheActionColors()
+    {
+        await using var factory = Factory(); using var client = Client(factory);
+        var login = await client.GetStringAsync("/Account/Login");
+        Assert.Contains("mwz-colores-accion", login);
+        Assert.Empty(MWZSystem.Ui.MwzActionColors.Problems(login));
+        await LoginAsync(client, "doctor");
+        foreach (var page in new[] { "/", "/Appointments", "/Appointments/List", "/Appointments/Book", "/Agenda", "/Leaves", "/Leaves/Create", "/Leaves/Calendar", "/LeaveDocuments/Record", "/ClinicalRecords", "/Inventory", "/Inventory/Create", "/Admin/Doctors", "/Admin/Access", "/Admin/Audit", "/Configuration", "/Help", "/Account/ChangePassword" })
+        {
+            using var response = await client.GetAsync(page);
+            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+            var html = await response.Content.ReadAsStringAsync();
+            Assert.Contains("mwz-colores-accion", html);
+            Assert.True(MWZSystem.Ui.MwzActionColors.Problems(html).Count == 0, page + ": " + string.Join("; ", MWZSystem.Ui.MwzActionColors.Problems(html)));
+        }
+        // Desactivar un horario de consulta va en rojo; Guardar, en azul.
+        var agenda = await client.GetStringAsync("/Agenda");
+        Assert.Matches(@"<button class=""btn btn-danger""[^>]*>.*?Desactivar", agenda);
+        Assert.Matches(@"class=""btn[^""]*btn-primary""[^>]*>(?:(?!</button>).)*Guardar", System.Net.WebUtility.HtmlDecode(await client.GetStringAsync("/Admin/Access")));
+    }
+
+    [Fact]
     public async Task Labor_AuthorizedReader_ReceivesOnlyLaborContract()
     {
         await using var factory = Factory();

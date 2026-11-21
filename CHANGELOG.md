@@ -1,5 +1,12 @@
 # Changelog
 
+## [Desarrollo 1.0.0] - 2026-11-21 (colores por acción)
+
+- `MWZSystem.Ui` 1.7.0 con `ActionColors = true` y su ayudante de etiquetas: cada botón toma el color de su acción, con el criterio de Trainify. Azul para guardar o aplicar, verde para aprobar o exportar, celeste para ver o ayuda, amarillo para editar o configurar, rojo para quitar, cancelar o desactivar y gris para volver. Los avisos emergentes van en color sólido y las alertas en su versión clara.
+- Cambian de color: «Aplicar filtros» (de gris de contorno a azul) en Citas, Agenda, Incapacidades, Inventario, Médicos, Accesos y Auditoría; «Guardar» en Médicos y Accesos (de contorno a azul sólido); «Desactivar» horario (rojo sólido) y «Cancelar» en Inventario (rojo); «Ver lista», «Ver horarios», «Ver calendario», «Ver expediente», «Ver calendario DEMO» y «Mostrar contraseña» (celeste).
+- Se quitó el turquesa que MedicApp ponía encima de `.btn-primary`: ahora los botones sólidos siguen el criterio común. El turquesa de la marca queda en el menú, los encabezados y el contorno de los botones que descargan o llevan a otra pantalla.
+- Pruebas: `ActionColorTests` (versión, activación, rojo y «Aceptar», contraste AA) y `HttpTests.Pages_FollowTheActionColors`, que revisa 19 pantallas con `MwzActionColors.Problems`.
+
 ## [Desarrollo 1.0.0] - 2026-11-20 (pantalla de carga)
 
 - `MWZSystem.Ui` 1.6.0 (incluye la corrección de 1.5.1): al navegar o guardar sale la barra a los 300 ms y, si la espera pasa de un segundo, un recuadro con el mensaje. Los botones de envío se desactivan, así que no hay doble envío.

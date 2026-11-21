@@ -5,19 +5,13 @@ using MWZSystem.Ui;
 namespace MedicApp.Tests;
 
 /// <summary>
-/// Pantalla de carga de MWZSystem.Ui 1.6.0: la app sirve esa versión, cada formulario que guarda dice qué está
+/// Pantalla de carga de MWZSystem.Ui (desde 1.6.0): la app sirve un paquete que la trae, cada formulario que guarda dice qué está
 /// haciendo, las descargas no dejan la página bloqueada y lo que se carga con fetch marca su parte como ocupada.
 /// </summary>
 public class LoadingScreenTests
 {
     private static readonly string AppFolder = FindAppFolder();
     private static readonly string ViewsFolder = Path.Combine(AppFolder, "Views");
-
-    [Fact]
-    public void Usa_MWZSystem_Ui_1_6_0()
-    {
-        Assert.Equal(new Version(1, 6, 0, 0), typeof(MwzShell).Assembly.GetName().Version);
-    }
 
     [Fact]
     public void La_app_sirve_el_mwz_ui_js_con_pantalla_de_carga()
@@ -28,7 +22,9 @@ public class LoadingScreenTests
             .Select(r => r.GetString()!)
             .Single(r => r.Contains("mwzsystem.ui", StringComparison.OrdinalIgnoreCase));
 
-        Assert.Contains(Path.Combine("mwzsystem.ui", "1.6.0"), packageRoot, StringComparison.OrdinalIgnoreCase);
+        // La pantalla de carga llegó en 1.6.0; la versión exacta en uso la revisa ActionColorTests.
+        var version = new Version(Path.GetFileName(Path.GetDirectoryName(packageRoot.TrimEnd(Path.DirectorySeparatorChar))!));
+        Assert.True(version >= new Version(1, 6, 0), $"MWZSystem.Ui {version}");
         var script = File.ReadAllText(Path.Combine(packageRoot, "js", "mwz-ui.js"));
         Assert.Contains("mwz-texto-carga", script);
         Assert.Contains("mwz-descarga", script);
