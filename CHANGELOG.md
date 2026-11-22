@@ -1,5 +1,10 @@
 # Changelog
 
+## [Desarrollo 1.0.0] - 2026-11-22 (vistas con SCHEMABINDING)
+
+- Nuevo `database/03_SchemabindingViews.sql`: recrea con `CREATE OR ALTER ... WITH SCHEMABINDING` las vistas `medic.vw_ApprovedLaborRestrictions` y `medic.vw_LaborEvents` (estándar SQL, sec. 7.4). Conservan las mismas columnas, el mismo resultado y los permisos de `WfmMedicalReader`. Se puede ejecutar varias veces y trae la reversa comentada al final.
+- Probado en LocalDB con `DeliveryTests.SchemabindingScript_RunTwice_KeepsViewContractAndReader`. No está aplicado en producción: falta la aprobación del usuario.
+
 ## [Desarrollo 1.0.0] - 2026-11-22 (estándar SQL)
 
 - Revisión contra el estándar SQL de MWZSystem (Rev 1.0). El SQL de la app ya lo cumplía: consultas parametrizadas, `THROW` con `SET XACT_ABORT ON`, `SYSUTCDATETIME()`, rangos de fechas medio abiertos y sin `NOLOCK`, `SELECT *`, `RAISERROR` ni SQL concatenado.

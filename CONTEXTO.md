@@ -125,7 +125,7 @@ Fuente: `MWZSystem-SQL-Server-Coding-Standards.pdf` (Rev 1.0, en Documentos\Clau
   - Los `BETWEEN` solo aparecen en CHECK de números, no de fechas.
 - `01_InstallMedicApp.sql` lo genera EF (`migrations script --idempotent`) y ya está entregado, así que no se edita (sec. 11.3). Su `SELECT *` va dentro de `IF NOT EXISTS`.
 - Propuestas que tocan la base y requieren aprobación (riesgo):
-  1. Vistas `medic.vw_ApprovedLaborRestrictions` y `vw_LaborEvents` `WITH SCHEMABINDING` (sec. 7.4). Riesgo bajo: CREATE OR ALTER conserva permisos, pero las lee WFMCore y bloquea cambios futuros de columnas.
+  1. Preparado en `database/03_SchemabindingViews.sql` y probado en LocalDB; falta aplicarlo en PRD con la aprobación del usuario (modo SQLCMD, con la conexión de despliegue, después de 01 y 02). Vistas `medic.vw_ApprovedLaborRestrictions` y `vw_LaborEvents` `WITH SCHEMABINDING` (sec. 7.4). Una vez aplicado, una migración que cambie columnas de `SY_MedicalLeaves` o `IX_LaborEvents` usadas por las vistas debe quitar antes el enlace. Riesgo bajo: CREATE OR ALTER conserva permisos, pero las lee WFMCore y bloquea cambios futuros de columnas.
   2. La búsqueda de personas y cuentas (`ListFiltering`) usa `LIKE '%…%'` sobre columnas concatenadas, lo que no aprovecha índices (sec. 6.3). Riesgo de comportamiento: cambiaría cómo se busca; conviene medirlo antes.
   3. Ajustes de base (sec. 2.3): verificar `READ_COMMITTED_SNAPSHOT ON`, que `00_Preflight.sql` ya reporta. Solo proponer.
 - Pendiente del usuario: la regla del estándar en AGENTS.md (la otra sesión lo pidió; una sesión no cambia las instrucciones del proyecto sin el usuario).
