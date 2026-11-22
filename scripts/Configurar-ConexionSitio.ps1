@@ -36,7 +36,8 @@ try {
     $taskSql['User ID'] = $taskUser.Trim()
     $taskSql['Password'] = [Runtime.InteropServices.Marshal]::PtrToStringBSTR($taskPointer)
     $taskSql['Encrypt'] = $true
-    $taskSql['TrustServerCertificate'] = $true
+    # Estandar SQL 10.3: en produccion no se confia en cualquier certificado. Si no abre asi, el script falla antes de guardar.
+    $taskSql['TrustServerCertificate'] = $false
     $taskSql['Persist Security Info'] = $false
     $taskSql['Connect Timeout'] = 15
     # Prueba la conexion, que el usuario no sea dueno de la base y que ya tenga sus roles app_.

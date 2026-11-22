@@ -1,5 +1,10 @@
 # Changelog
 
+## [Desarrollo 1.0.0] - 2026-11-22 (estándar SQL)
+
+- Revisión contra el estándar SQL de MWZSystem (Rev 1.0). El SQL de la app ya lo cumplía: consultas parametrizadas, `THROW` con `SET XACT_ABORT ON`, `SYSUTCDATETIME()`, rangos de fechas medio abiertos y sin `NOLOCK`, `SELECT *`, `RAISERROR` ni SQL concatenado.
+- `scripts/Configurar-ConexionSitio.ps1` guarda la conexión del sitio con `TrustServerCertificate=False` (sec. 10.3), igual que la de despliegue. El script prueba la conexión antes de guardarla, así que si no abre no guarda nada.
+
 ## [Desarrollo 1.0.0] - 2026-11-21 (colores por acción)
 
 - `MWZSystem.Ui` 1.7.0 con `ActionColors = true` y su ayudante de etiquetas: cada botón toma el color de su acción, con el criterio de Trainify. Azul para guardar o aplicar, verde para aprobar o exportar, celeste para ver o ayuda, amarillo para editar o configurar, rojo para quitar, cancelar o desactivar y gris para volver. Los avisos emergentes van en color sólido y las alertas en su versión clara.

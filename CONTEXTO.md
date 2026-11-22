@@ -112,3 +112,21 @@ Medido con las páginas renderizadas en pruebas y los tamaños del paquete publi
 - Verificado: compilación sin advertencias, todas las pruebas, `Problems` vacío en 19 pantallas y contraste ≥ 4.5 de los colores propios.
 - Pendiente: revisarlo en un navegador (misma limitación de la app local) y publicar cuando exista la conexión del sitio. No se revisaron con datos la pantalla de un expediente clínico abierto ni la de un artículo de inventario; el ayudante también actúa en ellas.
 
+## Estándar SQL de MWZSystem — 2026-11-22
+
+Fuente: `MWZSystem-SQL-Server-Coding-Standards.pdf` (Rev 1.0, en Documentos\Claude\Estandares). Base compartida `db_acaa35_trainify`: se conserva su estilo de nombres (CT_, SY_, SC_, IX_, AR_, PK/FK; sec. 2.4) y no se renombra nada. Los cambios en la base van como script re-ejecutable y aditivo, con nota de reversa, y solo se aplican con aprobación del usuario; lo compartido se coordina con Trainify.
+
+- Revisado y conforme:
+  - `MedicalRestrictionReader` usa parámetros con tipo, rango medio abierto y columnas explícitas.
+  - `MedicalLocks` usa `THROW`.
+  - `ListFiltering` usa SQL interpolado de EF, que va parametrizado.
+  - `00_Preflight.sql` y `02_RuntimeRoles.sql` usan `THROW` y `XACT_ABORT`.
+  - Las fechas guardadas usan `SYSUTCDATETIME()`.
+  - Los `BETWEEN` solo aparecen en CHECK de números, no de fechas.
+- `01_InstallMedicApp.sql` lo genera EF (`migrations script --idempotent`) y ya está entregado, así que no se edita (sec. 11.3). Su `SELECT *` va dentro de `IF NOT EXISTS`.
+- Propuestas que tocan la base y requieren aprobación (riesgo):
+  1. Vistas `medic.vw_ApprovedLaborRestrictions` y `vw_LaborEvents` `WITH SCHEMABINDING` (sec. 7.4). Riesgo bajo: CREATE OR ALTER conserva permisos, pero las lee WFMCore y bloquea cambios futuros de columnas.
+  2. La búsqueda de personas y cuentas (`ListFiltering`) usa `LIKE '%…%'` sobre columnas concatenadas, lo que no aprovecha índices (sec. 6.3). Riesgo de comportamiento: cambiaría cómo se busca; conviene medirlo antes.
+  3. Ajustes de base (sec. 2.3): verificar `READ_COMMITTED_SNAPSHOT ON`, que `00_Preflight.sql` ya reporta. Solo proponer.
+- Pendiente del usuario: la regla del estándar en AGENTS.md (la otra sesión lo pidió; una sesión no cambia las instrucciones del proyecto sin el usuario).
+
