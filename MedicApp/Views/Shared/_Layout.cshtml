@@ -83,6 +83,8 @@
     var shell = new MwzShell
     {
         AppName = Settings.Value.DisplayName,
+        // Ambiente y versión («PRD · v1.0.0») los pone la barra superior de MWZSystem.Ui desde Mwz:Ambiente.
+        Description = $"{Settings.Value.DisplayName}: {T["MedicalService"]}",
         Theme = "medicapp",
         Lang = "es-MX",
         HomeUrl = Url.Action("Index", "Home")!,
@@ -140,9 +142,6 @@
 <div class="container-fluid app-width">
     @RenderBody()
 </div>
-@section AfterMain {
-    <div class="app-version-bar"><span>@T["Version"] <strong>v@(typeof(Program).Assembly.GetName().Version?.ToString(3))</strong></span></div>
-}
 @section Scripts {
     @if (select2)
     {

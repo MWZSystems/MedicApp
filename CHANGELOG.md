@@ -1,5 +1,17 @@
 # Changelog
 
+## [Desarrollo 1.0.0] - 2026-11-22 (MWZSystem.Ui 1.9.0)
+
+- `MWZSystem.Ui` 1.9.0 (incluye 1.8.0):
+  - La barra superior muestra el ambiente y la versión («PRD · v1.0.0»). La barra de versión propia de MedicApp, abajo, se quitó.
+  - La confirmación usa `<dialog>` nativo.
+  - Llegan `color-scheme` y la descripción de la página (`MwzShell.Description`).
+- Las 11 tablas tienen `<caption class="visually-hidden">` y `scope="col"` en sus encabezados.
+- Encabezados nuevos: `Permissions-Policy` (sin cámara, micrófono, ubicación, pagos ni USB) y `Cross-Origin-Opener-Policy: same-origin`.
+- Se borraron de `medicapp.css` los estilos de avisos (`.app-toast`, `.toast-stack`) y de la barra de versión, que ya nadie usaba.
+- Publicación: `Publicar-MedicApp.ps1` pone `Mwz:Ambiente` en el paquete, con `Publish:Ambiente` de User Secrets o PRD si no está. En este equipo la etiqueta dice DEV.
+- Pruebas: `MarkupTests` y `HttpTests.Pages_ShowEnvironmentAndSendTheReviewHeaders`.
+
 ## [Desarrollo 1.0.0] - 2026-11-22 (vistas con SCHEMABINDING)
 
 - Nuevo `database/03_SchemabindingViews.sql`: recrea con `CREATE OR ALTER ... WITH SCHEMABINDING` las vistas `medic.vw_ApprovedLaborRestrictions` y `medic.vw_LaborEvents` (estándar SQL, sec. 7.4). Conservan las mismas columnas, el mismo resultado y los permisos de `WfmMedicalReader`. Se puede ejecutar varias veces y trae la reversa comentada al final.

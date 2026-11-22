@@ -159,6 +159,22 @@ public partial class HttpTests(SqlFixture fixture)
     }
 
     [Fact]
+    public async Task Pages_ShowEnvironmentAndSendTheReviewHeaders()
+    {
+        await using var factory = Factory().WithWebHostBuilder(builder => builder.ConfigureAppConfiguration((_, config) => config.AddInMemoryCollection(new Dictionary<string, string?> { ["Mwz:Ambiente"] = "PRD" })));
+        using var client = Client(factory);
+        using var response = await client.GetAsync("/Account/Login");
+        var html = System.Net.WebUtility.HtmlDecode(await response.Content.ReadAsStringAsync());
+        Assert.Equal("camera=(), microphone=(), geolocation=(), payment=(), usb=()", response.Headers.GetValues("Permissions-Policy").Single());
+        Assert.Equal("same-origin", response.Headers.GetValues("Cross-Origin-Opener-Policy").Single());
+        Assert.Contains("<meta name=\"color-scheme\" content=\"light\"", html);
+        Assert.Matches("<meta name=\"description\" content=\"[^\"]+: [^\"]+\"", html);
+        Assert.Contains("data-mwz-ambiente=\"PRD\"", html);
+        Assert.Contains("PRD · v1.0.0", html);
+        Assert.DoesNotContain("importmap", html);
+    }
+
+    [Fact]
     public async Task Labor_AuthorizedReader_ReceivesOnlyLaborContract()
     {
         await using var factory = Factory();

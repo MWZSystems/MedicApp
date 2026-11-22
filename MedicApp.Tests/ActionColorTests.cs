@@ -3,7 +3,7 @@ using MWZSystem.Ui;
 namespace MedicApp.Tests;
 
 /// <summary>
-/// Colores por acción de MWZSystem.Ui 1.7.0 (criterio de Trainify). Las pantallas renderizadas se revisan en
+/// Colores por acción de MWZSystem.Ui (desde 1.7.0, criterio de Trainify). Las pantallas renderizadas se revisan en
 /// HttpTests.Pages_FollowTheActionColors, que usa LocalDB; aquí, lo que no necesita base de datos.
 /// </summary>
 public class ActionColorTests
@@ -11,9 +11,9 @@ public class ActionColorTests
     private static readonly string AppFolder = FindAppFolder();
 
     [Fact]
-    public void Usa_MWZSystem_Ui_1_7_0()
+    public void Usa_MWZSystem_Ui_1_9_0()
     {
-        Assert.Equal(new Version(1, 7, 0, 0), typeof(MwzShell).Assembly.GetName().Version);
+        Assert.Equal(new Version(1, 9, 0, 0), typeof(MwzShell).Assembly.GetName().Version);
     }
 
     [Fact]

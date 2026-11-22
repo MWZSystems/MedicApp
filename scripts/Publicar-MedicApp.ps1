@@ -56,7 +56,11 @@ try {
         New-Item -ItemType Directory -Path $taskCalendarPath -Force | Out-Null
         @{Medical=@{BookingHorizonDays=7;Open24Hours=$true;OpeningTime='08:00';ClosingTime='18:00';DefaultSlotMinutes=30;DemoBookingEnabled=$true}} | ConvertTo-Json -Depth 4 | Set-Content -LiteralPath (Join-Path $taskCalendarPath 'medical.json') -Encoding UTF8
     }
-    $taskProduction = @{ ConnectionStrings = @{ Workforce = $taskSiteConnection }; AllowedHosts = $SiteUrl.Host; Medical = @{ DataDirectory = 'App_Data' } }
+    # Ambiente de la barra superior (MWZSystem.Ui 1.8.0+): Publish:Ambiente de User Secrets o PRD, porque site9 es produccion
+    # (no hay STG todavia). Va solo en el paquete publicado: en este equipo la app sigue diciendo DEV.
+    $taskAmbiente = $taskSecrets.'Publish:Ambiente'; if (!$taskAmbiente -and $taskSecrets.Publish) { $taskAmbiente = $taskSecrets.Publish.Ambiente }; if (!$taskAmbiente) { $taskAmbiente = 'PRD' }
+    if ($taskAmbiente -notin @('STG','PRD','DEV')) { throw 'Publish:Ambiente debe ser STG, PRD o DEV.' }
+    $taskProduction = @{ ConnectionStrings = @{ Workforce = $taskSiteConnection }; AllowedHosts = $SiteUrl.Host; Medical = @{ DataDirectory = 'App_Data' }; Mwz = @{ Ambiente = $taskAmbiente } }
     $taskProduction | ConvertTo-Json -Depth 5 | Set-Content -LiteralPath $taskPrivateFile -Encoding UTF8
     if ($PrepareOnly) {
         Write-Output ('PAQUETE_PREPARADO: ' + $taskStage)
