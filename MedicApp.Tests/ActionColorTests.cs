@@ -11,9 +11,9 @@ public class ActionColorTests
     private static readonly string AppFolder = FindAppFolder();
 
     [Fact]
-    public void Usa_MWZSystem_Ui_1_9_0()
+    public void Usa_MWZSystem_Ui_1_10_0()
     {
-        Assert.Equal(new Version(1, 9, 0, 0), typeof(MwzShell).Assembly.GetName().Version);
+        Assert.Equal(new Version(1, 10, 0, 0), typeof(MwzShell).Assembly.GetName().Version);
     }
 
     [Fact]

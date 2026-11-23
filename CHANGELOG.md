@@ -1,5 +1,9 @@
 # Changelog
 
+## [Desarrollo 1.0.0] - 2026-11-23 (MWZSystem.Ui 1.10.0)
+
+- `MWZSystem.Ui` 1.10.0 junta CSS y JS de la estructura común en grupos (`mwz-base.css`, `mwz-base.js`, `mwz-validacion.js`) para que el hosting no responda 503 cuando una página pide muchos archivos a la vez. El inicio de sesión pasa de 14 hojas y scripts a 8; las fuentes y los iconos no cambian. Sin cambios de código: ninguna plantilla de MedicApp carga jQuery por su cuenta, y la copia propia de Select2 sigue después de `mwz-base.js`.
+
 ## [Desarrollo 1.0.0] - 2026-11-22 (MWZSystem.Ui 1.9.0)
 
 - `MWZSystem.Ui` 1.9.0 (incluye 1.8.0):
