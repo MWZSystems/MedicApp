@@ -108,7 +108,8 @@
     document.getElementById("detail-time").textContent = `${format(event.start)} – ${format(event.end)}`;
     detailForm.elements.Id.value = detail.appointmentId; detailForm.elements.Version.value = detail.version;
     reason.value = ""; document.getElementById("detail-error").textContent = "";
-    action.replaceChildren();
+    // Regla común: la acción empieza vacía para que nadie guarde la primera sin elegirla.
+    action.replaceChildren(new Option(labels.chooseOption, ""));
     if (detail.canCancel) { action.add(new Option(labels.cancel, "3")); }
     if (detail.canAttend) { action.add(new Option(labels.attended, "2")); action.add(new Option(labels.noShow, "4")); }
     detailForm.hidden = !action.options.length; updateReason(); modal.show();

@@ -934,4 +934,5 @@
   <data name="LoadingLeaveUpload" xml:space="preserve"><value>Subiendo el documento de la incapacidad…</value></data>
   <data name="LoadingLeaveCalendar" xml:space="preserve"><value>Abriendo el calendario de incapacidades…</value></data>
   <data name="LoadingSearch" xml:space="preserve"><value>Buscando…</value></data>
+  <data name="ChooseOption" xml:space="preserve"><value>Selecciona…</value></data>
 </root>

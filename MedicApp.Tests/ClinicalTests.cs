@@ -55,7 +55,7 @@ public partial class ClinicalTests(ClinicalFixture fixture) : IAsyncDisposable
     {
         await using var db = fixture.Sql.Medical(); var service = Inventory(db, "doctor", fixture.Sql.DoctorPersonId);
         var id = await service.CreateAsync(new() { Code = Guid.NewGuid().ToString("N"), Name = "Synthetic test stock", Unit = "pieza", ExpiresOn = expiry }, Ct);
-        if (stock > 0) { await service.MoveAsync(new() { StockItemId = id, Quantity = stock, Reason = "Initial test stock" }, Ct); }
+        if (stock > 0) { await service.MoveAsync(new() { StockItemId = id, Kind = StockMovementKind.Entry, Quantity = stock, Reason = "Initial test stock" }, Ct); }
         return id;
     }
     [Fact]
@@ -115,7 +115,7 @@ public partial class ClinicalTests(ClinicalFixture fixture) : IAsyncDisposable
         var html = await doctor.GetStringAsync("/ClinicalRecords?personId=" + Number(fixture.Sql.EmployeeId));
         foreach (var attempt in new[] { 0, 1, 2 })
         {
-            var key = Guid.NewGuid(); using var form = new MultipartFormDataContent(); form.Add(new StringContent(Number(fixture.Sql.EmployeeId)), "PersonId"); form.Add(new StringContent(key.ToString()), "RequestKey"); if (attempt != 2) { form.Add(new StringContent(Token().Match(html).Groups[1].Value), "__RequestVerificationToken"); }
+            var key = Guid.NewGuid(); using var form = new MultipartFormDataContent(); form.Add(new StringContent(Number(fixture.Sql.EmployeeId)), "PersonId"); form.Add(new StringContent(key.ToString()), "RequestKey"); form.Add(new StringContent("0"), "Kind"); if (attempt != 2) { form.Add(new StringContent(Token().Match(html).Groups[1].Value), "__RequestVerificationToken"); }
             if (attempt == 0) { form.Add(new StringContent(Number(visit.Id)), "ClinicalVisitId"); }
             form.Add(new ByteArrayContent(attempt == 1 ? Encoding.ASCII.GetBytes("invalid") : Pdf), "Files", "test.pdf"); using var response = await doctor.PostAsync("/ClinicalRecords/Upload", form);
             Assert.Equal(attempt == 0 ? HttpStatusCode.NotFound : attempt == 1 ? HttpStatusCode.UnprocessableEntity : HttpStatusCode.BadRequest, response.StatusCode);
@@ -207,7 +207,7 @@ public partial class ClinicalTests(ClinicalFixture fixture) : IAsyncDisposable
         Assert.Equal(HttpStatusCode.Redirect, response.StatusCode); var visit = await db.ClinicalVisits.SingleAsync(x => x.RequestKey == key, Ct);
         Assert.Equal(72.25m, visit.Weight); Assert.Equal(170m, visit.Height); Assert.Equal(36.5m, visit.Temperature); Assert.Equal(120, visit.Systolic); Assert.Equal(80, visit.Diastolic); Assert.Equal(70, visit.Pulse); Assert.Equal(16, visit.RespiratoryRate); Assert.Equal(98, visit.OxygenSaturation); Assert.Equal(95.5m, visit.Glucose); Assert.Equal("Test recorded prescription", visit.Prescription);
         var record = await nurse.GetStringAsync("/ClinicalRecords?personId=" + Number(fixture.Sql.EmployeeId) + "&visitId=" + Number(visit.Id)); Assert.Contains("&lt;script&gt;clinical-test&lt;/script&gt;", record); Assert.DoesNotContain("<script>clinical-test</script>", record); Assert.Contains("name=\"ClinicalVisitId\" value=\"" + Number(visit.Id), record);
-        var uploadKey = Guid.NewGuid(); using var form = new MultipartFormDataContent(); form.Add(new StringContent(Number(fixture.Sql.EmployeeId)), "PersonId"); form.Add(new StringContent(Number(visit.Id)), "ClinicalVisitId"); form.Add(new StringContent(uploadKey.ToString()), "RequestKey"); form.Add(new StringContent(Token().Match(record).Groups[1].Value), "__RequestVerificationToken"); form.Add(new ByteArrayContent(Pdf), "Files", "Synthetic-study.pdf");
+        var uploadKey = Guid.NewGuid(); using var form = new MultipartFormDataContent(); form.Add(new StringContent(Number(fixture.Sql.EmployeeId)), "PersonId"); form.Add(new StringContent(Number(visit.Id)), "ClinicalVisitId"); form.Add(new StringContent("0"), "Kind"); form.Add(new StringContent(uploadKey.ToString()), "RequestKey"); form.Add(new StringContent(Token().Match(record).Groups[1].Value), "__RequestVerificationToken"); form.Add(new ByteArrayContent(Pdf), "Files", "Synthetic-study.pdf");
         using var uploaded = await nurse.PostAsync("/ClinicalRecords/Upload", form); Assert.Equal(HttpStatusCode.Redirect, uploaded.StatusCode); var file = await db.PatientDocuments.SingleAsync(x => x.RequestKey == uploadKey, Ct); Assert.Equal(visit.Id, file.ClinicalVisitId); Assert.Equal(fixture.Sql.EmployeeId, file.PersonId); Assert.Equal(movementCount, await db.StockMovements.CountAsync(Ct));
         var search = await nurse.GetStringAsync("/ClinicalRecords/People?term=TEST-E1"); Assert.Contains(Number(fixture.Sql.EmployeeId), search);
     }

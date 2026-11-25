@@ -74,7 +74,7 @@ public class ClinicalRecordService(MedicDbContext db, TrainifyDbContext shared, 
             foreach (var file in prepared)
             {
                 var key = Guid.NewGuid().ToString("N"); await storage.WriteAsync(key, file.Bytes, ct); written.Add(key);
-                var document = new PatientDocument { PersonId = input.PersonId, ClinicalVisitId = input.ClinicalVisitId, Kind = input.Kind, Description = input.Description?.Trim() ?? "", StorageKey = key, OriginalName = file.OriginalName, ContentType = file.ContentType, ByteCount = file.Bytes.LongLength, Sha256 = file.Sha256, RequestKey = input.RequestKey, Ordinal = documents.Count };
+                var document = new PatientDocument { PersonId = input.PersonId, ClinicalVisitId = input.ClinicalVisitId, Kind = input.Kind!.Value, Description = input.Description?.Trim() ?? "", StorageKey = key, OriginalName = file.OriginalName, ContentType = file.ContentType, ByteCount = file.Bytes.LongLength, Sha256 = file.Sha256, RequestKey = input.RequestKey, Ordinal = documents.Count };
                 medical.Stamp(document); documents.Add(document);
             }
             db.PatientDocuments.AddRange(documents); await db.SaveChangesAsync(ct);

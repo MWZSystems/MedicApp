@@ -1,5 +1,15 @@
 # Changelog
 
+## [Desarrollo 1.0.0] - 2026-11-25 (listas que empiezan vacías)
+
+- Regla común (la misma de Trainify): en un formulario, una lista sin dato guardado empieza en «Selecciona…» y es obligatoria, para que nadie guarde la primera opción sin elegirla.
+  - Cambian 5 listas: tipo de documento del expediente clínico, tipo de movimiento de inventario, la acción sobre una cita (en el listado y en el detalle del calendario) y la acción sobre una incapacidad.
+  - Ya cumplían 5: persona en Accesos y Médicos, horario de la reserva, empleado y doctor de la incapacidad.
+  - Conservan su valor guardado 2: disponible en Médicos y zona horaria en Configuración.
+  - Los filtros de búsqueda no cambian.
+- El servidor tampoco lo supone: `PatientUploadForm.Kind` y `StockMovementForm.Kind` ahora son obligatorios. Antes, si faltaban, se guardaban como el primer valor (General / Entrada). El cambio de estado ya rechazaba un valor vacío.
+- Pruebas: `FormSelectTests` recorre los formularios POST de las vistas, revisa `calendar.js` y valida los formularios en el servidor. Tres pruebas antiguas ahora mandan el tipo de forma explícita.
+
 ## [Desarrollo 1.0.0] - 2026-11-23 (MWZSystem.Ui 1.10.0)
 
 - `MWZSystem.Ui` 1.10.0 junta CSS y JS de la estructura común en grupos (`mwz-base.css`, `mwz-base.js`, `mwz-validacion.js`) para que el hosting no responda 503 cuando una página pide muchos archivos a la vez. El inicio de sesión pasa de 14 hojas y scripts a 8; las fuentes y los iconos no cambian. Sin cambios de código: ninguna plantilla de MedicApp carga jQuery por su cuenta, y la copia propia de Select2 sigue después de `mwz-base.js`.

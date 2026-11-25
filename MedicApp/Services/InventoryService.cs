@@ -40,8 +40,8 @@ public class InventoryService(MedicDbContext db, MedicalAccess access, MedicalSe
         if (balance < 0) { throw new MedicalRuleException("StockInsufficient"); }
         if (balance > 999999999.999m) { throw new MedicalRuleException("InvalidStockInput"); }
         item.CurrentStock = balance; medical.Stamp(item);
-        var movement = new StockMovement { StockItemId = item.Id, Kind = input.Kind, Quantity = input.Quantity, Balance = balance, Reason = input.Reason.Trim(), RequestKey = input.RequestKey };
+        var movement = new StockMovement { StockItemId = item.Id, Kind = input.Kind!.Value, Quantity = input.Quantity, Balance = balance, Reason = input.Reason.Trim(), RequestKey = input.RequestKey };
         medical.Stamp(movement); db.StockMovements.Add(movement); await db.SaveChangesAsync(ct);
-        medical.Audit("StockMovement", movement.Id, input.Kind.ToString()); await db.SaveChangesAsync(ct); await tx.CommitAsync(ct);
+        medical.Audit("StockMovement", movement.Id, movement.Kind.ToString()); await db.SaveChangesAsync(ct); await tx.CommitAsync(ct);
     }
 }

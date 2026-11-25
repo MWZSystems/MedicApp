@@ -29,7 +29,7 @@ public class PatientUploadForm
     [Range(1, int.MaxValue)] public int PersonId { get; set; }
     public int? ClinicalVisitId { get; set; }
     public Guid RequestKey { get; set; } = Guid.NewGuid();
-    [EnumDataType(typeof(PatientDocumentKind))] public PatientDocumentKind Kind { get; set; }
+    [Required(ErrorMessage = "Required"), EnumDataType(typeof(PatientDocumentKind))] public PatientDocumentKind? Kind { get; set; }
     [MaxLength(1000)] public string? Description { get; set; }
     public List<IFormFile> Files { get; set; } = [];
 }
@@ -55,7 +55,7 @@ public class StockMovementForm
 {
     [Range(1, int.MaxValue)] public int StockItemId { get; set; }
     public Guid RequestKey { get; set; } = Guid.NewGuid();
-    [EnumDataType(typeof(StockMovementKind))] public StockMovementKind Kind { get; set; }
+    [Required(ErrorMessage = "Required"), EnumDataType(typeof(StockMovementKind))] public StockMovementKind? Kind { get; set; }
     [Range(typeof(decimal), "0.001", "999999999")] public decimal Quantity { get; set; }
     [Required(ErrorMessage = "Required"), MaxLength(1000)] public string Reason { get; set; } = "";
 }
